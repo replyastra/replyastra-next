@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -10,18 +10,6 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
-
-  // 🔍 Check if user already logged in
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data?.user) {
-        setAlreadyLoggedIn(true);
-      }
-    };
-    checkUser();
-  }, []);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -38,82 +26,61 @@ export default function SignupPage() {
     if (error) {
       setError(error.message);
     } else {
-      alert("Signup successful! Check your email to verify.");
+      alert("Check your email to confirm your account.");
       router.push("/login");
     }
   };
 
-  // 🚫 Already logged in UI
-  if (alreadyLoggedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
-        <div className="bg-white p-8 rounded-xl shadow-lg text-center max-w-md w-full">
-          <h2 className="text-2xl font-bold mb-3">
-            You already have an account ✅
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Please login to continue using ReplyAstra.
-          </p>
-          <button
-            onClick={() => router.push("/login")}
-            className="w-full bg-purple-600 text-white py-3 rounded hover:bg-purple-700"
-          >
-            Go to Login
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ✅ Normal signup UI
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600">
-      <form
-        onSubmit={handleSignup}
-        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md"
-      >
-        <h1 className="text-2xl font-bold text-center mb-2">
-          Create Account
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
+
+        <h1 className="text-3xl font-extrabold text-center text-purple-600">
+          ReplyAstra
         </h1>
         <p className="text-center text-gray-500 mb-6">
-          Start automating with ReplyAstra
+          Create your account
         </p>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-3 border rounded mb-4"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSignup} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email address"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-3 border rounded mb-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Password (min 6 characters)"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm text-center">{error}</p>
+          )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-purple-600 text-white py-3 rounded hover:bg-purple-700"
-        >
-          {loading ? "Creating account..." : "Sign Up"}
-        </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+          >
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
+        </form>
 
-        <p className="text-center text-sm mt-4">
+        <p className="text-center text-sm text-gray-600 mt-5">
           Already have an account?{" "}
-          <a href="/login" className="text-purple-600 font-semibold">
+          <a href="/login" className="text-purple-600 font-semibold hover:underline">
             Login
           </a>
         </p>
-      </form>
+      </div>
     </div>
   );
 }
