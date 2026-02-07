@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
 
-export default function SignupPage() {
+export default function SignupPage() { ... }
   const router = useRouter();
 
   const [email, setEmail] = useState("");
