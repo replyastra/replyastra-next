@@ -1,12 +1,14 @@
+import "./globals.css";
+
 export const metadata = {
-  title: "ReplyAstra – Instagram DM Automation",
-  description: "Automate Instagram DMs and convert leads 24/7"
+  title: "ReplyAstra",
+  description: "AI-powered Instagram DM automation",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: "Inter, sans-serif" }}>
+      <body className="min-h-screen flex flex-col">
         {children}
       </body>
     </html>
