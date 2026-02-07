@@ -1,149 +1,204 @@
-"use client";
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Check, MessageSquare, Zap, Target, Shield, ArrowRight, Instagram, Menu, X, Star } from 'lucide-react';
-import { supabase } from '../lib/supabase'; // Ensure this path is correct
-
-export default function LandingPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [inquiryData, setInquiryData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState({ type: null, message: '' });
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmitInquiry = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setStatus({ type: null, message: '' });
-
-    try {
-      const { error } = await supabase.from('inquiries').insert([inquiryData]);
-      if (error) throw error;
-      setStatus({ type: 'success', message: 'Message sent successfully!' });
-      setInquiryData({ name: '', email: '', message: '' });
-    } catch (err) {
-      setStatus({ type: 'error', message: err.message || 'Failed to send message.' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#020402] text-white selection:bg-emerald-500/30 overflow-x-hidden relative font-sans">
-      
-      {/* VIBRANT BACKGROUND MESH - For Windows PC Pop */}
-      <div className="fixed inset-0 overflow-hidden -z-10">
-        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-[#00ff88]/15 blur-[160px] rounded-full"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-[700px] h-[700px] bg-[#10b981]/10 blur-[140px] rounded-full"></div>
-      </div>
+    <main className="bg-gradient-to-br from-emerald-50 via-white to-green-50 text-slate-900">
 
-      {/* NAVIGATION */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl bg-white/[0.03] backdrop-blur-[40px] border border-white/10 rounded-[3rem] px-8 py-4 flex items-center justify-between shadow-2xl">
-        <div className="text-2xl font-black tracking-tighter italic">
-          REPLY<span className="text-emerald-400">ASTRA</span>
-        </div>
-        
-        <div className="hidden md:flex items-center gap-8 font-semibold text-sm">
-          <a href="#features" className="opacity-60 hover:opacity-100 transition">Features</a>
-          <a href="#pricing" className="opacity-60 hover:opacity-100 transition">Pricing</a>
-          <Link href="/login" className="opacity-60 hover:opacity-100 transition">Login</Link>
-          <Link href="/signup" className="bg-[#00ff88] text-black px-6 py-2.5 rounded-full font-bold shadow-[0_0_20px_rgba(0,255,136,0.3)] hover:scale-105 transition-all">
+      {/* NAVBAR */}
+      <header className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-green-600">ReplyAstra</h1>
+        <nav className="flex items-center gap-6">
+          <a href="#features" className="text-sm text-slate-600 hover:text-slate-900">Features</a>
+          <a href="#pricing" className="text-sm text-slate-600 hover:text-slate-900">Pricing</a>
+          <a href="/login" className="text-sm text-slate-600 hover:text-slate-900">Login</a>
+          <a
+            href="/signup"
+            className="rounded-full bg-green-600 px-5 py-2 text-sm font-medium text-white hover:bg-green-700"
+          >
             Get Started
-          </Link>
-        </div>
+          </a>
+        </nav>
+      </header>
 
-        <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X /> : <Menu />}
-        </button>
-      </nav>
+      {/* HERO */}
+      <section className="max-w-7xl mx-auto px-6 pt-24 pb-20 text-center">
+        <span className="inline-block rounded-full bg-green-100 px-4 py-1 text-sm font-medium text-green-700">
+          Intelligent Instagram Growth
+        </span>
 
-      {/* HERO SECTION */}
-      <section className="pt-48 pb-20 px-6 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 mb-10 text-[10px] font-bold uppercase tracking-widest rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 backdrop-blur-md">
-          🌱 AI-Powered Instagram Automation
-        </div>
-        <h1 className="text-6xl md:text-[6rem] font-black tracking-tighter leading-[0.95] mb-10">
-          Automate DMs. <br />
-          <span className="bg-gradient-to-r from-[#00ff88] via-[#10b981] to-[#34d399] bg-clip-text text-transparent filter drop-shadow-[0_0_15px_rgba(0,255,136,0.2)]">
-            Grow 24/7.
-          </span>
-        </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-12 font-medium">
-          ReplyAstra handles your comments and DMs instantly, capturing leads while you sleep.
+        <h2 className="mt-6 text-5xl font-bold leading-tight">
+          Fresh approach to <br />
+          <span className="text-green-600">DM Automation.</span>
+        </h2>
+
+        <p className="mt-6 max-w-2xl mx-auto text-lg text-slate-600">
+          Automate replies, capture leads, and manage conversations
+          with a fast, reliable and scalable system.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-6">
-          <Link href="/signup" className="px-12 py-5 bg-white text-black font-black rounded-2xl text-lg hover:scale-105 transition-all flex items-center justify-center">
-            Start Free Trial <ArrowRight className="ml-2" />
-          </Link>
-        </div>
 
-        {/* MOCKUP PREVIEW */}
-        <div className="mt-24 max-w-5xl mx-auto relative group">
-          <div className="absolute -inset-1 bg-[#00ff88]/20 rounded-[3rem] blur-2xl group-hover:opacity-40 transition opacity-20"></div>
-          <img src="https://picsum.photos/1200/700" alt="Dashboard" className="relative rounded-[2.5rem] border border-white/10 shadow-2xl grayscale-[0.5] hover:grayscale-0 transition duration-700" />
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section id="features" className="py-32 px-6 max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-20">Fresh Features</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { icon: <MessageSquare className="text-emerald-400" />, title: "AI DM Replies", desc: "Contextual AI that talks just like you." },
-            { icon: <Target className="text-emerald-400" />, title: "Lead Gen", desc: "Auto-export interested users to your list." },
-            { icon: <Zap className="text-emerald-400" />, title: "Comment Automation", desc: "Instantly DM anyone who comments your keyword." }
-          ].map((feature, i) => (
-            <div key={i} className="p-10 rounded-[2.5rem] bg-white/[0.03] border border-white/10 backdrop-blur-xl hover:bg-white/[0.06] transition-all group">
-              <div className="mb-6 group-hover:scale-110 transition-transform">{feature.icon}</div>
-              <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-              <p className="text-gray-500 leading-relaxed">{feature.desc}</p>
-            </div>
-          ))}
+        <div className="mt-10 flex justify-center gap-4">
+          <a
+            href="/signup"
+            className="rounded-full bg-black px-8 py-4 text-white font-medium hover:bg-slate-900"
+          >
+            Start Free Now
+          </a>
+          <a
+            href="#features"
+            className="rounded-full border border-slate-300 px-8 py-4 font-medium text-slate-700 hover:bg-white"
+          >
+            Explore Features
+          </a>
         </div>
       </section>
 
-      {/* PRICING (Windows Pop Style) */}
-      <section id="pricing" className="py-32 px-6">
-        <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-          <div className="p-12 rounded-[3rem] bg-white/[0.02] border border-white/10 backdrop-blur-xl">
-            <h3 className="text-2xl font-bold mb-2">Pro Plan</h3>
-            <div className="text-5xl font-black mb-6 text-emerald-400">₹299<span className="text-lg text-gray-500">/mo</span></div>
-            <ul className="space-y-4 mb-10 text-gray-400">
-              <li className="flex items-center gap-2 font-medium"> <Check size={18} className="text-emerald-400"/> AI Responses</li>
-              <li className="flex items-center gap-2 font-medium"> <Check size={18} className="text-emerald-400"/> Unlimited Keywords</li>
-            </ul>
-            <Link href="/signup" className="block w-full text-center py-4 bg-white text-black font-bold rounded-2xl hover:bg-emerald-400 transition-colors">Start Trial</Link>
+      {/* MINI FEATURES */}
+      <section className="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pb-28">
+        {[
+          ["Natural Flow", "Smooth automated conversations"],
+          ["Smart Logic", "Rule based intelligent replies"],
+          ["Privacy First", "Secure and compliant system"],
+          ["Deep Insights", "Track performance in real time"],
+        ].map(([title, desc]) => (
+          <div
+            key={title}
+            className="rounded-2xl bg-white/80 backdrop-blur border border-slate-200 p-6 shadow-sm"
+          >
+            <h3 className="font-semibold">{title}</h3>
+            <p className="mt-2 text-sm text-slate-600">{desc}</p>
           </div>
-          {/* Add more pricing cards as needed */}
+        ))}
+      </section>
+
+      {/* FEATURES GRID */}
+      <section id="features" className="bg-white py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <h3 className="text-3xl font-bold text-center">
+            Everything you need to scale
+          </h3>
+          <p className="mt-3 text-center text-slate-600">
+            Powerful automation tools built for growth
+          </p>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              ["AI DM Responses", "Automatic replies based on intent"],
+              ["Lead Generation", "Capture and export leads instantly"],
+              ["Comment to DM", "Auto DM users from comments"],
+              ["Safe & Approved", "Uses official Instagram APIs"],
+              ["Analytics Dashboard", "Monitor conversations & growth"],
+              ["Multi Account Support", "Manage multiple brands easily"],
+            ].map(([title, desc]) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-slate-200 p-8 hover:shadow-md transition"
+              >
+                <h4 className="font-semibold">{title}</h4>
+                <p className="mt-2 text-sm text-slate-600">{desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* INQUIRY FORM */}
-      <section className="py-32 px-6 max-w-4xl mx-auto">
-        <div className="bg-white/[0.03] p-12 rounded-[3rem] border border-white/10 backdrop-blur-2xl">
-          <h2 className="text-3xl font-bold mb-8">Get in touch</h2>
-          <form onSubmit={handleSubmitInquiry} className="space-y-6">
-            <input 
-              type="text" placeholder="Name" 
-              className="w-full bg-white/[0.05] border border-white/10 p-4 rounded-2xl focus:border-emerald-400 outline-none"
-              onChange={(e) => setInquiryData({...inquiryData, name: e.target.value})}
-            />
-            <input 
-              type="email" placeholder="Email" 
-              className="w-full bg-white/[0.05] border border-white/10 p-4 rounded-2xl focus:border-emerald-400 outline-none"
-              onChange={(e) => setInquiryData({...inquiryData, email: e.target.value})}
-            />
-            <textarea 
-              rows={4} placeholder="Message" 
-              className="w-full bg-white/[0.05] border border-white/10 p-4 rounded-2xl focus:border-emerald-400 outline-none"
-              onChange={(e) => setInquiryData({...inquiryData, message: e.target.value})}
-            ></textarea>
-            <button className="w-full bg-[#00ff88] text-black font-black py-4 rounded-2xl shadow-xl shadow-emerald-600/20 active:scale-95 transition-all">
-              {loading ? 'Sending...' : 'Send Message'}
-            </button>
-          </form>
+      {/* PRICING */}
+      <section id="pricing" className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <h3 className="text-3xl font-bold text-center">Simple Pricing</h3>
+          <p className="mt-3 text-center text-slate-600">
+            Choose a plan that fits your business
+          </p>
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* FREE */}
+            <div className="rounded-2xl bg-white p-8 border">
+              <h4 className="font-semibold">Free</h4>
+              <p className="mt-2 text-3xl font-bold">₹0</p>
+              <ul className="mt-6 space-y-2 text-sm text-slate-600">
+                <li>Limited automation</li>
+                <li>Basic features</li>
+                <li>1 Instagram account</li>
+              </ul>
+              <a href="/signup" className="block mt-6 text-center rounded-full border px-4 py-2">
+                Get Started
+              </a>
+            </div>
+
+            {/* PRO */}
+            <div className="rounded-2xl bg-white p-8 border-2 border-green-600 shadow-lg">
+              <h4 className="font-semibold">Pro</h4>
+              <p className="mt-2 text-3xl font-bold">₹299 / month</p>
+              <ul className="mt-6 space-y-2 text-sm text-slate-600">
+                <li>Advanced automation</li>
+                <li>AI replies</li>
+                <li>Analytics dashboard</li>
+                <li>Priority support</li>
+              </ul>
+              <a
+                href="/signup"
+                className="block mt-6 text-center rounded-full bg-green-600 text-white px-4 py-2 hover:bg-green-700"
+              >
+                Start Free Trial
+              </a>
+            </div>
+
+            {/* BUSINESS */}
+            <div className="rounded-2xl bg-white p-8 border">
+              <h4 className="font-semibold">Business</h4>
+              <p className="mt-2 text-3xl font-bold">₹599 / month</p>
+              <ul className="mt-6 space-y-2 text-sm text-slate-600">
+                <li>Unlimited automation</li>
+                <li>Multiple accounts</li>
+                <li>Team access</li>
+                <li>Premium support</li>
+              </ul>
+              <a href="#contact" className="block mt-6 text-center rounded-full border px-4 py-2">
+                Contact Sales
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
-    </div>
+      {/* FOOTER */}
+      <footer className="bg-slate-900 text-slate-400 py-16">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h5 className="text-white font-semibold">ReplyAstra</h5>
+            <p className="mt-3 text-sm">
+              AI powered DM automation platform.
+            </p>
+          </div>
+
+          <div>
+            <h6 className="text-white font-semibold">Product</h6>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>Features</li>
+              <li>Pricing</li>
+              <li>API</li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 className="text-white font-semibold">Company</h6>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>About</li>
+              <li>Blog</li>
+              <li>Legal</li>
+            </ul>
+          </div>
+
+          <div>
+            <h6 className="text-white font-semibold">Support</h6>
+            <ul className="mt-3 space-y-2 text-sm">
+              <li>Help Center</li>
+              <li>Contact</li>
+            </ul>
+          </div>
+        </div>
+
+        <p className="mt-10 text-center text-xs">
+          © 2026 ReplyAstra. All rights reserved.
+        </p>
+      </footer>
+    </main>
   );
 }
