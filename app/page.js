@@ -2,70 +2,65 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans">
-      {/* Background Glow */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-blue-600/10 blur-[120px] -z-10"></div>
+    <div className="min-h-screen bg-[#f2f2f7] dark:bg-[#000] text-black dark:text-white selection:bg-green-500/30 overflow-hidden">
+      {/* iOS Style Background Blobs */}
+      <div className="fixed -top-[10%] -left-[10%] w-[50%] h-[50%] bg-green-400/20 blur-[120px] rounded-full animate-pulse"></div>
+      <div className="fixed top-[40%] -right-[10%] w-[40%] h-[40%] bg-emerald-500/10 blur-[100px] rounded-full"></div>
 
-      {/* Navigation */}
-      <nav className="flex items-center justify-between px-10 py-8 max-w-7xl mx-auto">
-        <div className="text-2xl font-black tracking-widest text-white">
-          REPLY<span className="text-blue-500">ASTRA</span>
+      {/* iOS 26 Blur Header */}
+      <nav className="sticky top-4 z-50 max-w-4xl mx-auto px-6 py-3 mx-4 md:mx-auto bg-white/60 dark:bg-black/60 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-[2.5rem] flex items-center justify-between shadow-2xl shadow-black/5">
+        <div className="text-xl font-bold tracking-tight px-2">
+          Reply<span className="text-emerald-600">Astra</span>
         </div>
-        <div className="hidden md:flex gap-10 text-sm font-medium text-gray-400">
-          <Link href="#features" className="hover:text-white transition">Features</Link>
-          <Link href="#pricing" className="hover:text-white transition">Pricing</Link>
-          <Link href="/login" className="hover:text-white transition">Login</Link>
+        <div className="flex items-center gap-6">
+          <Link href="/login" className="text-sm font-semibold opacity-70 hover:opacity-100 transition">Login</Link>
+          <Link href="/signup" className="bg-emerald-600 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-emerald-500/30 hover:scale-105 transition-all">
+            Get Started
+          </Link>
         </div>
-        <Link href="/signup" className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-blue-500 hover:text-white transition-all duration-300 shadow-lg shadow-white/5">
-          Get Started
-        </Link>
       </nav>
 
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center text-center pt-28 px-6">
-        <div className="border border-blue-500/30 bg-blue-500/5 px-4 py-1 rounded-full text-xs font-bold text-blue-400 mb-8 tracking-widest uppercase">
-          Next Gen Automation
+      <main className="max-w-5xl mx-auto pt-24 pb-20 px-8 text-center relative z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 text-xs font-bold uppercase tracking-widest rounded-full bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/50">
+          🌱 Intelligent Instagram Growth
         </div>
         
-        <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-tight mb-8">
-          Automate DMs. <br />
-          <span className="bg-gradient-to-r from-blue-400 to-indigo-600 bg-clip-text text-transparent">
-            Grow Faster.
+        <h1 className="text-6xl md:text-[5.5rem] font-black tracking-tight leading-[1.1] mb-8">
+          Fresh approach to <br />
+          <span className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-400 bg-clip-text text-transparent">
+            DM Automation.
           </span>
         </h1>
 
-        <p className="max-w-2xl text-gray-400 text-lg md:text-xl mb-12 leading-relaxed">
-          Scale your Instagram engagement without lifting a finger. ReplyAstra handles your DMs while you focus on creating.
+        <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
+          ReplyAstra brings the elegance of iOS 26 to your social media workflow. Simple, powerful, and natural.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-5 mb-24">
-          <Link href="/signup" className="px-10 py-4 bg-blue-600 rounded-2xl font-bold text-lg hover:bg-blue-700 transition shadow-xl shadow-blue-600/20">
-            Start Free Trial
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <Link href="/signup" className="w-full sm:w-auto px-10 py-5 bg-black dark:bg-white text-white dark:text-black font-bold rounded-[2rem] text-lg shadow-2xl hover:scale-[1.02] transition">
+            Start Free Now
           </Link>
-          <button className="px-10 py-4 bg-zinc-900 border border-zinc-800 rounded-2xl font-bold text-lg hover:bg-zinc-800 transition">
-            See Features
+          <button className="w-full sm:w-auto px-10 py-5 bg-white/40 dark:bg-white/10 backdrop-blur-md border border-white/20 dark:border-white/10 font-bold rounded-[2rem] text-lg hover:bg-white/60 dark:hover:bg-white/20 transition">
+            Explore Features
           </button>
         </div>
 
-        {/* Floating Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto pb-20">
-          <div className="p-8 bg-zinc-900/50 border border-zinc-800 rounded-3xl backdrop-blur-md text-left">
-            <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-blue-500 mb-6">⚡</div>
-            <h3 className="text-xl font-bold mb-3">Instant Reply</h3>
-            <p className="text-gray-400 text-sm">Never miss a lead. Respond to every DM in milliseconds.</p>
-          </div>
-          <div className="p-8 bg-zinc-900/50 border border-zinc-800 rounded-3xl backdrop-blur-md text-left">
-            <div className="w-12 h-12 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-500 mb-6">🎯</div>
-            <h3 className="text-xl font-bold mb-3">Smart Keywords</h3>
-            <p className="text-gray-400 text-sm">Set custom triggers for specific words or phrases.</p>
-          </div>
-          <div className="p-8 bg-zinc-900/50 border border-zinc-800 rounded-3xl backdrop-blur-md text-left">
-            <div className="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center text-purple-500 mb-6">📈</div>
-            <h3 className="text-xl font-bold mb-3">Growth Analytics</h3>
-            <p className="text-gray-400 text-sm">Track how many followers you convert into customers.</p>
-          </div>
+        {/* Feature Grid - iOS App Icon Style */}
+        <div className="mt-28 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { icon: '🍀', label: 'Natural Flow' },
+            { icon: '🧩', label: 'Smart Logic' },
+            { icon: '🛡️', label: 'Privacy First' },
+            { icon: '📊', label: 'Deep Insights' }
+          ].map((item, idx) => (
+            <div key={idx} className="p-6 bg-white/40 dark:bg-white/5 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-[2.5rem] flex flex-col items-center gap-3 hover:translate-y-[-5px] transition-all">
+              <div className="text-4xl mb-2">{item.icon}</div>
+              <span className="font-bold text-sm tracking-tight">{item.label}</span>
+            </div>
+          ))}
         </div>
-      </section>
+      </main>
     </div>
   );
 }
