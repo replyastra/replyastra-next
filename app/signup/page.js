@@ -8,12 +8,10 @@ export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const handleSignup = async () => {
     setError("");
     setLoading(true);
 
@@ -24,74 +22,57 @@ export default function SignupPage() {
 
     setLoading(false);
 
-    if (error) setError(error.message);
-    else {
-      alert("Check your email to confirm your account.");
-      router.push("/login");
+    if (error) {
+      setError(error.message);
+      return;
     }
+
+    // Email confirmation OFF → redirect immediately
+    router.push("/login");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
+      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl">
 
-        <h1 className="text-3xl font-extrabold text-center text-purple-600">
-          ReplyAstra
+        <h1 className="text-3xl font-extrabold text-purple-600 text-center mb-6">
+          Create ReplyAstra Account
         </h1>
-        <p className="text-center text-gray-500 mb-6">
-          Create your account
-        </p>
 
-        <form onSubmit={handleSignup} className="space-y-4">
+        <input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
+        />
 
-          {/* EMAIL */}
-          <input
-            type="email"
-            placeholder="Email address"
-            className="w-full px-4 py-3 border rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
+        />
 
-          {/* PASSWORD */}
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password (min 6 characters)"
-              className="w-full px-4 py-3 border rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          </div>
+        <button
+          onClick={handleSignup}
+          disabled={loading}
+          className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+        >
+          {loading ? "Creating..." : "Sign Up"}
+        </button>
 
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
-          >
-            {loading ? "Creating account..." : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-600 mt-5">
+        <p className="text-sm text-center mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-purple-600 font-semibold hover:underline">
+          <span
+            className="text-purple-600 cursor-pointer font-semibold"
+            onClick={() => router.push("/login")}
+          >
             Login
-          </a>
+          </span>
         </p>
       </div>
     </div>
