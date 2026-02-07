@@ -1,77 +1,63 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import { useState } from "react";
-import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function SignupPage() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = async () => {
+  async function handleSignup() {
     setError("");
+    setLoading(true);
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
     });
 
+    setLoading(false);
+
     if (error) {
       setError(error.message);
-      return;
+    } else {
+      router.push("/login");
     }
-
-    router.push("/login");
-  };
+  }
 
   return (
-    <div style={page}>
-      <div style={card}>
-        <h1 style={title}>ReplyAstra</h1>
-        <p style={subtitle}>Create your account</p>
+    <div className="auth-container">
+      <h1>ReplyAstra</h1>
+      <h2>Create Account</h2>
 
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={input}
-        />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
 
-        <div style={passwordWrap}>
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ ...input, marginBottom: 0 }}
-          />
-          <span
-            style={eye}
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </span>
-        </div>
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-        {error && <p style={errorText}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
-        <button style={btn} onClick={handleSignup}>
-          Create account
-        </button>
+      <button onClick={handleSignup} disabled={loading}>
+        {loading ? "Creating..." : "Sign Up"}
+      </button>
 
-        <p style={switchText}>
-          Already have an account?{" "}
-          <span style={link} onClick={() => router.push("/login")}>
-            Login
-          </span>
-        </p>
-      </div>
+      <p className="link" onClick={() => router.push("/login")}>
+        Already have an account? Login
+      </p>
     </div>
   );
 }
