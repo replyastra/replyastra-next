@@ -1,19 +1,17 @@
 "use client";
 
-export const dynamic = "force-dynamic";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
-import { useRouter } from "next/navigation";
-
-export default function LoginPage() { ... }
+export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setError("");
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -23,152 +21,53 @@ export default function LoginPage() { ... }
 
     if (error) {
       setError(error.message);
-      return;
+    } else {
+      router.push("/dashboard");
     }
-
-    router.push("/dashboard");
   };
 
   return (
-    <div style={page}>
-      <div style={card}>
-        <h1 style={title}>ReplyAstra</h1>
-        <p style={subtitle}>Login to your account</p>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+      <form
+        onSubmit={handleLogin}
+        className="w-full max-w-md bg-zinc-900 p-8 rounded-xl"
+      >
+        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
+
+        {error && <p className="text-red-500 mb-3">{error}</p>}
 
         <input
           type="email"
-          placeholder="Email address"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={input}
+          className="w-full p-3 mb-4 rounded bg-zinc-800 text-white"
+          required
         />
 
-        <div style={passwordWrap}>
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ ...input, marginBottom: 0 }}
-          />
-          <span
-            style={eye}
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </span>
-        </div>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-3 mb-4 rounded bg-zinc-800 text-white"
+          required
+        />
 
-        <p
-          style={forgot}
-          onClick={() => router.push("/forgot-password")}
+        <button
+          type="submit"
+          className="w-full bg-indigo-600 hover:bg-indigo-700 p-3 rounded font-semibold"
         >
-          Forgot password?
-        </p>
-
-        {error && <p style={errorText}>{error}</p>}
-
-        <button style={btn} onClick={handleLogin}>
           Login
         </button>
 
-        <p style={switchText}>
+        <p className="mt-4 text-center text-sm">
           Don’t have an account?{" "}
-          <span style={link} onClick={() => router.push("/signup")}>
+          <a href="/signup" className="text-indigo-400">
             Sign up
-          </span>
+          </a>
         </p>
-      </div>
+      </form>
     </div>
   );
 }
-
-/* ---------- STYLES ---------- */
-
-const page = {
-  minHeight: "100vh",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background: "linear-gradient(135deg,#667eea,#764ba2)",
-};
-
-const card = {
-  width: 380,
-  background: "#fff",
-  padding: 32,
-  borderRadius: 14,
-  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-};
-
-const title = {
-  textAlign: "center",
-  fontSize: 28,
-  fontWeight: "bold",
-  color: "#4f46e5",
-};
-
-const subtitle = {
-  textAlign: "center",
-  marginBottom: 24,
-  color: "#6b7280",
-};
-
-const input = {
-  width: "100%",
-  padding: "12px 14px",
-  marginBottom: 16,
-  borderRadius: 8,
-  border: "1px solid #d1d5db",
-  fontSize: 15,
-  color: "#111827",
-};
-
-const passwordWrap = {
-  position: "relative",
-  marginBottom: 10,
-};
-
-const eye = {
-  position: "absolute",
-  right: 12,
-  top: 12,
-  cursor: "pointer",
-};
-
-const forgot = {
-  textAlign: "right",
-  fontSize: 13,
-  color: "#4f46e5",
-  cursor: "pointer",
-  marginBottom: 16,
-};
-
-const btn = {
-  width: "100%",
-  padding: 12,
-  background: "#4f46e5",
-  color: "#fff",
-  border: "none",
-  borderRadius: 8,
-  fontSize: 16,
-  cursor: "pointer",
-};
-
-const switchText = {
-  marginTop: 18,
-  textAlign: "center",
-  fontSize: 14,
-};
-
-const link = {
-  color: "#4f46e5",
-  cursor: "pointer",
-  fontWeight: "bold",
-};
-
-const errorText = {
-  color: "red",
-  fontSize: 13,
-  marginBottom: 10,
-};
