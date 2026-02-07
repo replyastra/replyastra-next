@@ -2,15 +2,13 @@ import "./globals.css";
 
 export const metadata = {
   title: "ReplyAstra",
-  description: "AI-powered Instagram DM automation",
+  description: "AI powered DM automation",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
