@@ -8,69 +8,64 @@ export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const handleSignup = async () => {
     setError("");
-    setLoading(true);
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
     });
 
-    setLoading(false);
-
     if (error) {
       setError(error.message);
       return;
     }
 
-    // Email confirmation OFF → redirect immediately
     router.push("/login");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
-      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl">
-
-        <h1 className="text-3xl font-extrabold text-purple-600 text-center mb-6">
-          Create ReplyAstra Account
-        </h1>
+    <div style={page}>
+      <div style={card}>
+        <h1 style={title}>ReplyAstra</h1>
+        <p style={subtitle}>Create your account</p>
 
         <input
           type="email"
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
+          style={input}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
-        />
+        <div style={passwordWrap}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ ...input, marginBottom: 0 }}
+          />
+          <span
+            style={eye}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </span>
+        </div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        {error && <p style={errorText}>{error}</p>}
 
-        <button
-          onClick={handleSignup}
-          disabled={loading}
-          className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
-        >
-          {loading ? "Creating..." : "Sign Up"}
+        <button style={btn} onClick={handleSignup}>
+          Create account
         </button>
 
-        <p className="text-sm text-center mt-4">
+        <p style={switchText}>
           Already have an account?{" "}
-          <span
-            className="text-purple-600 cursor-pointer font-semibold"
-            onClick={() => router.push("/login")}
-          >
+          <span style={link} onClick={() => router.push("/login")}>
             Login
           </span>
         </p>
