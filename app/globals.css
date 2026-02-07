@@ -71,7 +71,7 @@ body {
 
 .hero p {
   color: #64748b;
-  max-width: 420px;
+  max-width: 520px;
   margin: 0 auto 24px;
   font-size: 15px;
 }
@@ -81,6 +81,7 @@ body {
   display: flex;
   gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn-dark {
@@ -114,4 +115,14 @@ body {
   border-radius: 20px;
   text-align: center;
   font-weight: 500;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .hero h1 {
+    font-size: 56px;
+  }
+  .features {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
