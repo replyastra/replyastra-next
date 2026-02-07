@@ -1,23 +1,24 @@
-"use client";
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
-import { useRouter } from "next/navigation";
-
 export default function Dashboard() {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) router.push("/login");
-      else setUser(data.user);
-    });
-  }, []);
-
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Dashboard</h1>
-      {user && <p>Welcome, {user.email}</p>}
+    <div className="min-h-screen flex">
+      <aside className="w-64 bg-black/20 p-6">
+        <h2 className="text-xl font-bold mb-6">ReplyAstra</h2>
+        <ul className="space-y-4">
+          <li>Dashboard</li>
+          <li>Automations</li>
+          <li>Analytics</li>
+          <li>Logout</li>
+        </ul>
+      </aside>
+
+      <main className="flex-1 p-10">
+        <h1 className="text-3xl font-bold mb-4">
+          Welcome 👋
+        </h1>
+        <p className="text-white/80">
+          Your DM automation dashboard will appear here.
+        </p>
+      </main>
     </div>
   );
 }
