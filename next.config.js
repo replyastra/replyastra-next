@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone",
-  webpack: (config) => {
-    config.cache = false; // 🔥 IMPORTANT
-    return config;
+  output: "export",
+  images: {
+    unoptimized: true,
   },
 };
 
