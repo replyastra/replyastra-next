@@ -8,93 +8,67 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     setError("");
-    setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setLoading(false);
-    if (error) setError(error.message);
-    else router.push("/dashboard");
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    router.push("/dashboard");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
+      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl">
 
-        <h1 className="text-3xl font-extrabold text-center text-purple-600">
-          ReplyAstra
+        <h1 className="text-3xl font-extrabold text-purple-600 text-center mb-6">
+          Login to ReplyAstra
         </h1>
-        <p className="text-center text-gray-500 mb-6">
-          Login to your account
+
+        <input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
+        />
+
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
+        <button
+          onClick={handleLogin}
+          className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+        >
+          Login
+        </button>
+
+        <p className="text-sm text-center mt-4">
+          New user?{" "}
+          <span
+            className="text-purple-600 cursor-pointer font-semibold"
+            onClick={() => router.push("/signup")}
+          >
+            Create account
+          </span>
         </p>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-
-          {/* EMAIL */}
-          <input
-            type="email"
-            placeholder="Email address"
-            className="w-full px-4 py-3 border rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          {/* PASSWORD */}
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="w-full px-4 py-3 border rounded-lg bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          </div>
-
-          {error && (
-            <p className="text-red-500 text-sm text-center">{error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        <div className="text-center mt-5 space-y-2">
-          <a href="/forgot-password" className="text-sm text-purple-600 hover:underline">
-            Forgot password?
-          </a>
-
-          <p className="text-sm text-gray-600">
-            Don’t have an account?{" "}
-            <a href="/signup" className="text-purple-600 font-semibold hover:underline">
-              Sign up
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );
