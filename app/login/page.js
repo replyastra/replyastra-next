@@ -8,6 +8,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
@@ -27,49 +28,145 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
-      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl">
-
-        <h1 className="text-3xl font-extrabold text-purple-600 text-center mb-6">
-          Login to ReplyAstra
-        </h1>
+    <div style={page}>
+      <div style={card}>
+        <h1 style={title}>ReplyAstra</h1>
+        <p style={subtitle}>Login to your account</p>
 
         <input
           type="email"
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
+          style={input}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 px-4 py-3 border rounded-lg text-gray-900"
-        />
+        <div style={passwordWrap}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ ...input, marginBottom: 0 }}
+          />
+          <span
+            style={eye}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </span>
+        </div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-
-        <button
-          onClick={handleLogin}
-          className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition"
+        <p
+          style={forgot}
+          onClick={() => router.push("/forgot-password")}
         >
+          Forgot password?
+        </p>
+
+        {error && <p style={errorText}>{error}</p>}
+
+        <button style={btn} onClick={handleLogin}>
           Login
         </button>
 
-        <p className="text-sm text-center mt-4">
-          New user?{" "}
-          <span
-            className="text-purple-600 cursor-pointer font-semibold"
-            onClick={() => router.push("/signup")}
-          >
-            Create account
+        <p style={switchText}>
+          Don’t have an account?{" "}
+          <span style={link} onClick={() => router.push("/signup")}>
+            Sign up
           </span>
         </p>
-
       </div>
     </div>
   );
 }
+
+/* ---------- STYLES ---------- */
+
+const page = {
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "linear-gradient(135deg,#667eea,#764ba2)",
+};
+
+const card = {
+  width: 380,
+  background: "#fff",
+  padding: 32,
+  borderRadius: 14,
+  boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+};
+
+const title = {
+  textAlign: "center",
+  fontSize: 28,
+  fontWeight: "bold",
+  color: "#4f46e5",
+};
+
+const subtitle = {
+  textAlign: "center",
+  marginBottom: 24,
+  color: "#6b7280",
+};
+
+const input = {
+  width: "100%",
+  padding: "12px 14px",
+  marginBottom: 16,
+  borderRadius: 8,
+  border: "1px solid #d1d5db",
+  fontSize: 15,
+  color: "#111827",
+};
+
+const passwordWrap = {
+  position: "relative",
+  marginBottom: 10,
+};
+
+const eye = {
+  position: "absolute",
+  right: 12,
+  top: 12,
+  cursor: "pointer",
+};
+
+const forgot = {
+  textAlign: "right",
+  fontSize: 13,
+  color: "#4f46e5",
+  cursor: "pointer",
+  marginBottom: 16,
+};
+
+const btn = {
+  width: "100%",
+  padding: 12,
+  background: "#4f46e5",
+  color: "#fff",
+  border: "none",
+  borderRadius: 8,
+  fontSize: 16,
+  cursor: "pointer",
+};
+
+const switchText = {
+  marginTop: 18,
+  textAlign: "center",
+  fontSize: 14,
+};
+
+const link = {
+  color: "#4f46e5",
+  cursor: "pointer",
+  fontWeight: "bold",
+};
+
+const errorText = {
+  color: "red",
+  fontSize: 13,
+  marginBottom: 10,
+};
