@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
-import { ArrowRight, Zap, Shield, BarChart3, MessageSquare, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+
 
 export default function Page() {
-  const [menuOpen, setMenuOpen] = useState(false);
+ const [open, setOpen] = useState(false);
+
 
   return (
 
@@ -23,41 +25,44 @@ export default function Page() {
       </span>
     </div>
 
-    {/* DESKTOP LINKS */}
-    <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="/login">Login</a>
-      <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full">
-        Get Started
-      </a>
-    </div>
+    {/* Desktop Menu */}
+<div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
+  <a href="#features">Features</a>
+  <a href="#pricing">Pricing</a>
+  <a href="/login">Login</a>
+  <a
+    href="/signup"
+    className="bg-emerald-600 text-white px-5 py-2 rounded-full"
+  >
+    Get Started
+  </a>
+</div>
 
-    {/* MOBILE HAMBURGER */}
-    <button
-      className="md:hidden"
-      onClick={() => setMenuOpen(!menuOpen)}
-    >
-      {menuOpen ? <X size={28} /> : <Menu size={28} />}
-    </button>
-  </div>
+{/* Mobile Hamburger */}
+<button
+  onClick={() => setOpen(!open)}
+  className="md:hidden text-gray-800"
+>
+  {open ? <X size={28} /> : <Menu size={28} />}
+</button>
 
-  {/* MOBILE MENU */}
-  {menuOpen && (
-    <div className="md:hidden bg-white border-t border-gray-100 px-6 py-6 space-y-4 font-semibold">
-      <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
-      <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
-      <a href="/login" onClick={() => setMenuOpen(false)}>Login</a>
+{open && (
+  <div className="md:hidden bg-white shadow-lg border-b">
+    <div className="flex flex-col px-6 py-4 gap-4 font-semibold text-gray-700">
+      <a onClick={() => setOpen(false)} href="#features">Features</a>
+      <a onClick={() => setOpen(false)} href="#pricing">Pricing</a>
+      <a onClick={() => setOpen(false)} href="/login">Login</a>
       <a
+        onClick={() => setOpen(false)}
         href="/signup"
-        onClick={() => setMenuOpen(false)}
-        className="block text-center bg-emerald-600 text-white py-3 rounded-full"
+        className="bg-emerald-600 text-white px-4 py-2 rounded-full text-center"
       >
         Get Started
       </a>
     </div>
-  )}
-</nav>
+  </div>
+)}
+
 
 
       {/* HERO */}
