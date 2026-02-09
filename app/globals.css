@@ -2,24 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* GLOBAL STYLES */
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #e6f7f0, #f6f7fb);
-  color: #0f172a;
-  overflow-x: hidden;
-}
-
+/* This removes all the "middle-floating" gaps from your screenshot */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* LANDING PAGE LAYOUT */
-.landing {
-  min-height: 100vh;
-  padding: 16px;
-  max-width: 100%;
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: #f8fafc; /* Clean light background like the studio site */
 }
 
 /* NAVBAR */
