@@ -42,15 +42,18 @@ export default function Page() {
             </a>
           </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <button onClick={() => setOpen(!open)} className="md:hidden">
+          {/* MOBILE HAMBURGER */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden text-gray-800"
+          >
             {open ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
         {/* MOBILE MENU */}
         {open && (
-          <div className="md:hidden bg-white border-t">
+          <div className="md:hidden bg-white shadow-lg border-b">
             <div className="flex flex-col px-6 py-4 gap-4 font-semibold text-gray-700">
               <a onClick={() => setOpen(false)} href="#features">Features</a>
               <a onClick={() => setOpen(false)} href="#pricing">Pricing</a>
@@ -69,60 +72,75 @@ export default function Page() {
 
       {/* HERO */}
       <section className="pt-40 pb-24 text-center px-6">
-        <h1 className="text-5xl md:text-6xl font-black text-gray-900">
-          Fresh approach to <br />
-          <span className="text-emerald-600">DM Automation.</span>
-        </h1>
-        <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
-          Intelligent Instagram DM automation built for real creators.
-        </p>
-        <div className="mt-10 flex justify-center gap-4">
-          <a href="/signup" className="btn-dark flex items-center gap-2">
-            Start Free Now <ArrowRight size={18} />
-          </a>
-          <a href="#features" className="btn-light">Explore Features</a>
-        </div>
-      </section>
+        <div className="max-w-4xl mx-auto">
+          <span className="pill">INTELLIGENT GROWTH</span>
 
-      {/* ✅ FEATURES SECTION (THIS WAS MISSING) */}
-      <section
-        id="features"
-        className="scroll-mt-32 pt-32 pb-24 bg-[#f0fdfa] px-6"
-      >
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl font-extrabold text-gray-900">
-            Designed for modern creators
-          </h2>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            Smart automation that helps creators manage conversations
-            without missing important messages.
+          <h1 className="mt-6 text-5xl md:text-6xl font-black text-gray-900 leading-tight">
+            Fresh approach to <br />
+            <span className="text-emerald-600">DM Automation.</span>
+          </h1>
+
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+            ReplyAstra brings intelligent automation to Instagram DMs —
+            helping creators reply faster and grow smarter.
           </p>
 
-          <div className="grid md:grid-cols-4 gap-6 mt-16">
-            <Feature icon={<MessageSquare />} title="Natural Flow" desc="Human-like replies that match your tone." />
-            <Feature icon={<Zap />} title="Smart Logic" desc="Triggers that automate common responses." />
-            <Feature icon={<Shield />} title="Secure Setup" desc="Meta-approved & compliant integrations." />
-            <Feature icon={<BarChart3 />} title="Clear Visibility" desc="Real-time analytics, no guesswork." />
+          <div className="buttons mt-10">
+            <a href="/signup" className="btn-dark flex items-center gap-2">
+              Start Free Now <ArrowRight size={18} />
+            </a>
+            <a href="#features" className="btn-light">
+              Explore Features
+            </a>
           </div>
         </div>
       </section>
 
-      {/* GROWTH */}
-      <section className="py-24 px-6">
+      {/* FEATURE PILLS */}
+      <section className="pb-24 px-6">
+        <div className="features">
+          <div className="feature flex flex-col items-center gap-2">
+            <Zap className="text-emerald-600" /> Natural Flow
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <MessageSquare className="text-emerald-600" /> Smart Logic
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <Shield className="text-emerald-600" /> Privacy First
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <BarChart3 className="text-emerald-600" /> Deep Insights
+          </div>
+        </div>
+      </section>
+
+      {/* GROWTH SECTION */}
+      <section className="py-24 px-6 bg-[#f0fdfa]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+
           <div>
-            <h2 className="text-4xl font-extrabold">
-              Watch your community <span className="text-emerald-600">thrive</span>
+            <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
+              REAL GROWTH
+            </span>
+
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
+              Watch your community <span className="text-emerald-600">thrive</span><br />
+              while you sleep.
             </h2>
-            <ul className="mt-6 space-y-3 font-semibold text-gray-700">
-              <li>✅ Instant DM replies</li>
+
+            <p className="text-gray-600 mb-6">
+              No fake dashboards. Just visible growth creators actually feel.
+            </p>
+
+            <ul className="space-y-3 font-semibold text-gray-700">
+              <li>✅ Instant reply to “price?” DMs</li>
               <li>✅ Auto-link delivery</li>
               <li>✅ Natural welcome flows</li>
             </ul>
           </div>
 
           <div className="relative bg-white rounded-3xl p-8 shadow-lg">
-            <div className="absolute -top-6 right-6 animate-float bg-gray-900 text-white px-4 py-2 rounded-xl text-sm">
+            <div className="absolute -top-6 right-6 animate-float bg-gray-900 text-white px-4 py-2 rounded-xl text-sm shadow-lg">
               ✨ Link sent! check your DM
             </div>
 
@@ -132,35 +150,68 @@ export default function Page() {
                 fill="none"
                 stroke="#10b981"
                 strokeWidth="4"
+                strokeLinecap="round"
                 className="animate-draw"
               />
             </svg>
+
+            <div className="flex justify-between text-sm text-gray-500 mt-4">
+              <span>Before</span>
+              <span className="font-bold text-emerald-600">After</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* PRICING */}
-      <section id="pricing" className="scroll-mt-32 pricing-section">
+      <section id="pricing" className="pricing-section">
         <h2>Choose your growth path</h2>
+        <p className="subtitle">Transparent pricing for real influence.</p>
+
+        <div className="pricing-grid">
+          <div className="pricing-card">
+            <h3>Free</h3>
+            <div className="price">₹0</div>
+            <ul>
+              <li>Limited automation</li>
+              <li>1 Instagram account</li>
+              <li>Basic analytics</li>
+            </ul>
+            <button className="pricing-btn outline">Get Started</button>
+          </div>
+
+          <div className="pricing-card popular">
+            <span className="popular-badge">Most Popular</span>
+            <h3>Starter</h3>
+            <div className="price">₹199</div>
+            <ul>
+              <li>Unlimited replies</li>
+              <li>Welcome flows</li>
+              <li>Email support</li>
+            </ul>
+            <button className="pricing-btn">Start Free Now</button>
+          </div>
+
+          <div className="pricing-card">
+            <h3>Pro</h3>
+            <div className="price">₹399</div>
+            <ul>
+              <li>Multiple accounts</li>
+              <li>Advanced AI replies</li>
+              <li>Priority support</li>
+            </ul>
+            <button className="pricing-btn outline">Start Free Now</button>
+          </div>
+        </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="py-12 text-center text-gray-500">
-        © 2026 ReplyAstra Platform
+      <footer className="footer">
+        <div className="footer-bottom">
+          © 2026 ReplyAstra Platform
+        </div>
       </footer>
 
     </main>
   );
-}
-
-function Feature({ icon, title, desc }) {
-  return (
-    <div className="bg-white rounded-3xl p-6 shadow-sm text-left">
-      <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 mb-4">
-        {icon}
-      </div>
-      <h3 className="font-bold text-lg">{title}</h3>
-      <p className="text-gray-600 mt-2">{desc}</p>
-    </div>
-  );
-}
+}  
