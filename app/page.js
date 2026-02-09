@@ -176,83 +176,115 @@ export default function Page() {
   </div>
 </section>
 
-     <div className="relative bg-white rounded-3xl p-10 shadow-lg overflow-hidden">
+    "use client";
+import React, { useState, useEffect } from 'react';
+import { MousePointer2 } from 'lucide-react';
 
-  {/* FLOATING REAL-TIME MESSAGE */}
-  <div className="absolute bottom-6 right-6 bg-gray-900 text-white px-5 py-3 rounded-2xl text-sm shadow-xl animate-float flex items-center gap-2">
-    <span className="text-emerald-400">▶</span>
-    <span>
-      <span className="block text-xs text-emerald-400">Real-time Reply</span>
-      “Link sent! check your DM ✨”
-    </span>
-  </div>
+export default function GraphSection() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [stats, setStats] = useState({ replies: 1240, leads: 85 });
 
-  {/* GRAPH HEADER */}
-  <div className="mb-6">
-    <p className="text-xs text-gray-400 uppercase tracking-wider">
-      Active Chats
-    </p>
-    <p className="text-2xl font-extrabold text-gray-900">+1,400%</p>
-  </div>
+  // Handle mouse movement for the interactive effect
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setMousePos({ x, y });
+    
+    // Subtly change numbers based on mouse position
+    setStats({
+      replies: 1240 + Math.floor(x * 20),
+      leads: 85 + Math.floor(y * 5)
+    });
+  };
 
-  {/* GRAPH */}
-  <svg viewBox="0 0 420 220" className="w-full h-56">
+  return (
+    <section className="py-24 px-6 bg-white overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <div 
+          onMouseMove={handleMouseMove}
+          className="relative bg-slate-900 rounded-[3rem] p-8 md:p-16 overflow-hidden shadow-2xl group cursor-none"
+        >
+          {/* Custom Cursor Dot */}
+          <div 
+            className="fixed pointer-events-none z-50 w-4 h-4 bg-emerald-400 rounded-full blur-[2px] transition-transform duration-75 ease-out hidden group-hover:block"
+            style={{ left: `${mousePos.x * 100}%`, top: `${mousePos.y * 100}%`, transform: 'translate(-50%, -50%)' }}
+          />
 
-    {/* GRADIENT */}
-    <defs>
-      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
-        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-      </linearGradient>
-    </defs>
+          <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+                Watch your growth <br />
+                <span className="text-emerald-400">in real-time.</span>
+              </h2>
+              <div className="flex gap-8">
+                <div>
+                  <p className="text-slate-400 font-bold uppercase tracking-wider text-xs mb-1">Total Replies</p>
+                  <p className="text-3xl font-black text-white tabular-nums">{stats.replies.toLocaleString()}</p>
+                </div>
+                <div className="w-px h-12 bg-slate-800" />
+                <div>
+                  <p className="text-slate-400 font-bold uppercase tracking-wider text-xs mb-1">Leads Captured</p>
+                  <p className="text-3xl font-black text-emerald-400 tabular-nums">{stats.leads}%</p>
+                </div>
+              </div>
+            </div>
 
-    {/* AREA */}
-    <path
-      d="
-        M20 180
-        C 80 160, 140 150, 200 120
-        C 260 90, 310 80, 380 40
-        L380 200
-        L20 200
-        Z
-      "
-      fill="url(#areaGradient)"
-    />
+            {/* THE GRAPH AREA */}
+            <div className="relative h-64 bg-slate-800/50 rounded-2xl border border-slate-700 p-6 overflow-hidden">
+              {/* Animated Background Lines */}
+              <svg className="absolute inset-0 w-full h-full opacity-20">
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+              </svg>
 
-    {/* LINE */}
-    <path
-      d="
-        M20 180
-        C 80 160, 140 150, 200 120
-        C 260 90, 310 80, 380 40
-      "
-      fill="none"
-      stroke="#10b981"
-      strokeWidth="4"
-      strokeLinecap="round"
-      className="animate-draw"
-    />
+              {/* THE GRAPH LINE - Moves with Mouse */}
+              <svg className="absolute inset-0 w-full h-full">
+                <path 
+                  d={`M0,100 Q${mousePos.x * 500},${150 - (mousePos.y * 50)} 600,80`} 
+                  fill="none" 
+                  stroke="#10b981" 
+                  strokeWidth="4" 
+                  className="transition-all duration-300 ease-out"
+                />
+              </svg>
 
-    {/* DOTTED INDICATOR */}
-    <line
-      x1="300"
-      y1="40"
-      x2="300"
-      y2="200"
-      stroke="#10b981"
-      strokeDasharray="5 6"
-      opacity="0.6"
-    />
+              {/* FLOATING PILL: "Link sent! check your DM ✨" */}
+              <div 
+                className="absolute bg-white shadow-xl px-4 py-2 rounded-full flex items-center gap-2 border border-emerald-100 transition-all duration-500 ease-out"
+                style={{ 
+                  left: `${20 + (mousePos.x * 10)}%`, 
+                  top: `${40 + (mousePos.y * 15)}%`,
+                  transform: `translateY(${Math.sin(Date.now() / 1000) * 5}px)` // Gentle floating
+                }}
+              >
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-sm font-bold text-slate-800 tracking-tight">
+                  Link sent! check your DM ✨
+                </span>
+              </div>
 
-    {/* POINT */}
-    <circle cx="300" cy="90" r="6" fill="#10b981" />
+              {/* REAL-TIME REPLY LABEL */}
+              <div className="absolute bottom-4 left-4 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-md">
+                <span className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">Real-time Reply</span>
+              </div>
+            </div>
+          </div>
 
-  </svg>
-
-  {/* AXIS LABEL */}
-  <p className="mt-4 text-xs text-gray-400">PRE-ASTRA → POST-ASTRA</p>
-
-</div>
+          {/* Background Glow that follows mouse */}
+          <div 
+            className="absolute inset-0 pointer-events-none opacity-30 transition-opacity duration-500 group-hover:opacity-50"
+            style={{ 
+              background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(16, 185, 129, 0.15) 0%, transparent 50%)` 
+            }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
 
       {/* PRICING */}
       <section id="pricing" className="pricing-section">
