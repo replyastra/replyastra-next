@@ -1,82 +1,180 @@
-import React from 'react';
-import { CheckCircle2, Zap, Shield, BarChart3, MessageSquare, ArrowRight } from 'lucide-react';
+import { ArrowRight, Zap, Shield, BarChart3, MessageSquare } from "lucide-react";
 
-export default function LandingPage() {
+export default function Page() {
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-sans">
+    <main className="min-h-screen bg-[#f8fafc] overflow-x-hidden">
       
-      {/* 1. FIXED NAVBAR (Matches Studio Site) */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 px-6 py-4 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg relative">
-              <span className="text-white font-bold text-xl">R</span>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white animate-pulse"></div>
+      {/* NAVBAR */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center">
+              R
             </div>
-            <span className="text-2xl font-bold tracking-tight">
+            <span className="text-xl font-extrabold">
               <span className="text-gray-900">Reply</span>
               <span className="text-emerald-600">Astra</span>
             </span>
           </div>
-          
-          <div className="flex items-center space-x-8">
-            <a href="#features" className="hidden md:block text-gray-600 font-semibold hover:text-emerald-600 transition-colors">Features</a>
-            <a href="#pricing" className="hidden md:block text-gray-600 font-semibold hover:text-emerald-600 transition-colors">Pricing</a>
-            <div className="flex items-center space-x-6">
-              {/* Added the Login button you mentioned was missing */}
-              <a href="/login" className="text-gray-700 font-bold hover:text-emerald-600">Login</a>
-              <button className="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-md">
-                Get Started
-              </button>
-            </div>
+
+          <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="/login">Login</a>
+            <a
+              href="/signup"
+              className="bg-emerald-600 text-white px-5 py-2 rounded-full font-bold"
+            >
+              Get Started
+            </a>
           </div>
         </div>
       </nav>
 
-      {/* 2. HERO SECTION (Aligned to top, no extra gaps) */}
-      <section className="pt-40 pb-20 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center space-x-2 bg-emerald-100 px-4 py-2 rounded-full mb-8">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-            <span className="text-emerald-800 text-xs font-black uppercase tracking-widest">New: AI-Powered Automation</span>
-          </div>
+      {/* HERO */}
+      <section className="pt-40 pb-24 text-center px-6">
+        <div className="max-w-4xl mx-auto">
+          <span className="pill">INTELLIGENT GROWTH</span>
 
-          <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-8 leading-[1.1]">
+          <h1 className="mt-6 text-5xl md:text-6xl font-black text-gray-900 leading-tight">
             Fresh approach to <br />
-            <span className="text-emerald-600 italic">DM Automation</span>
+            <span className="text-emerald-600">DM Automation.</span>
           </h1>
 
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12 leading-relaxed">
-            Automate your Instagram DMs with intelligent logic. Engage followers, capture leads, and close sales 24/7 with the most advanced automation tool.
+          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+            ReplyAstra brings intelligent automation to Instagram DMs —
+            helping creators reply faster and grow smarter.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="w-full sm:w-auto bg-gray-900 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-black hover:scale-105 transition-all shadow-xl flex items-center justify-center gap-2">
-              Start Free Trial <ArrowRight className="w-5 h-5" />
-            </button>
-            <button className="w-full sm:w-auto bg-emerald-700 text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-emerald-800 transition-all shadow-lg">
-              Watch Demo
-            </button>
+          <div className="buttons mt-10">
+            <a href="/signup" className="btn-dark flex items-center gap-2">
+              Start Free Now <ArrowRight size={18} />
+            </a>
+            <a href="#features" className="btn-light">
+              Explore Features
+            </a>
           </div>
         </div>
       </section>
 
-      {/* 3. FEATURE PILLS (Like the Studio Row) */}
+      {/* FEATURE PILLS */}
       <section className="pb-24 px-6">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: <Zap />, label: "Natural Flow" },
-            { icon: <Shield />, label: "Privacy First" },
-            { icon: <BarChart3 />, label: "Deep Insights" },
-            { icon: <MessageSquare />, label: "Smart Logic" }
-          ].map((item, i) => (
-            <div key={i} className="bg-white border border-gray-100 p-6 rounded-2xl flex flex-col items-center text-center shadow-sm hover:shadow-md transition-all">
-              <div className="text-emerald-600 mb-3">{item.icon}</div>
-              <span className="font-bold text-gray-800">{item.label}</span>
-            </div>
-          ))}
+        <div className="features">
+          <div className="feature flex flex-col items-center gap-2">
+            <Zap className="text-emerald-600" />
+            Natural Flow
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <MessageSquare className="text-emerald-600" />
+            Smart Logic
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <Shield className="text-emerald-600" />
+            Privacy First
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <BarChart3 className="text-emerald-600" />
+            Deep Insights
+          </div>
         </div>
       </section>
-    </div>
+
+      {/* FEATURES GRID */}
+      <section id="features" className="features-section">
+        <h2>Designed for modern creators</h2>
+
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">💬</div>
+            <h3>Natural Flow</h3>
+            <p>Replies that match your tone and keep conversations human.</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">⚙️</div>
+            <h3>Smart Logic</h3>
+            <p>Keyword & intent based automation that just works.</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🔒</div>
+            <h3>Secure Setup</h3>
+            <p>Meta-approved, safe and compliant integrations.</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">📊</div>
+            <h3>Clear Visibility</h3>
+            <p>Know exactly how many DMs are handled automatically.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="pricing" className="pricing-section">
+        <h2>Choose your growth path</h2>
+        <p className="subtitle">Transparent pricing for real influence.</p>
+
+        <div className="pricing-grid">
+          <div className="pricing-card">
+            <h3>Free</h3>
+            <div className="price">₹0</div>
+            <ul>
+              <li>Limited automation</li>
+              <li>1 Instagram account</li>
+              <li>Basic analytics</li>
+            </ul>
+            <button className="pricing-btn outline">Get Started</button>
+          </div>
+
+          <div className="pricing-card popular">
+            <span className="popular-badge">Most Popular</span>
+            <h3>Starter</h3>
+            <div className="price">₹199</div>
+            <ul>
+              <li>Unlimited keyword replies</li>
+              <li>Welcome & away messages</li>
+              <li>Email support</li>
+            </ul>
+            <button className="pricing-btn">Start Free Now</button>
+          </div>
+
+          <div className="pricing-card">
+            <h3>Pro</h3>
+            <div className="price">₹399</div>
+            <ul>
+              <li>Multiple Instagram accounts</li>
+              <li>Advanced AI replies</li>
+              <li>Priority support</li>
+            </ul>
+            <button className="pricing-btn outline">Start Free Now</button>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="flex justify-center px-6 mt-24">
+        <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-[40px] p-16 max-w-3xl w-full text-center shadow-2xl">
+          <h2 className="text-4xl font-black mb-4">Ready to grow?</h2>
+          <p className="mb-8">
+            Join the future of social interaction. No complexity. Just results.
+          </p>
+          <input
+            placeholder="Your Email"
+            className="w-full max-w-md mx-auto mb-4 px-6 py-4 rounded-full text-gray-900"
+          />
+          <button className="w-full max-w-md bg-white text-emerald-700 font-bold py-4 rounded-full">
+            START FREE NOW
+          </button>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footer-bottom">
+          © 2026 ReplyAstra. All rights reserved.
+        </div>
+      </footer>
+    </main>
   );
 }
