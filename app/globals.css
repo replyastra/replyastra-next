@@ -587,3 +587,17 @@ body {
     transform: scale(1);
   }
 }
+
+@keyframes grow {
+  from {
+    height: 0;
+  }
+  to {
+    height: 180px;
+  }
+}
+
+.animate-grow {
+  animation: grow 1.6s ease-out forwards;
+}
+
