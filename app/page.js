@@ -1,35 +1,64 @@
-import { ArrowRight, Zap, Shield, BarChart3, MessageSquare } from "lucide-react";
+"use client";
+import { useState } from "react";
+import { ArrowRight, Zap, Shield, BarChart3, MessageSquare, Menu, X } from "lucide-react";
 
 export default function Page() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
+
     <main className="min-h-screen bg-[#f8fafc] overflow-x-hidden">
       
-      {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center">
-              R
-            </div>
-            <span className="text-xl font-extrabold">
-              <span className="text-gray-900">Reply</span>
-              <span className="text-emerald-600">Astra</span>
-            </span>
-          </div>
+     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
+  <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-          <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
-            <a href="#features">Features</a>
-            <a href="#pricing">Pricing</a>
-            <a href="/login">Login</a>
-            <a
-              href="/signup"
-              className="bg-emerald-600 text-white px-5 py-2 rounded-full font-bold"
-            >
-              Get Started
-            </a>
-          </div>
-        </div>
-      </nav>
+    {/* LOGO */}
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center">
+        R
+      </div>
+      <span className="text-xl font-extrabold">
+        <span className="text-gray-900">Reply</span>
+        <span className="text-emerald-600">Astra</span>
+      </span>
+    </div>
+
+    {/* DESKTOP LINKS */}
+    <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="/login">Login</a>
+      <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full">
+        Get Started
+      </a>
+    </div>
+
+    {/* MOBILE HAMBURGER */}
+    <button
+      className="md:hidden"
+      onClick={() => setMenuOpen(!menuOpen)}
+    >
+      {menuOpen ? <X size={28} /> : <Menu size={28} />}
+    </button>
+  </div>
+
+  {/* MOBILE MENU */}
+  {menuOpen && (
+    <div className="md:hidden bg-white border-t border-gray-100 px-6 py-6 space-y-4 font-semibold">
+      <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+      <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
+      <a href="/login" onClick={() => setMenuOpen(false)}>Login</a>
+      <a
+        href="/signup"
+        onClick={() => setMenuOpen(false)}
+        className="block text-center bg-emerald-600 text-white py-3 rounded-full"
+      >
+        Get Started
+      </a>
+    </div>
+  )}
+</nav>
+
 
       {/* HERO */}
       <section className="pt-40 pb-24 text-center px-6">
@@ -109,6 +138,45 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+{/* GROWTH GRAPH SECTION */}
+<section className="py-32 bg-[#f0fdf9]">
+  <div className="max-w-5xl mx-auto px-6 text-center">
+
+    <h2 className="text-4xl font-black mb-4">
+      Growth after using <span className="text-emerald-600">ReplyAstra</span>
+    </h2>
+
+    <p className="text-gray-600 mb-16">
+      Automated replies convert conversations into revenue.
+    </p>
+
+    <div className="relative h-64 bg-white rounded-3xl shadow-xl p-10 overflow-hidden">
+
+      {/* AXES */}
+      <div className="absolute left-8 top-6 bottom-6 w-px bg-gray-200" />
+      <div className="absolute left-8 right-6 bottom-8 h-px bg-gray-200" />
+
+      {/* BARS */}
+      <div className="flex items-end justify-around h-full pl-12 pr-6">
+
+        {/* BEFORE */}
+        <div className="flex flex-col items-center">
+          <div className="w-14 bg-gray-300 rounded-t-lg h-20" />
+          <span className="mt-3 text-sm text-gray-500">Before</span>
+        </div>
+
+        {/* AFTER */}
+        <div className="flex flex-col items-center">
+          <div className="w-14 bg-emerald-600 rounded-t-lg animate-grow h-[180px]" />
+          <span className="mt-3 text-sm font-bold text-emerald-600">After</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* PRICING */}
       <section id="pricing" className="pricing-section">
