@@ -260,12 +260,13 @@ export default function Page() {
         </div>
       </section>
 
-      {/* FOOTER */}
+          {/* FOOTER */}
       <footer className="footer">
         <div className="footer-bottom">
-          © 2026 ReplyAstra. All rights reserved.
+          © 2026 ReplyAstra Platform
         </div>
       </footer>
+
     </main>
   );
 }
