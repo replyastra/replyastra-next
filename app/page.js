@@ -176,54 +176,83 @@ export default function Page() {
   </div>
 </section>
 
-      {/* GROWTH SECTION */}
-      <section className="py-24 px-6 bg-[#f0fdfa]">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+     <div className="relative bg-white rounded-3xl p-10 shadow-lg overflow-hidden">
 
-          <div>
-            <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
-              REAL GROWTH
-            </span>
+  {/* FLOATING REAL-TIME MESSAGE */}
+  <div className="absolute bottom-6 right-6 bg-gray-900 text-white px-5 py-3 rounded-2xl text-sm shadow-xl animate-float flex items-center gap-2">
+    <span className="text-emerald-400">▶</span>
+    <span>
+      <span className="block text-xs text-emerald-400">Real-time Reply</span>
+      “Link sent! check your DM ✨”
+    </span>
+  </div>
 
-            <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
-              Watch your community <span className="text-emerald-600">thrive</span><br />
-              while you sleep.
-            </h2>
+  {/* GRAPH HEADER */}
+  <div className="mb-6">
+    <p className="text-xs text-gray-400 uppercase tracking-wider">
+      Active Chats
+    </p>
+    <p className="text-2xl font-extrabold text-gray-900">+1,400%</p>
+  </div>
 
-            <p className="text-gray-600 mb-6">
-              No fake dashboards. Just visible growth creators actually feel.
-            </p>
+  {/* GRAPH */}
+  <svg viewBox="0 0 420 220" className="w-full h-56">
 
-            <ul className="space-y-3 font-semibold text-gray-700">
-              <li>✅ Instant reply to “price?” DMs</li>
-              <li>✅ Auto-link delivery</li>
-              <li>✅ Natural welcome flows</li>
-            </ul>
-          </div>
+    {/* GRADIENT */}
+    <defs>
+      <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#10b981" stopOpacity="0.35" />
+        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+      </linearGradient>
+    </defs>
 
-          <div className="relative bg-white rounded-3xl p-8 shadow-lg">
-            <div className="absolute -top-6 right-6 animate-float bg-gray-900 text-white px-4 py-2 rounded-xl text-sm shadow-lg">
-              ✨ Link sent! check your DM
-            </div>
+    {/* AREA */}
+    <path
+      d="
+        M20 180
+        C 80 160, 140 150, 200 120
+        C 260 90, 310 80, 380 40
+        L380 200
+        L20 200
+        Z
+      "
+      fill="url(#areaGradient)"
+    />
 
-            <svg viewBox="0 0 300 160" className="w-full h-40">
-              <path
-                d="M10 130 Q80 110 140 90 T290 30"
-                fill="none"
-                stroke="#10b981"
-                strokeWidth="4"
-                strokeLinecap="round"
-                className="animate-draw"
-              />
-            </svg>
+    {/* LINE */}
+    <path
+      d="
+        M20 180
+        C 80 160, 140 150, 200 120
+        C 260 90, 310 80, 380 40
+      "
+      fill="none"
+      stroke="#10b981"
+      strokeWidth="4"
+      strokeLinecap="round"
+      className="animate-draw"
+    />
 
-            <div className="flex justify-between text-sm text-gray-500 mt-4">
-              <span>Before</span>
-              <span className="font-bold text-emerald-600">After</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    {/* DOTTED INDICATOR */}
+    <line
+      x1="300"
+      y1="40"
+      x2="300"
+      y2="200"
+      stroke="#10b981"
+      strokeDasharray="5 6"
+      opacity="0.6"
+    />
+
+    {/* POINT */}
+    <circle cx="300" cy="90" r="6" fill="#10b981" />
+
+  </svg>
+
+  {/* AXIS LABEL */}
+  <p className="mt-4 text-xs text-gray-400">PRE-ASTRA → POST-ASTRA</p>
+
+</div>
 
       {/* PRICING */}
       <section id="pricing" className="pricing-section">
