@@ -144,43 +144,61 @@ export default function Page() {
         </div>
       </section>
 
-{/* GROWTH GRAPH SECTION */}
-<section className="py-32 bg-[#f0fdf9]">
-  <div className="max-w-5xl mx-auto px-6 text-center">
+{/* GROWTH SECTION */}
+<section className="py-24 px-6 bg-[#f0fdfa]">
+  <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
-    <h2 className="text-4xl font-black mb-4">
-      Growth after using <span className="text-emerald-600">ReplyAstra</span>
-    </h2>
+    {/* LEFT TEXT */}
+    <div>
+      <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
+        REAL GROWTH
+      </span>
 
-    <p className="text-gray-600 mb-16">
-      Automated replies convert conversations into revenue.
-    </p>
+      <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
+        Watch your community <span className="text-emerald-600">thrive</span><br />
+        while you sleep.
+      </h2>
 
-    <div className="relative h-64 bg-white rounded-3xl shadow-xl p-10 overflow-hidden">
+      <p className="text-gray-600 mb-6">
+        Creators using ReplyAstra see higher reply rates within days.
+        No spam. No fake automation. Just real conversations.
+      </p>
 
-      {/* AXES */}
-      <div className="absolute left-8 top-6 bottom-6 w-px bg-gray-200" />
-      <div className="absolute left-8 right-6 bottom-8 h-px bg-gray-200" />
+      <ul className="space-y-3 font-semibold text-gray-700">
+        <li>✅ Instant reply to “price?” DMs</li>
+        <li>✅ Auto-link delivery to story replies</li>
+        <li>✅ Natural welcome sequences</li>
+      </ul>
+    </div>
 
-      {/* BARS */}
-      <div className="flex items-end justify-around h-full pl-12 pr-6">
+    {/* RIGHT GRAPH */}
+    <div className="relative bg-white rounded-3xl p-8 shadow-lg">
 
-        {/* BEFORE */}
-        <div className="flex flex-col items-center">
-          <div className="w-14 bg-gray-300 rounded-t-lg h-20" />
-          <span className="mt-3 text-sm text-gray-500">Before</span>
-        </div>
+      {/* FLOATING DM */}
+      <div className="absolute -top-6 right-6 animate-float bg-gray-900 text-white px-4 py-2 rounded-xl text-sm shadow-lg">
+        ✨ Link sent! check your DM
+      </div>
 
-        {/* AFTER */}
-        <div className="flex flex-col items-center">
-          <div className="w-14 bg-emerald-600 rounded-t-lg animate-grow h-[180px]" />
-          <span className="mt-3 text-sm font-bold text-emerald-600">After</span>
-        </div>
+      <svg viewBox="0 0 300 160" className="w-full h-40">
+        <path
+          d="M10 130 Q80 110 140 90 T290 30"
+          fill="none"
+          stroke="#10b981"
+          strokeWidth="4"
+          strokeLinecap="round"
+          className="animate-draw"
+        />
+      </svg>
 
+      <div className="flex justify-between text-sm text-gray-500 mt-4">
+        <span>Before</span>
+        <span className="font-bold text-emerald-600">After</span>
       </div>
     </div>
+
   </div>
 </section>
+
 
 
       {/* PRICING */}
