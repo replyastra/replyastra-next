@@ -588,16 +588,29 @@ body {
   }
 }
 
-@keyframes grow {
+@keyframes draw {
   from {
-    height: 0;
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
   }
   to {
-    height: 180px;
+    stroke-dashoffset: 0;
   }
 }
 
-.animate-grow {
-  animation: grow 1.6s ease-out forwards;
+.animate-draw {
+  animation: draw 2s ease-out forwards;
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
