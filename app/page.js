@@ -114,6 +114,68 @@ export default function Page() {
         </div>
       </section>
 
+{/* DESIGNED FOR MODERN CREATORS */}
+<section
+  id="features"
+  className="py-32 px-6 bg-[#f0fdfa]"
+>
+  <div className="max-w-6xl mx-auto text-center">
+
+    <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+      Designed for modern creators
+    </h2>
+
+    <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+      Smart automation that helps creators manage conversations
+      without missing important messages.
+    </p>
+
+    <div className="grid md:grid-cols-4 gap-8 mt-16">
+
+      <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
+        <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <MessageSquare />
+        </div>
+        <h3 className="font-bold text-lg mb-2">Natural Flow</h3>
+        <p className="text-gray-600">
+          Intelligent replies that capture your tone and feel human.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
+        <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <Zap />
+        </div>
+        <h3 className="font-bold text-lg mb-2">Smart Logic</h3>
+        <p className="text-gray-600">
+          Simple triggers to automate common responses.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
+        <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <Shield />
+        </div>
+        <h3 className="font-bold text-lg mb-2">Secure Setup</h3>
+        <p className="text-gray-600">
+          Meta-approved integrations to keep your account safe.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
+        <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <BarChart3 />
+        </div>
+        <h3 className="font-bold text-lg mb-2">Clear Visibility</h3>
+        <p className="text-gray-600">
+          See exactly how many DMs are handled automatically.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
       {/* GROWTH SECTION */}
       <section className="py-24 px-6 bg-[#f0fdfa]">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
