@@ -33,12 +33,11 @@ const growthData = [
 ];
 
 export default function LandingPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isYearly, setIsYearly] = useState(false);
-  const [inquiryData, setInquiryData] = useState({ name: '', email: '', message: '' });
- const [status, setStatus] = useState({ type: null, message: '' });
-  const [loading, setLoading] = useState(false);
-
+ const [isMenuOpen, setIsMenuOpen] = useState(false);
+const [isYearly, setIsYearly] = useState(false);
+const [inquiryData, setInquiryData] = useState({ name: '', email: '', message: '' });
+const [status, setStatus] = useState({ type: null, message: '' });
+const [loading, setLoading] = useState(false);
   // Note: Ensure your Supabase client is set up in a separate file (e.g., lib/supabase.js)
  const handleSubmitInquiry = async (e) => {
     e.preventDefault();
@@ -47,7 +46,7 @@ export default function LandingPage() {
     setLoading(false);
   };
 
-  const getPrice = (monthly: number) => {
+  const getPrice = (monthly) => {
     if (!isYearly) return monthly;
     return Math.floor(monthly * 0.8);
   };
