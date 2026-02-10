@@ -308,12 +308,28 @@ export default function Page() {
     <div className="grid md:grid-cols-3 gap-8">
 
       {/* STEP 1 */}
-      <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative">
+      <div className="
+  bg-[#f8fafc] rounded-3xl p-10 text-left relative
+  transition-all duration-300 ease-out
+  hover:-translate-y-2
+  hover:shadow-2xl
+  hover:bg-[#f0fdfa]
+  hover:border hover:border-emerald-200
+  group
+">
+
         <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">
           01
         </div>
 
-        <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl">
+        <div className="
+  w-12 h-12 rounded-xl
+  bg-emerald-100 text-emerald-600
+  flex items-center justify-center mb-6 text-xl
+  transition-transform duration-300
+  group-hover:scale-110
+">
+
           📸
         </div>
 
@@ -328,12 +344,28 @@ export default function Page() {
       </div>
 
       {/* STEP 2 */}
-      <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative">
+      <div className="
+  bg-[#f8fafc] rounded-3xl p-10 text-left relative
+  transition-all duration-300 ease-out
+  hover:-translate-y-2
+  hover:shadow-2xl
+  hover:bg-[#f0fdfa]
+  hover:border hover:border-emerald-200
+  group
+">
+
         <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">
           02
         </div>
 
-        <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl">
+        <div className="
+  w-12 h-12 rounded-xl
+  bg-emerald-100 text-emerald-600
+  flex items-center justify-center mb-6 text-xl
+  transition-transform duration-300
+  group-hover:scale-110
+">
+
           ✍️
         </div>
 
@@ -342,33 +374,46 @@ export default function Page() {
         </h3>
 
         <p className="text-gray-600 leading-relaxed">
-          Choose keywords like “price” or “link” and set your auto-replies.
+          Choose keywords like e.g “price” or “link” and set your auto-replies.
           Takes less than 30 seconds.
         </p>
       </div>
 
       {/* STEP 3 */}
-      <div className="bg-[#f0fdfa] rounded-3xl p-10 text-left relative border border-emerald-200">
-        <div className="absolute top-6 right-6 text-emerald-200 text-4xl font-extrabold">
-          03
-        </div>
+<div className="
+  bg-[#f8fafc] rounded-3xl p-10 text-left relative
+  transition-all duration-300 ease-out
+  hover:-translate-y-2
+  hover:shadow-2xl
+  hover:bg-[#f0fdfa]
+  hover:border hover:border-emerald-200
+  group
+">
 
-        <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center mb-6 text-xl">
-          ⚡
-        </div>
-
-        <h3 className="text-xl font-bold text-gray-900 mb-3">
-          Scale
-        </h3>
-
-        <p className="text-gray-600 leading-relaxed">
-          ReplyAstra handles your DMs 24/7. Engagement grows while
-          you sleep or create new content.
-        </p>
-      </div>
-
-    </div>
+  <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">
+    03
   </div>
+
+  <div className="
+    w-12 h-12 rounded-xl
+    bg-emerald-100 text-emerald-600
+    flex items-center justify-center mb-6 text-xl
+    transition-transform duration-300
+    group-hover:scale-110
+  ">
+    ⚡
+  </div>
+
+  <h3 className="text-xl font-bold text-gray-900 mb-3">
+    Scale
+  </h3>
+
+  <p className="text-gray-600 leading-relaxed">
+    ReplyAstra handles your DMs 24/7. Engagement grows while
+    you sleep or create new content.
+  </p>
+</div>
+
 </section>
 
 
