@@ -195,114 +195,82 @@ export default function Page() {
   </div>
 </section>
 
- {/* Growth Visualization Section - Copy from here */}
-<section className="py-24 px-6 overflow-hidden">
+{/* Growth Visualization Section */}
+<section className="py-12 md:py-24 px-4 md:px-6 overflow-hidden">
   <div className="max-w-7xl mx-auto">
-    <div className="bg-white/60 backdrop-blur-xl rounded-[4rem] border border-white shadow-2xl p-12 md:p-20 relative">
-      <div className="grid lg:grid-cols-5 gap-16 items-center">
-        <div className="lg:col-span-2 space-y-8">
+    <div className="bg-white/60 backdrop-blur-xl rounded-[2.5rem] md:rounded-[4rem] border border-white shadow-2xl p-6 md:p-20 relative">
+      <div className="grid lg:grid-cols-5 gap-10 md:gap-16 items-center">
+        
+        {/* Text Side */}
+        <div className="lg:col-span-2 space-y-6 md:space-y-8">
           <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.2em] uppercase">
             <TrendingUp size={14} />
             <span>Accelerated Engagement</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
             Watch your <br />
-            <span className="text-emerald-600">community thrive</span> while you sleep.
+            <span className="gradient-text">community thrive</span>
           </h2>
-          <p className="text-slate-500 text-lg font-semibold leading-relaxed">
-            Creators using ReplyAstra see a significant lift in response rates within the first 30 days. Our intelligent logic ensures no follower is left on read.
+          <p className="text-slate-500 text-base md:text-lg font-semibold">
+            Creators using ReplyAstra see a significant lift in response rates within 30 days.
           </p>
-          <div className="space-y-4">
-            {[
-              "Instant response to 'how much' queries",
-              "Automated link delivery to story reactions",
-              "Natural-sounding welcome sequences"
-            ].map((item, i) => (
+          
+          <div className="space-y-3">
+            {["Instant response", "Automated delivery", "Welcome sequences"].map((item, i) => (
               <div key={i} className="flex items-center space-x-3">
-                <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-white">
-                  <Check size={14} strokeWidth={4} />
+                <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+                  <Check size={12} strokeWidth={4} />
                 </div>
-                <span className="text-slate-700 font-bold">{item}</span>
+                <span className="text-slate-700 font-bold text-sm md:text-base">{item}</span>
               </div>
             ))}
           </div>
-          <div className="pt-6">
-            <button className="inline-flex items-center text-emerald-600 font-black text-lg group">
-              Start Free Now <ArrowRight className="ml-2 group-hover:translate-x-2 transition-transform" />
-            </button>
-          </div>
         </div>
 
-        <div className="lg:col-span-3 h-[450px] relative group">
-          <div className="absolute inset-0 bg-emerald-500/5 blur-[100px] rounded-full group-hover:bg-emerald-500/10 transition-colors"></div>
-          <div className="w-full h-full bg-white/40 backdrop-blur-sm rounded-[3rem] border border-white shadow-inner p-8 relative z-10">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex space-x-4">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Chats</span>
-                  <span className="text-2xl font-black text-slate-900">+1,400%</span>
-                </div>
-              </div>
-              <div className="flex space-x-2">
-                 <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                 <div className="w-3 h-3 bg-teal-500 rounded-full opacity-30"></div>
+        {/* Graph Side - FIXED FOR MOBILE */}
+        <div className="lg:col-span-3 w-full">
+          <div className="relative w-full bg-white/40 backdrop-blur-sm rounded-[2rem] md:rounded-[3rem] border border-white shadow-inner p-4 md:p-8">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Growth</span>
+                <span className="text-xl md:text-2xl font-black text-slate-900">+1,400%</span>
               </div>
             </div>
             
-            <div className="h-[280px] w-full">
+            {/* THIS BOX CONTROLS THE SIZE */}
+            <div className="h-[200px] md:h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={[
-                  { name: 'Week 1', volume: 400 },
-                  { name: 'Week 2', volume: 700 },
-                  { name: 'Week 3', volume: 1200 },
-                  { name: 'Week 4', volume: 2100 },
-                  { name: 'Week 5', volume: 3800 },
-                ]} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart data={growthData}>
                   <defs>
                     <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
                       <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <Tooltip 
-                    contentStyle={{ 
-                      borderRadius: '24px', 
-                      border: '1px solid #f1f5f9', 
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)',
-                      padding: '12px 16px'
-                    }}
-                  />
+                  <Tooltip contentStyle={{ borderRadius: '15px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }} />
                   <Area 
                     type="monotone" 
                     dataKey="volume" 
                     stroke="#10b981" 
-                    strokeWidth={6}
-                    fillOpacity={1} 
+                    strokeWidth={4} 
                     fill="url(#colorVolume)" 
                   />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-            
-            <div className="mt-6 flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest border-t border-slate-100 pt-6">
-              <span>Pre-Astra</span>
-              <span className="text-emerald-600">Peak Influence</span>
-            </div>
-          </div>
-          
-          {/* Floating UI element */}
-          <div className="absolute -bottom-6 -right-6 bg-slate-900 text-white p-6 rounded-[2rem] shadow-2xl animate-bounce hidden md:block z-20">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
-                <MousePointer2 className="text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-emerald-400">Real-time Reply</p>
-                <p className="text-sm font-black italic">"Link sent! check your DM ✨"</p>
+
+            {/* Floating UI - Hidden on small mobile to avoid clutter */}
+            <div className="absolute -bottom-4 -right-2 md:-bottom-6 md:-right-6 bg-slate-900 text-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl animate-float hidden sm:flex z-20">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <MousePointer2 size={16} className="text-emerald-400" />
+                </div>
+                <p className="text-[10px] md:text-xs font-black italic">"Link sent! check DM ✨"</p>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
