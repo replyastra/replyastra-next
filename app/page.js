@@ -115,41 +115,24 @@ export default function Page() {
         </div>
       </section>
 
-     {/* FEATURE PILLS */}
-<section className="pb-24 px-6">
-  <div className="max-w-7xl mx-auto">
-    {/* md:flex-row makes it one line on Desktop
-      flex-wrap or overflow-x-auto handles the mobile side
-    */}
-    <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-4 md:gap-8">
-      
-      {/* Pill 1 */}
-      <div className="flex items-center gap-2 bg-white border border-slate-100 shadow-sm px-6 py-3 rounded-2xl hover:shadow-md transition-shadow whitespace-nowrap">
-        <Zap size={18} className="text-emerald-600" /> 
-        <span className="font-bold text-slate-700 text-sm md:text-base">Natural Flow</span>
-      </div>
+  {/* FEATURE PILLS */}
+      <section className="pb-24 px-6">
+        <div className="features">
+          <div className="feature flex flex-col items-center gap-2">
+            <Zap className="text-emerald-600" /> Natural Flow
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <MessageSquare className="text-emerald-600" /> Smart Logic
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <Shield className="text-emerald-600" /> Privacy First
+          </div>
+          <div className="feature flex flex-col items-center gap-2">
+            <BarChart3 className="text-emerald-600" /> Deep Insights
+          </div>
+        </div>
+      </section>
 
-      {/* Pill 2 */}
-      <div className="flex items-center gap-2 bg-white border border-slate-100 shadow-sm px-6 py-3 rounded-2xl hover:shadow-md transition-shadow whitespace-nowrap">
-        <MessageSquare size={18} className="text-emerald-600" /> 
-        <span className="font-bold text-slate-700 text-sm md:text-base">Smart Logic</span>
-      </div>
-
-      {/* Pill 3 */}
-      <div className="flex items-center gap-2 bg-white border border-slate-100 shadow-sm px-6 py-3 rounded-2xl hover:shadow-md transition-shadow whitespace-nowrap">
-        <Shield size={18} className="text-emerald-600" /> 
-        <span className="font-bold text-slate-700 text-sm md:text-base">Privacy First</span>
-      </div>
-
-      {/* Pill 4 */}
-      <div className="flex items-center gap-2 bg-white border border-slate-100 shadow-sm px-6 py-3 rounded-2xl hover:shadow-md transition-shadow whitespace-nowrap">
-        <BarChart3 size={18} className="text-emerald-600" /> 
-        <span className="font-bold text-slate-700 text-sm md:text-base">Deep Insights</span>
-      </div>
-
-    </div>
-  </div>
-</section>
 
 {/* DESIGNED FOR MODERN CREATORS */}
 <section
