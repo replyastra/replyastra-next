@@ -9,14 +9,33 @@ import {
   MessageSquare,
   Shield,
   BarChart3,
+  TrendingUp,    // Added this
+  Check,         // Added this
+  MousePointer2, // Added this
 } from "lucide-react";
+
+// Add these imports for the Graph to work
+import { 
+  ResponsiveContainer, 
+  AreaChart, 
+  Area, 
+  Tooltip 
+} from 'recharts';
 
 export default function Page() {
   const [open, setOpen] = useState(false);
+  
+  // Also add this sample data for the graph
+  const growthData = [
+    { name: 'W1', volume: 400 },
+    { name: 'W2', volume: 900 },
+    { name: 'W3', volume: 1500 },
+    { name: 'W4', volume: 2800 },
+    { name: 'W5', volume: 4200 },
+  ];
 
   return (
     <main className="min-h-screen bg-[#f8fafc] overflow-x-hidden">
-
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
