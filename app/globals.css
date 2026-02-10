@@ -588,50 +588,25 @@ body {
   }
 }
 
-@keyframes lineDraw {
-  from {
-    stroke-dasharray: 600;
-    stroke-dashoffset: 600;
-  }
-  to {
-    stroke-dashoffset: 0;
+@layer base {
+  /* This creates the smooth "Watch your community thrive" gradient */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 bg-[length:200%_auto];
+    animation: textGradient 4s linear infinite;
   }
 }
 
-.animate-line {
-  animation: lineDraw 1.6s ease-out forwards;
-}
-
-@keyframes areaFade {
-  to {
-    opacity: 1;
-  }
-}
-
-.animate-area {
-  animation: areaFade 1s ease-out 0.3s forwards;
+@keyframes textGradient {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-15px); }
 }
 
+/* Custom bounce for the floating UI card */
 .animate-float {
   animation: float 3s ease-in-out infinite;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade {
-  animation: fadeIn 0.8s ease-out forwards;
 }
