@@ -40,7 +40,7 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(false);
 
   // Note: Ensure your Supabase client is set up in a separate file (e.g., lib/supabase.js)
-  const handleSubmitInquiry = async (e: React.FormEvent) => {
+ const handleSubmitInquiry = async (e) => {
     e.preventDefault();
     setLoading(true);
     // Logic for Supabase would go here
