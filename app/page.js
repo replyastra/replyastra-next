@@ -413,7 +413,8 @@ export default function Page() {
     you sleep or create new content.
   </p>
 </div>
-
+</div>
+</div>      
 </section>
 
 
