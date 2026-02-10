@@ -418,8 +418,11 @@ export default function Page() {
 </section>
 
 
-      {/* PRICING */}
-      <section id="pricing" className="pricing-section">
+     {/* PRICING */}
+<section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
+  <PricingSection />
+</section>
+
         <h2>Choose your growth path</h2>
         <p className="subtitle">Transparent pricing for real influence.</p>
 
@@ -470,3 +473,124 @@ export default function Page() {
     </main>
   );
 }  
+function PricingSection() {
+  const [yearly, setYearly] = useState(false);
+
+  return (
+    <div className="max-w-6xl mx-auto text-center">
+      <h2 className="text-4xl md:text-5xl font-black text-gray-900">
+        Choose your growth path
+      </h2>
+      <p className="mt-4 text-gray-600">
+        Transparent pricing for real influence.
+      </p>
+
+      {/* TOGGLE */}
+      <div className="mt-8 flex items-center justify-center gap-3 text-sm font-semibold">
+        <span className={!yearly ? "text-gray-900" : "text-gray-400"}>
+          Monthly
+        </span>
+
+        <button
+          onClick={() => setYearly(!yearly)}
+          className={`w-14 h-7 rounded-full px-1 flex items-center transition ${
+            yearly ? "bg-emerald-600" : "bg-gray-300"
+          }`}
+        >
+          <span
+            className={`w-5 h-5 bg-white rounded-full transition-transform ${
+              yearly ? "translate-x-7" : ""
+            }`}
+          />
+        </button>
+
+        <span className={yearly ? "text-gray-900" : "text-gray-400"}>
+          Yearly
+        </span>
+        <span className="ml-1 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+          SAVE 15%
+        </span>
+      </div>
+
+      {/* CARDS */}
+      <div className="mt-16 grid md:grid-cols-3 gap-8">
+        {/* FREE */}
+        <div className="bg-white rounded-3xl p-10 shadow-sm">
+          <h3 className="font-bold text-lg">Free</h3>
+          <p className="text-xs text-gray-400 mb-6">BASE LAYER</p>
+
+          <div className="text-5xl font-black mb-6">
+            ₹0<span className="text-base text-gray-400">/mo</span>
+          </div>
+
+          <ul className="space-y-3 text-left text-sm">
+            <li>✔ Limited automated replies</li>
+            <li className="text-red-500">✖ Ask to Follow Automation</li>
+            <li>✔ 1 Instagram account</li>
+            <li>✔ Basic analytics</li>
+            <li className="italic">✔ ReplyAstra Watermark</li>
+          </ul>
+
+          <button className="mt-8 w-full py-3 rounded-full border border-emerald-600 text-emerald-600 font-bold">
+            GET STARTED
+          </button>
+        </div>
+
+        {/* STARTER */}
+        <div className="relative bg-white rounded-3xl p-10 border-2 border-emerald-600 shadow-xl scale-[1.03]">
+          <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-xs px-4 py-1 rounded-full font-bold">
+            MOST POPULAR
+          </span>
+
+          <h3 className="font-bold text-lg">Starter</h3>
+          <p className="text-xs text-emerald-600 mb-6">EXPANSION MODE</p>
+
+          <div className="text-5xl font-black mb-6">
+            ₹{yearly ? 169 : 199}
+            <span className="text-base text-gray-400">/mo</span>
+          </div>
+
+          <ul className="space-y-3 text-left text-sm">
+            <li>✔ High-volume DM automation</li>
+            <li>✔ Ask to Follow Automation</li>
+            <li>✔ 3 Instagram accounts</li>
+            <li>✔ Unlimited keyword replies</li>
+            <li>✔ Basic analytics</li>
+            <li className="italic">✔ No Watermark</li>
+          </ul>
+
+          <button className="mt-8 w-full py-3 rounded-full bg-emerald-600 text-white font-bold">
+            GET STARTED
+          </button>
+        </div>
+
+        {/* PRO */}
+        <div className="bg-white rounded-3xl p-10 shadow-sm">
+          <h3 className="font-bold text-lg">Pro</h3>
+          <p className="text-xs text-gray-400 mb-6">ENTERPRISE CORE</p>
+
+          <div className="text-5xl font-black mb-6">
+            ₹{yearly ? 339 : 399}
+            <span className="text-base text-gray-400">/mo</span>
+          </div>
+
+          <ul className="space-y-3 text-left text-sm">
+            <li>✔ High-volume DM automation</li>
+            <li>✔ 10 Instagram accounts</li>
+            <li>✔ Advanced analytics</li>
+            <li>✔ Priority support</li>
+            <li className="italic">✔ All Starter features</li>
+          </ul>
+
+          <button className="mt-8 w-full py-3 rounded-full border border-emerald-600 text-emerald-600 font-bold">
+            GET STARTED
+          </button>
+        </div>
+      </div>
+
+      <p className="mt-10 text-xs text-gray-400 italic">
+        *Automation volume depends on Instagram’s official messaging limits.
+      </p>
+    </div>
+  );
+}
