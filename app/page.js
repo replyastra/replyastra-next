@@ -36,7 +36,7 @@ export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isYearly, setIsYearly] = useState(false);
   const [inquiryData, setInquiryData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState({ type: null as 'success' | 'error' | null, message: '' });
+ const [status, setStatus] = useState({ type: null, message: '' });
   const [loading, setLoading] = useState(false);
 
   // Note: Ensure your Supabase client is set up in a separate file (e.g., lib/supabase.js)
