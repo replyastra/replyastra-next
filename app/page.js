@@ -592,5 +592,9 @@ function PricingSection() {
         *Automation volume depends on Instagram’s official messaging limits.
       </p>
     </div>
+</footer>
+    </main>
+  );
+}
   );
 }
