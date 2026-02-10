@@ -54,6 +54,8 @@ export default function Page() {
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
             <a href="#features">Features</a>
+            <a href="#how-it-works">How it works</a>
+
             <a href="#pricing">Pricing</a>
             <a href="/login">Login</a>
             <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full">
@@ -75,6 +77,10 @@ export default function Page() {
           <div className="md:hidden bg-white shadow-lg border-b">
             <div className="flex flex-col px-6 py-4 gap-4 font-semibold text-gray-700">
               <a onClick={() => setOpen(false)} href="#features">Features</a>
+          <a onClick={() => setOpen(false)} href="#how-it-works">How it works</a>
+
+
+
               <a onClick={() => setOpen(false)} href="#pricing">Pricing</a>
               <a onClick={() => setOpen(false)} href="/login">Login</a>
               <a
@@ -275,6 +281,92 @@ export default function Page() {
         </div>
 </div>
       </div>
+    </div>
+  </div>
+</section>
+
+{/* HOW IT WORKS */}
+<section
+  id="how-it-works"
+  className="py-28 px-6 bg-white"
+>
+  <div className="max-w-6xl mx-auto text-center">
+
+    <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
+      HOW IT WORKS
+    </span>
+
+    <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
+      Simple setup. Real results.
+    </h2>
+
+    <p className="text-gray-600 max-w-2xl mx-auto mb-16">
+      Get started in minutes. ReplyAstra works quietly in the background
+      while your engagement grows.
+    </p>
+
+    <div className="grid md:grid-cols-3 gap-8">
+
+      {/* STEP 1 */}
+      <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative">
+        <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">
+          01
+        </div>
+
+        <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl">
+          📸
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          Connect
+        </h3>
+
+        <p className="text-gray-600 leading-relaxed">
+          Securely link your Instagram account with one click.
+          We use official Meta APIs so your password stays private.
+        </p>
+      </div>
+
+      {/* STEP 2 */}
+      <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative">
+        <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">
+          02
+        </div>
+
+        <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl">
+          ✍️
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          Set Rules
+        </h3>
+
+        <p className="text-gray-600 leading-relaxed">
+          Choose keywords like “price” or “link” and set your auto-replies.
+          Takes less than 30 seconds.
+        </p>
+      </div>
+
+      {/* STEP 3 */}
+      <div className="bg-[#f0fdfa] rounded-3xl p-10 text-left relative border border-emerald-200">
+        <div className="absolute top-6 right-6 text-emerald-200 text-4xl font-extrabold">
+          03
+        </div>
+
+        <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center mb-6 text-xl">
+          ⚡
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          Scale
+        </h3>
+
+        <p className="text-gray-600 leading-relaxed">
+          ReplyAstra handles your DMs 24/7. Engagement grows while
+          you sleep or create new content.
+        </p>
+      </div>
+
     </div>
   </div>
 </section>
