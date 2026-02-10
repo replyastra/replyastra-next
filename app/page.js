@@ -259,16 +259,18 @@ export default function Page() {
               </ResponsiveContainer>
             </div>
 
-            {/* Floating UI - Hidden on small mobile to avoid clutter */}
-            <div className="absolute -bottom-4 -right-2 md:-bottom-6 md:-right-6 bg-slate-900 text-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl animate-float hidden sm:flex z-20">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                  <MousePointer2 size={16} className="text-emerald-400" />
-                </div>
-                <p className="text-[10px] md:text-xs font-black italic">"Link sent! check DM ✨"</p>
-              </div>
-            </div>
-          </div>
+            {/* Floating UI element - Now visible on mobile but smaller */}
+<div className="absolute -bottom-4 right-2 md:-bottom-6 md:-right-6 bg-slate-900 text-white p-3 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl animate-float z-20">
+  <div className="flex items-center space-x-2 md:space-x-4">
+    <div className="w-8 h-8 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center">
+      <MousePointer2 className="text-emerald-400 w-4 h-4 md:w-6 md:h-6" />
+    </div>
+    <div>
+      <p className="text-[8px] md:text-xs font-bold text-emerald-400">Real-time Reply</p>
+      <p className="text-[10px] md:text-sm font-black italic">"Link sent! check DM ✨"</p>
+    </div>
+  </div>
+</div>
         </div>
 
       </div>
