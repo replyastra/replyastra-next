@@ -422,7 +422,7 @@ export default function Page() {
 
 
 
-}  
+
 function PricingSection() {
   const [yearly, setYearly] = useState(false);
 
