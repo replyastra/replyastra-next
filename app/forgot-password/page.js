@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { supabase } from "../../lib/supabase";
 
 export default function ForgotPasswordPage() {
@@ -25,34 +26,73 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      <form
-        onSubmit={handleReset}
-        className="w-full max-w-md bg-zinc-900 p-8 rounded-xl"
-      >
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          Reset Password
+    <main className="min-h-screen bg-[#f8fafc] flex items-center justify-center px-6">
+
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-10 text-center">
+
+        {/* Back */}
+        <Link
+          href="/"
+          className="text-sm text-gray-500 hover:text-emerald-600 mb-6 inline-block"
+        >
+          ← Back to Home
+        </Link>
+
+        {/* Title */}
+        <h1 className="text-3xl font-extrabold text-emerald-600 mb-2">
+          ReplyAstra
         </h1>
 
-        {error && <p className="text-red-500 mb-3">{error}</p>}
-        {message && <p className="text-green-500 mb-3">{message}</p>}
+        <p className="text-gray-500 mb-8">
+          Reset your password and regain access.
+        </p>
 
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-3 mb-4 rounded bg-zinc-800 text-white outline-none"
-          required
-        />
+        {/* Messages */}
+        {error && (
+          <p className="text-red-500 text-sm mb-4">{error}</p>
+        )}
+        {message && (
+          <p className="text-emerald-600 text-sm mb-4">{message}</p>
+        )}
 
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 p-3 rounded font-semibold"
-        >
-          Send Reset Link
-        </button>
-      </form>
-    </div>
+        {/* Form */}
+        <form onSubmit={handleReset} className="space-y-6">
+
+          <div className="text-left">
+            <label className="text-sm font-semibold text-gray-700">
+              Email
+            </label>
+
+            <input
+              type="email"
+              placeholder="you@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-2 w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded-full font-semibold hover:opacity-90 transition"
+          >
+            Send Reset Link
+          </button>
+        </form>
+
+        {/* Bottom Link */}
+        <p className="text-sm text-gray-500 mt-6">
+          Remember your password?{" "}
+          <Link
+            href="/login"
+            className="text-emerald-600 font-semibold hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+
+      </div>
+    </main>
   );
 }
