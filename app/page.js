@@ -497,7 +497,7 @@ function PricingSection() {
 
           <button className="mt-8 w-full py-3 rounded-full border border-emerald-600 text-emerald-600 font-bold">
             GET STARTED
-          <a href="/signup">
+          <a>...</a>
         </div>
 
         {/* STARTER */}
@@ -525,7 +525,7 @@ function PricingSection() {
 
           <button className="mt-8 w-full py-3 rounded-full bg-emerald-600 text-white font-bold">
             GET STARTED
-          <a href="/signup">
+          <a>...</a>
         </div>
 
         {/* PRO */}
@@ -548,7 +548,7 @@ function PricingSection() {
 
           <button className="mt-8 w-full py-3 rounded-full border border-emerald-600 text-emerald-600 font-bold">
             GET STARTED
-          <a href="/signup">
+         <a>...</a>
         </div>
       </div>
 
