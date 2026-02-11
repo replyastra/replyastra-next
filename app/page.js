@@ -420,14 +420,14 @@ export default function Page() {
 </section>
 
 {/* 1. ADD THIS LINE HERE */}
-<section id="pricing-section" className="py-28 px-6 bg-[#f0fdfa]">
+<section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
       <PricingSection />
       </section>
 
   {/* 2. ADD THE FOOTER HERE - This makes it the last thing on the page */}
       <footer className="footer py-10 border-t border-gray-100">
         <div className="footer-bottom text-center text-gray-500 font-bold">
-          © 2026 ReplyAstra Platform
+          © 2026 ReplyAstra 
         </div>
       </footer>
 {/* 1. Add these 3 lines to close the Page Box */}
@@ -497,7 +497,7 @@ function PricingSection() {
 
           <button className="mt-8 w-full py-3 rounded-full border border-emerald-600 text-emerald-600 font-bold">
             GET STARTED
-          </button>
+          <a href="/signup" ...>
         </div>
 
         {/* STARTER */}
@@ -525,7 +525,7 @@ function PricingSection() {
 
           <button className="mt-8 w-full py-3 rounded-full bg-emerald-600 text-white font-bold">
             GET STARTED
-          </button>
+          <a href="/signup" ...>
         </div>
 
         {/* PRO */}
@@ -548,7 +548,7 @@ function PricingSection() {
 
           <button className="mt-8 w-full py-3 rounded-full border border-emerald-600 text-emerald-600 font-bold">
             GET STARTED
-          </button>
+          <a href="/signup" ...>
         </div>
       </div>
 
