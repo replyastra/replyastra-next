@@ -56,7 +56,7 @@ export default function Page() {
             <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
 
-            <a href="#pricing">Pricing</a>
+            <a href="#pricing-section">Pricing</a>
             <a href="/login">Login</a>
             <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full">
               Get Started
@@ -420,8 +420,15 @@ export default function Page() {
 </section>
 
 {/* 1. ADD THIS LINE HERE */}
+<section id="pricing-section" className="py-28 px-6 bg-[#f0fdfa]">
       <PricingSection />
-        
+
+  {/* 2. ADD THE FOOTER HERE - This makes it the last thing on the page */}
+      <footer className="footer py-10 border-t border-gray-100">
+        <div className="footer-bottom text-center text-gray-500 font-bold">
+          © 2026 ReplyAstra Platform
+        </div>
+      </footer>
 {/* 1. Add these 3 lines to close the Page Box */}
     </main>
   );
@@ -551,16 +558,7 @@ function PricingSection() {
 
 
 
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-bottom">
-          © 2026 ReplyAstra Platform
-        </div>
-    </footer>
-    </div>
     
-  );
-} 
 
     
 
