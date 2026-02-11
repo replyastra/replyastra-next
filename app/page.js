@@ -422,6 +422,7 @@ export default function Page() {
 {/* 1. ADD THIS LINE HERE */}
 <section id="pricing-section" className="py-28 px-6 bg-[#f0fdfa]">
       <PricingSection />
+      </section>
 
   {/* 2. ADD THE FOOTER HERE - This makes it the last thing on the page */}
       <footer className="footer py-10 border-t border-gray-100">
