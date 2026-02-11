@@ -424,7 +424,10 @@ export default function Page() {
 <section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
   <PricingSection />
 </section>
+ <h2>Choose your growth path</h2>
+        <p className="subtitle">Transparent pricing for real influence.</p>
 
+        <div className="pricing-grid">
        
           <div className="pricing-card">
             <h3>Free</h3>
@@ -467,7 +470,9 @@ export default function Page() {
         <div className="footer-bottom">
           © 2026 ReplyAstra Platform
         </div>
-     
+      </footer>
+  </div>
+);
 
   
   );
@@ -591,8 +596,8 @@ function PricingSection() {
         *Automation volume depends on Instagram’s official messaging limits.
       </p>
     </div>
-</footer>
-    </main>
+
+
   );
 }
   );
