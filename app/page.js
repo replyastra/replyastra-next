@@ -419,6 +419,9 @@ export default function Page() {
 </div>      
 </section>
 
+{/* 1. ADD THIS LINE HERE */}
+      <PricingSection />
+        
 {/* 1. Add these 3 lines to close the Page Box */}
     </main>
   );
