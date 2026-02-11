@@ -556,5 +556,5 @@ function PricingSection() {
 
   );
 }
-  );
-}
+
+
