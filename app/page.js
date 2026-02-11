@@ -555,7 +555,11 @@ function PricingSection() {
       <p className="mt-10 text-xs text-gray-400 italic">
         *Automation volume depends on Instagram’s official messaging limits.
       </p>
-    
+      </div>
+
+      );
+
+      }
 
 
 
