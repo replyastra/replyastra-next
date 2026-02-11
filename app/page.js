@@ -421,16 +421,6 @@ export default function Page() {
 
 
 
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-bottom">
-          © 2026 ReplyAstra Platform
-        </div>
-      </footer>
-  </main>
-);
-
-  
 
 }  
 function PricingSection() {
@@ -554,7 +544,17 @@ function PricingSection() {
     </div>
 
 
-  );
-}
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footer-bottom">
+          © 2026 ReplyAstra Platform
+        </div>
+      </footer>
+  </main>
+);
+
+ 
+
 
 
