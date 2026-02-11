@@ -419,7 +419,10 @@ export default function Page() {
 </div>      
 </section>
 
-
+{/* 1. Add these 3 lines to close the Page Box */}
+    </main>
+  );
+}
 
 
 
@@ -550,11 +553,12 @@ function PricingSection() {
         <div className="footer-bottom">
           © 2026 ReplyAstra Platform
         </div>
-      </footer>
-  </main>
-);
+    </footer>
 
- 
+    </main>
+  );
+} 
 
+    
 
 
