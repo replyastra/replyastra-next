@@ -427,7 +427,7 @@ export default function Page() {
           © 2026 ReplyAstra Platform
         </div>
       </footer>
-  </div>
+  </main>
 );
 
   
