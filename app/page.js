@@ -420,51 +420,6 @@ export default function Page() {
 </section>
 
 
-     {/* PRICING */}
-<section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
-  <PricingSection />
-</section>
- <h2>Choose your growth path</h2>
-        <p className="subtitle">Transparent pricing for real influence.</p>
-
-        <div className="pricing-grid">
-       
-          <div className="pricing-card">
-            <h3>Free</h3>
-            <div className="price">₹0</div>
-            <ul>
-              <li>Limited automation</li>
-              <li>1 Instagram account</li>
-              <li>Basic analytics</li>
-            </ul>
-            <button className="pricing-btn outline">Get Started</button>
-          </div>
-
-          <div className="pricing-card popular">
-            <span className="popular-badge">Most Popular</span>
-            <h3>Starter</h3>
-            <div className="price">₹199</div>
-            <ul>
-              <li>Unlimited replies</li>
-              <li>Welcome flows</li>
-              <li>Email support</li>
-            </ul>
-            <button className="pricing-btn">Start Free Now</button>
-          </div>
-
-          <div className="pricing-card">
-            <h3>Pro</h3>
-            <div className="price">₹399</div>
-            <ul>
-              <li>Multiple accounts</li>
-              <li>Advanced AI replies</li>
-              <li>Priority support</li>
-            </ul>
-            <button className="pricing-btn outline">Start Free Now</button>
-          </div>
-        </div>
-      </section>
-      </main>
 
       {/* FOOTER */}
       <footer className="footer">
