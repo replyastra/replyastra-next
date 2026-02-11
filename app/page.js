@@ -141,8 +141,9 @@ export default function Page() {
 
 
 {/* DESIGNED FOR MODERN CREATORS */}
-<section
-  id="features"
+<section id="features"
+
+  
   className="py-32 px-6 bg-[#f0fdfa]"
 >
   <div className="max-w-6xl mx-auto text-center">
@@ -286,8 +287,9 @@ export default function Page() {
 </section>
 
 {/* HOW IT WORKS */}
-<section
-  id="how-it-works"
+<section id="how-it-works"
+
+
   className="py-28 px-6 bg-white"
 >
   <div className="max-w-6xl mx-auto text-center">
@@ -423,10 +425,7 @@ export default function Page() {
   <PricingSection />
 </section>
 
-        <h2>Choose your growth path</h2>
-        <p className="subtitle">Transparent pricing for real influence.</p>
-
-        <div className="pricing-grid">
+       
           <div className="pricing-card">
             <h3>Free</h3>
             <div className="price">₹0</div>
@@ -468,9 +467,9 @@ export default function Page() {
         <div className="footer-bottom">
           © 2026 ReplyAstra Platform
         </div>
-      </footer>
+     
 
-    </main>
+  
   );
 }  
 function PricingSection() {
