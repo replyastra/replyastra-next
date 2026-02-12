@@ -22,6 +22,8 @@ import {
   Tooltip 
 } from 'recharts';
 
+import FAQSection from "./FAQSection";
+
 export default function Page() {
   const [open, setOpen] = useState(false);
   
@@ -423,6 +425,8 @@ export default function Page() {
 <section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
       <PricingSection />
       </section>
+
+<FAQSection />
 
   {/* 2. ADD THE FOOTER HERE - This makes it the last thing on the page */}
       <footer className="footer py-10 border-t border-gray-100">
