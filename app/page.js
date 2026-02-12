@@ -495,7 +495,7 @@ function PricingSection() {
             <li className="italic">✔ ReplyAstra Watermark</li>
           </ul>
 
-          <a href="/signup"className="mt-12 block w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-center hover:bg-emerald-600 transition-all">
+          <a href="/signup"className="mt-12 block w-full py-4 rounded-2xl bg-emerald-600 text-white font-bold text-center hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-200"
             GET STARTED
           </a>
         </div>
@@ -546,7 +546,7 @@ function PricingSection() {
             <li className="italic">✔ All Starter features</li>
           </ul>
 
-          <a href="/signup"className="mt-12 block w-full py-4 rounded-2xl bg-slate-900 text-white font-bold text-center hover:bg-emerald-600 transition-all">
+          <a href="/signup"className="mt-12 block w-full py-4 rounded-2xl bg-emerald-600 text-white font-bold text-center hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-200"
             GET STARTED
           </a>
         </div>
@@ -562,7 +562,7 @@ function PricingSection() {
       }
 
 
-  
+
 
 
     
