@@ -428,13 +428,10 @@ export default function Page() {
 
 <FAQSection />
 
-  {/* 2. ADD THE FOOTER HERE - This makes it the last thing on the page */}
-      <footer className="footer py-10 border-t border-gray-100">
-        <div className="footer-bottom text-center text-gray-500 font-bold">
-          © 2026 ReplyAstra 
-        </div>
-      </footer>
-{/* 1. Add these 3 lines to close the Page Box */}
+  <Footer />
+  
+
+
     </main>
   );
 }
