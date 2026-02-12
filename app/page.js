@@ -23,6 +23,7 @@ import {
 } from 'recharts';
 
 import FAQSection from "./FAQSection";
+import Footer from "./Footer";
 
 export default function Page() {
   const [open, setOpen] = useState(false);
