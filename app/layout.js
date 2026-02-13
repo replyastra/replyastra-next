@@ -1,14 +1,19 @@
 import "./globals.css";
-
-export const metadata = {
-  title: "ReplyAstra",
-  description: "AI powered DM automation",
-};
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-[#f8fafc] text-gray-900">
+        <Navbar />   {/* ✅ Always visible */}
+        
+        <main className="min-h-screen">
+          {children}
+        </main>
+
+        <Footer />   {/* ✅ Always visible */}
+      </body>
     </html>
   );
 }
