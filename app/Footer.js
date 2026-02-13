@@ -46,7 +46,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3 font-semibold">
               <li>
-                <a href="/contact" className="text-emerald-600 hover:underline">
+                <a href="/contact" className="hover:text-emerald-600 transition-colors">
                   Contact Us
                 </a>
               </li>
