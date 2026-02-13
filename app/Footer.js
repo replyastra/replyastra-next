@@ -68,7 +68,7 @@ export default function Footer() {
           </p>
 
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/replyastra?igsh=N2t5OGszZXp4aWUw"
             target="_blank"
             className="w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:text-emerald-600 hover:border-emerald-300 transition"
           >
