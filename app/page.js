@@ -145,7 +145,7 @@ export default function Page() {
       </div>
 
     </div>
-  </div>
+  </div>  
 </section>
 
 {/* DESIGNED FOR MODERN CREATORS */}
@@ -268,7 +268,7 @@ export default function Page() {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
+            </div> 
 
             {/* Floating UI element - Now visible on mobile but smaller */}
 <div className="absolute -bottom-4 right-2 md:-bottom-6 md:-right-6 bg-slate-900 text-white p-3 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl animate-float z-20">
@@ -428,8 +428,8 @@ export default function Page() {
  
   </section>
   <FAQSection />
-
-    </main>
+    </div> {/* This closes any accidentally opened div from above */}
+  </main>
   );
 }
 
