@@ -52,7 +52,7 @@ export default function SupportPage() {
   };
 
   return (
-    <main className="bg-[#f8fafc] min-h-screen px-6 py-32">
+    <main className="bg-[#f0fdfa] min-h-screen px-6 py-32">
       {/* HERO */}
       <div className="text-center max-w-3xl mx-auto mb-20">
         <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
@@ -139,10 +139,10 @@ export default function SupportPage() {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className={`border rounded-2xl p-6 transition ${
+                className={`border rounded-2xl p-6 transition-all duration-300 bg-white ${
                   openFAQ === i
-                    ? "border-emerald-500 bg-[#f0fdfa]"
-                    : "bg-white"
+                    ? "border-emerald-400"
+                    : "border-gray-200"
                 }`}
               >
                 <button
@@ -151,9 +151,9 @@ export default function SupportPage() {
                 >
                   {faq.q}
                   {openFAQ === i ? (
-                    <Minus className="text-emerald-600" />
+                    <Minus className="text-emerald-600 shrink-0 ml-4" />
                   ) : (
-                    <Plus className="text-gray-400" />
+                    <Plus className="text-gray-400 shrink-0 ml-4" />
                   )}
                 </button>
 
