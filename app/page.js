@@ -427,13 +427,13 @@ export default function Page() {
       <PricingSection />
       </section>
 
-{/* ... previous content like FAQSection ... */}
-      <FAQSection />
+<FAQSection />
 
-    </div> {/* THIS IS THE MISSING TAG YOU NEED TO ADD */}
-  </main>
+    </main>
   );
 }
+
+// PricingSection MUST be outside the Page function
 function PricingSection() {
   const [yearly, setYearly] = useState(false);
 
@@ -445,8 +445,7 @@ function PricingSection() {
       <p className="mt-4 text-gray-600">
         Transparent pricing for real influence.
       </p>
- 
-      {/* Rest of your pricing cards code goes here... */}
+      {/* ... the rest of your pricing card code ... */}
     </div>
   );
 }
