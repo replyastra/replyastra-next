@@ -427,8 +427,8 @@ export default function Page() {
       <PricingSection />
       </section>
 <FAQSection />
-
-    </main>
+    </div> {/* ADD THIS EXTRA CLOSING DIV HERE */}
+  </main>
   );
 }
 
