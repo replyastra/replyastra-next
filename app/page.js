@@ -36,7 +36,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#f8fafc] overflow-x-hidden">
+    <main className="min-h-screen bg-[#f0fdfa] overflow-x-hidden">
       {/* NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -147,7 +147,7 @@ export default function Page() {
       </section>
 
       {/* DESIGNED FOR MODERN CREATORS */}
-      <section id="features" className="py-32 px-6 bg-[#f0fdfa]">
+      <section id="features" className="py-32 px-6">
         <div className="max-w-6xl mx-auto text-center">
 
           <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">
@@ -282,7 +282,7 @@ export default function Page() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-28 px-6 bg-white">
+      <section id="how-it-works" className="py-28 px-6">
         <div className="max-w-6xl mx-auto text-center">
 
           <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
@@ -301,7 +301,7 @@ export default function Page() {
           <div className="grid md:grid-cols-3 gap-8">
 
             {/* STEP 1 */}
-            <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:bg-[#f0fdfa] hover:border hover:border-emerald-200 group">
+            <div className="bg-white rounded-3xl p-10 text-left relative transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:border hover:border-emerald-200 group">
               <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">01</div>
               <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl transition-transform duration-300 group-hover:scale-110">
                 📸
@@ -314,7 +314,7 @@ export default function Page() {
             </div>
 
             {/* STEP 2 */}
-            <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:bg-[#f0fdfa] hover:border hover:border-emerald-200 group">
+            <div className="bg-white rounded-3xl p-10 text-left relative transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:border hover:border-emerald-200 group">
               <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">02</div>
               <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl transition-transform duration-300 group-hover:scale-110">
                 ✍️
@@ -327,7 +327,7 @@ export default function Page() {
             </div>
 
             {/* STEP 3 */}
-            <div className="bg-[#f8fafc] rounded-3xl p-10 text-left relative transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:bg-[#f0fdfa] hover:border hover:border-emerald-200 group">
+            <div className="bg-white rounded-3xl p-10 text-left relative transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:border hover:border-emerald-200 group">
               <div className="absolute top-6 right-6 text-emerald-100 text-4xl font-extrabold">03</div>
               <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6 text-xl transition-transform duration-300 group-hover:scale-110">
                 ⚡
@@ -344,7 +344,7 @@ export default function Page() {
       </section>
 
       {/* PRICING */}
-      <section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
+      <section id="pricing" className="py-28 px-6">
         <PricingSection />
       </section>
 
