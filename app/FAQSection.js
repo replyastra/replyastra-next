@@ -39,7 +39,7 @@ export default function FAQSection() {
     setActiveIndex(activeIndex === index ? null : index);
   };
   return (
-    <section className="py-28 px-6 bg-[#f0fdfa]">
+    <section className="pt-28 pb-16 px-6 bg-[#f0fdfa]">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-4xl md:text-5xl font-black text-gray-900">
           Frequently Asked Questions
