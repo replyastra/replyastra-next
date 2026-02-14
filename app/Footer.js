@@ -7,9 +7,9 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-12">
           {/* LEFT — BRAND */}
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://replyastra.online/logo.png" alt="ReplyAstra" style={{height: '36px', width: 'auto'}} />
+            <div className="flex items-center gap-0 mb-4">
+              <span className="text-xl font-black text-emerald-600 tracking-tight">REPLY</span>
+              <span className="text-xl font-light text-emerald-700 tracking-widest">ASTRA</span>
             </div>
             <p className="text-gray-600 leading-relaxed max-w-sm">
               ReplyAstra brings intelligent automation to Instagram DMs —
