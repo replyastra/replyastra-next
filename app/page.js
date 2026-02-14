@@ -430,7 +430,9 @@ export default function Page() {
 <FAQSection />
 
  
-  
+ </main>
+  ); 
+} 
 
 
     
