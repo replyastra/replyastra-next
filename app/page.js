@@ -59,7 +59,7 @@ export default function Page() {
             <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
 
-            <a href="#pricing-section">Pricing</a>
+            <a href="/#pricing">Pricing</a>
             <a href="/login">Login</a>
             <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full">
               Get Started
