@@ -90,7 +90,7 @@ export default function Page() {
     </div>
   </div>
 )}
-      </nav>
+     
 
       {/* HERO */}
       <section className="pt-40 pb-24 text-center px-6">
