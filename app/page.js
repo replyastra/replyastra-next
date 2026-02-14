@@ -125,29 +125,31 @@ export default function Page() {
 
 {/* FEATURE PILLS */}
 <section className="pb-24 px-6">
-  {/* Added flex-row and justify-center to force the single line */}
-  <div className="features flex flex-row flex-wrap md:flex-nowrap justify-center gap-4">
-    
-    <div className="feature flex flex-row items-center gap-2">
-      <Zap className="text-emerald-600" size={20} /> 
-      <span>Natural Flow</span>
-    </div>
+  <div className="max-w-7xl mx-auto flex justify-center">
+    {/* 'flex-nowrap' forces everything to stay in one line */}
+    <div className="flex flex-row flex-nowrap items-center justify-center gap-2 md:gap-6">
+      
+      <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
+        <Zap className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+        <span className="font-semibold text-gray-700 text-sm md:text-base">Natural Flow</span>
+      </div>
 
-    <div className="feature flex flex-row items-center gap-2">
-      <MessageSquare className="text-emerald-600" size={20} /> 
-      <span>Smart Logic</span>
-    </div>
+      <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
+        <MessageSquare className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+        <span className="font-semibold text-gray-700 text-sm md:text-base">Smart Logic</span>
+      </div>
 
-    <div className="feature flex flex-row items-center gap-2">
-      <Shield className="text-emerald-600" size={20} /> 
-      <span>Privacy First</span>
-    </div>
+      <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
+        <Shield className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+        <span className="font-semibold text-gray-700 text-sm md:text-base">Privacy First</span>
+      </div>
 
-    <div className="feature flex flex-row items-center gap-2">
-      <BarChart3 className="text-emerald-600" size={20} /> 
-      <span>Deep Insights</span>
-    </div>
+      <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
+        <BarChart3 className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+        <span className="font-semibold text-gray-700 text-sm md:text-base">Deep Insights</span>
+      </div>
 
+    </div>
   </div>
 </section>
 
