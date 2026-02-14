@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Instagram } from "lucide-react";
 export default function Footer() {
   return (
@@ -8,7 +9,7 @@ export default function Footer() {
           {/* LEFT — BRAND */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src="/logo.png" alt="ReplyAstra" className="h-10 w-auto" />
+              <Image src="/logo.png" alt="ReplyAstra" width={160} height={40} className="object-contain" />
             </div>
             <p className="text-gray-600 leading-relaxed max-w-sm">
               ReplyAstra brings intelligent automation to Instagram DMs —
