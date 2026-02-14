@@ -1,19 +1,17 @@
 import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Footer from "./Footer"; // This pulls in your perfect footer
 import "./globals.css";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        {/* This Navbar will now show on every page */}
+      <body>
         <Navbar />
+        {/* This "children" is where your Contact Page or Home Page shows up */}
+        <main>{children}</main> 
         
-        {/* This "children" represents your Home page, Contact page, etc. */}
-        <main>{children}</main>
-        
-        {/* This Footer will now show on every page */}
-        <Footer />
+        {/* Adding this here makes it visible on ALL pages automatically */}
+        <Footer /> 
       </body>
     </html>
   );
