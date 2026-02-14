@@ -120,25 +120,25 @@ export default function Page() {
       {/* FEATURE PILLS */}
       <section className="pb-24 px-6">
         <div className="max-w-7xl mx-auto flex justify-center">
-          <div className="flex flex-row flex-nowrap items-center justify-center gap-2 md:gap-6">
+          <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-3 md:gap-6">
             
-            <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
-              <Zap className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+            <div className="flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100">
+              <Zap className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0" /> 
               <span className="font-semibold text-gray-700 text-sm md:text-base">Natural Flow</span>
             </div>
 
-            <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
-              <MessageSquare className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+            <div className="flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100">
+              <MessageSquare className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0" /> 
               <span className="font-semibold text-gray-700 text-sm md:text-base">Smart Logic</span>
             </div>
 
-            <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
-              <Shield className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+            <div className="flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100">
+              <Shield className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0" /> 
               <span className="font-semibold text-gray-700 text-sm md:text-base">Privacy First</span>
             </div>
 
-            <div className="flex items-center gap-2 bg-white px-4 py-2 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-50 whitespace-nowrap">
-              <BarChart3 className="text-emerald-600 w-4 h-4 md:w-5 md:h-5" /> 
+            <div className="flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100">
+              <BarChart3 className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0" /> 
               <span className="font-semibold text-gray-700 text-sm md:text-base">Deep Insights</span>
             </div>
 
