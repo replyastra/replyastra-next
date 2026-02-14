@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
-
 export default function FAQSection() {
   const faqs = [
     {
@@ -35,15 +34,12 @@ export default function FAQSection() {
         "You can visit our dedicated Support page to send us a message anytime. We provide direct email support for all users, with priority response times for Pro subscribers.",
     },
   ];
-
   const [activeIndex, setActiveIndex] = useState(null);
-
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
-
   return (
-    <section className="py-28 px-6 bg-white">
+    <section className="py-28 px-6 bg-[#f0fdfa]">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-4xl md:text-5xl font-black text-gray-900">
           Frequently Asked Questions
@@ -51,34 +47,29 @@ export default function FAQSection() {
         <p className="mt-4 text-gray-600">
           Everything you need to know about ReplyAstra.
         </p>
-
         <div className="mt-12 space-y-4 text-left">
           {faqs.map((faq, index) => {
             const isActive = activeIndex === index;
-
             return (
               <div
                 key={index}
                 className={`rounded-2xl border p-6 transition-all duration-300 ${
                   isActive
-                    ? "border-emerald-500 bg-emerald-50"
-                    : "border-gray-200 bg-gray-50"
+                    ? "border-emerald-400 bg-white"
+                    : "border-gray-200 bg-white"
                 }`}
               >
-                {/* Question */}
                 <button
                   onClick={() => toggleFAQ(index)}
                   className="flex justify-between items-center w-full text-left font-semibold text-gray-900"
                 >
                   {faq.question}
                   {isActive ? (
-                    <Minus className="text-emerald-600" />
+                    <Minus className="text-emerald-600 shrink-0 ml-4" />
                   ) : (
-                    <Plus className="text-gray-500" />
+                    <Plus className="text-gray-500 shrink-0 ml-4" />
                   )}
                 </button>
-
-                {/* Answer */}
                 {isActive && (
                   <p className="mt-4 text-gray-600 leading-relaxed">
                     {faq.answer}
