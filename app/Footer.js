@@ -8,13 +8,7 @@ export default function Footer() {
           {/* LEFT — BRAND */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
-                R
-              </div>
-              <span className="text-xl font-extrabold">
-                <span className="text-gray-900">Reply</span>
-                <span className="text-emerald-600">Astra</span>
-              </span>
+              <img src="/logo.png" alt="ReplyAstra" className="h-10 w-auto" />
             </div>
             <p className="text-gray-600 leading-relaxed max-w-sm">
               ReplyAstra brings intelligent automation to Instagram DMs —
