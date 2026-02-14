@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   Menu,
   X,
@@ -43,7 +44,7 @@ export default function Page() {
 
           {/* LOGO */}
           <a href="/">
-            <img src="/logo.png" alt="ReplyAstra" className="h-10 w-auto" />
+            <Image src="/logo.png" alt="ReplyAstra" width={160} height={40} className="object-contain" />
           </a>
 
           {/* DESKTOP MENU */}
