@@ -123,24 +123,33 @@ export default function Page() {
         </div>
       </section>
 
-  {/* FEATURE PILLS */}
-      <section className="pb-24 px-6">
-        <div className="features">
-          <div className="feature flex flex-col items-center gap-2">
-            <Zap className="text-emerald-600" /> Natural Flow
-          </div>
-          <div className="feature flex flex-col items-center gap-2">
-            <MessageSquare className="text-emerald-600" /> Smart Logic
-          </div>
-          <div className="feature flex flex-col items-center gap-2">
-            <Shield className="text-emerald-600" /> Privacy First
-          </div>
-          <div className="feature flex flex-col items-center gap-2">
-            <BarChart3 className="text-emerald-600" /> Deep Insights
-          </div>
-        </div>
-      </section>
+{/* FEATURE PILLS */}
+<section className="pb-24 px-6">
+  {/* Added flex-row and justify-center to force the single line */}
+  <div className="features flex flex-row flex-wrap md:flex-nowrap justify-center gap-4">
+    
+    <div className="feature flex flex-row items-center gap-2">
+      <Zap className="text-emerald-600" size={20} /> 
+      <span>Natural Flow</span>
+    </div>
 
+    <div className="feature flex flex-row items-center gap-2">
+      <MessageSquare className="text-emerald-600" size={20} /> 
+      <span>Smart Logic</span>
+    </div>
+
+    <div className="feature flex flex-row items-center gap-2">
+      <Shield className="text-emerald-600" size={20} /> 
+      <span>Privacy First</span>
+    </div>
+
+    <div className="feature flex flex-row items-center gap-2">
+      <BarChart3 className="text-emerald-600" size={20} /> 
+      <span>Deep Insights</span>
+    </div>
+
+  </div>
+</section>
 
 {/* DESIGNED FOR MODERN CREATORS */}
 <section id="features"
