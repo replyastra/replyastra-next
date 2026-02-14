@@ -445,6 +445,11 @@ function PricingSection() {
       <p className="mt-4 text-gray-600">
         Transparent pricing for real influence.
       </p>
+ 
+      {/* Rest of your pricing cards code goes here... */}
+    </div>
+  );
+}
 
       {/* TOGGLE */}
       <div className="mt-8 flex items-center justify-center gap-3 text-sm font-semibold">
