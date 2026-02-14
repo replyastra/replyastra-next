@@ -159,44 +159,44 @@ export default function Page() {
             without missing important messages.
           </p>
 
-          <div className="grid md:grid-cols-4 gap-8 mt-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-16">
 
-            <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
-              <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <MessageSquare />
+            <div className="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-lg mb-2">Natural Flow</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Natural Flow</h3>
+              <p className="text-gray-600 text-xs md:text-base">
                 Intelligent replies that capture your tone and feel human.
               </p>
             </div>
 
-            <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
-              <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <Zap />
+            <div className="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <Zap className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-lg mb-2">Smart Logic</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Smart Logic</h3>
+              <p className="text-gray-600 text-xs md:text-base">
                 Simple triggers to automate common responses.
               </p>
             </div>
 
-            <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
-              <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <Shield />
+            <div className="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <Shield className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-lg mb-2">Secure Setup</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Secure Setup</h3>
+              <p className="text-gray-600 text-xs md:text-base">
                 Meta-approved integrations to keep your account safe.
               </p>
             </div>
 
-            <div className="bg-white rounded-3xl p-8 text-left shadow-sm">
-              <div className="w-12 h-12 mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <BarChart3 />
+            <div className="bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-lg mb-2">Clear Visibility</h3>
-              <p className="text-gray-600">
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Clear Visibility</h3>
+              <p className="text-gray-600 text-xs md:text-base">
                 See exactly how many DMs are handled automatically.
               </p>
             </div>
