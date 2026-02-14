@@ -429,18 +429,15 @@ export default function Page() {
 
 <FAQSection />
 
- 
- </main>
-  ); 
-} 
+   
+  </main>     // ← <div> opened somewhere above is missing its </div>
+  );
+}             // ← stray brace causing "unexpected token"
 
 
     
-  );
+  );           // ← another stray closing of a return/function
 }
-
-
-
 function PricingSection() {
   const [yearly, setYearly] = useState(false);
 
