@@ -1,15 +1,12 @@
+import "./globals.css";
 import Footer from "../components/Footer";
-
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#f8fafc] overflow-x-hidden">
         {children}
-
         <Footer />
-
-        {/* ❌ SOME EXTRA FOOTER BELOW */}
       </body>
     </html>
   );
