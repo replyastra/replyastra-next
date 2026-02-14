@@ -427,16 +427,12 @@ export default function Page() {
       <PricingSection />
       </section>
 
-<FAQSection />
+{/* ... previous content like FAQSection ... */}
+      <FAQSection />
 
-   
-  </main>     // ← <div> opened somewhere above is missing its </div>
+    </div> {/* THIS IS THE MISSING TAG YOU NEED TO ADD */}
+  </main>
   );
-}             // ← stray brace causing "unexpected token"
-
-
-    
-  );           // ← another stray closing of a return/function
 }
 function PricingSection() {
   const [yearly, setYearly] = useState(false);
