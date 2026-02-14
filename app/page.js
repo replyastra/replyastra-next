@@ -54,8 +54,11 @@ export default function Page() {
             </span>
           </div>
 
-         {/* DESKTOP MENU */}
+     {/* DESKTOP MENU */}
 <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
+  {/* NEW HOME BUTTON */}
+  <a href="/" className="hover:text-emerald-600 transition-colors">Home</a>
+  
   <a href="/#features" className="hover:text-emerald-600 transition-colors">Features</a>
   <a href="/#how-it-works" className="hover:text-emerald-600 transition-colors">How it works</a>
   <a href="/#pricing" className="hover:text-emerald-600 transition-colors">Pricing</a>
@@ -65,36 +68,28 @@ export default function Page() {
     Get Started
   </a>
 </div>
-          {/* MOBILE HAMBURGER */}
-          <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden text-gray-800"
-          >
-            {open ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
 
-        {/* MOBILE MENU */}
-        {open && (
-          <div className="md:hidden bg-white shadow-lg border-b">
-            <div className="flex flex-col px-6 py-4 gap-4 font-semibold text-gray-700">
-              <a onClick={() => setOpen(false)} href="#features">Features</a>
-          <a onClick={() => setOpen(false)} href="#how-it-works">How it works</a>
-
-
-
-              <a onClick={() => setOpen(false)} href="#pricing">Pricing</a>
-              <a onClick={() => setOpen(false)} href="/login">Login</a>
-              <a
-                onClick={() => setOpen(false)}
-                href="/signup"
-                className="bg-emerald-600 text-white px-4 py-2 rounded-full text-center"
-              >
-                Get Started
-              </a>
-            </div>
-          </div>
-        )}
+{/* MOBILE MENU (Inside the {open && ...} block) */}
+{open && (
+  <div className="md:hidden bg-white shadow-lg border-b">
+    <div className="flex flex-col px-6 py-4 gap-4 font-semibold text-gray-700">
+      {/* NEW HOME BUTTON FOR MOBILE */}
+      <a onClick={() => setOpen(false)} href="/">Home</a>
+      
+      <a onClick={() => setOpen(false)} href="/#features">Features</a>
+      <a onClick={() => setOpen(false)} href="/#how-it-works">How it works</a>
+      <a onClick={() => setOpen(false)} href="/#pricing">Pricing</a>
+      <a onClick={() => setOpen(false)} href="/login">Login</a>
+      <a
+        onClick={() => setOpen(false)}
+        href="/signup"
+        className="bg-emerald-600 text-white px-4 py-2 rounded-full text-center"
+      >
+        Get Started
+      </a>
+    </div>
+  </div>
+)}
       </nav>
 
       {/* HERO */}
