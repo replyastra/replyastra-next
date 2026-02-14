@@ -241,12 +241,7 @@ export default function Page() {
         {/* Graph Side - FIXED FOR MOBILE */}
         <div className="lg:col-span-3 w-full">
           <div className="relative w-full bg-white/40 backdrop-blur-sm rounded-[2rem] md:rounded-[3rem] border border-white shadow-inner p-4 md:p-8">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Growth</span>
-                <span className="text-xl md:text-2xl font-black text-slate-900">+1,400%</span>
-              </div>
-            </div>
+            
             
             {/* THIS BOX CONTROLS THE SIZE */}
             <div className="h-[200px] md:h-[300px] w-full">
