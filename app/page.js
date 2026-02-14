@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import {
   Menu,
   X,
@@ -44,7 +43,8 @@ export default function Page() {
 
           {/* LOGO */}
           <a href="/">
-            <Image src="/logo.png" alt="ReplyAstra" width={160} height={40} className="object-contain" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="https://replyastra.online/logo.png" alt="ReplyAstra" style={{height: '36px', width: 'auto'}} />
           </a>
 
           {/* DESKTOP MENU */}
