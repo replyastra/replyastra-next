@@ -122,24 +122,24 @@ export default function Page() {
         <div className="max-w-7xl mx-auto flex justify-center">
           <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-3 md:gap-6">
             
-            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300 hover:bg-emerald-50">
+            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300">
               <Zap className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" /> 
-              <span className="font-semibold text-gray-700 text-sm md:text-base transition-colors duration-300 group-hover:text-emerald-700">Natural Flow</span>
+              <span className="font-semibold text-gray-700 text-sm md:text-base">Natural Flow</span>
             </div>
 
-            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300 hover:bg-emerald-50">
+            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300">
               <MessageSquare className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12" /> 
-              <span className="font-semibold text-gray-700 text-sm md:text-base transition-colors duration-300 group-hover:text-emerald-700">Smart Logic</span>
+              <span className="font-semibold text-gray-700 text-sm md:text-base">Smart Logic</span>
             </div>
 
-            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300 hover:bg-emerald-50">
+            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300">
               <Shield className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" /> 
-              <span className="font-semibold text-gray-700 text-sm md:text-base transition-colors duration-300 group-hover:text-emerald-700">Privacy First</span>
+              <span className="font-semibold text-gray-700 text-sm md:text-base">Privacy First</span>
             </div>
 
-            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300 hover:bg-emerald-50">
+            <div className="group flex items-center gap-2 bg-white px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-sm border border-gray-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-emerald-300">
               <BarChart3 className="text-emerald-600 w-4 h-4 md:w-5 md:h-5 shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12" /> 
-              <span className="font-semibold text-gray-700 text-sm md:text-base transition-colors duration-300 group-hover:text-emerald-700">Deep Insights</span>
+              <span className="font-semibold text-gray-700 text-sm md:text-base">Deep Insights</span>
             </div>
 
           </div>
@@ -161,41 +161,41 @@ export default function Page() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-16">
 
-            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200 hover:bg-emerald-50">
-              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-emerald-200">
+            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <MessageSquare className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 transition-colors duration-300 group-hover:text-emerald-700">Natural Flow</h3>
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Natural Flow</h3>
               <p className="text-gray-600 text-xs md:text-base">
                 Intelligent replies that capture your tone and feel human.
               </p>
             </div>
 
-            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200 hover:bg-emerald-50">
-              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-emerald-200">
+            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <Zap className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 transition-colors duration-300 group-hover:text-emerald-700">Smart Logic</h3>
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Smart Logic</h3>
               <p className="text-gray-600 text-xs md:text-base">
                 Simple triggers to automate common responses.
               </p>
             </div>
 
-            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200 hover:bg-emerald-50">
-              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-emerald-200">
+            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <Shield className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 transition-colors duration-300 group-hover:text-emerald-700">Secure Setup</h3>
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Secure Setup</h3>
               <p className="text-gray-600 text-xs md:text-base">
                 Meta-approved integrations to keep your account safe.
               </p>
             </div>
 
-            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200 hover:bg-emerald-50">
-              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-emerald-200">
+            <div className="group bg-white rounded-2xl md:rounded-3xl p-5 md:p-8 text-left shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border hover:border-emerald-200">
+              <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <BarChart3 className="w-5 h-5 md:w-6 md:h-6" />
               </div>
-              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2 transition-colors duration-300 group-hover:text-emerald-700">Clear Visibility</h3>
+              <h3 className="font-bold text-sm md:text-lg mb-1 md:mb-2">Clear Visibility</h3>
               <p className="text-gray-600 text-xs md:text-base">
                 See exactly how many DMs are handled automatically.
               </p>
@@ -208,7 +208,7 @@ export default function Page() {
       {/* Growth Visualization Section */}
       <section className="py-12 md:py-24 px-4 md:px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white/60 backdrop-blur-xl rounded-[2.5rem] md:rounded-[4rem] border border-white shadow-2xl p-6 md:p-20 relative">
+          <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] border border-gray-100 shadow-2xl p-6 md:p-20 relative">
             <div className="grid lg:grid-cols-5 gap-10 md:gap-16 items-center">
               
               {/* Text Side */}
