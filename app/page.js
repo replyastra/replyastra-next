@@ -42,15 +42,9 @@ export default function Page() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
           {/* LOGO */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center">
-              R
-            </div>
-            <span className="text-xl font-extrabold">
-              <span className="text-gray-900">Reply</span>
-              <span className="text-emerald-600">Astra</span>
-            </span>
-          </div>
+          <a href="/">
+            <img src="/logo.png" alt="ReplyAstra" className="h-10 w-auto" />
+          </a>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
