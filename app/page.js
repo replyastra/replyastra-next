@@ -426,14 +426,13 @@ export default function Page() {
 <section id="pricing" className="py-28 px-6 bg-[#f0fdfa]">
       <PricingSection />
       </section>
-
 <FAQSection />
 
     </main>
   );
 }
 
-// PricingSection MUST be outside the Page function
+// PricingSection MUST stay outside the Page function
 function PricingSection() {
   const [yearly, setYearly] = useState(false);
 
@@ -445,11 +444,10 @@ function PricingSection() {
       <p className="mt-4 text-gray-600">
         Transparent pricing for real influence.
       </p>
-      {/* ... the rest of your pricing card code ... */}
+      {/* Rest of your pricing cards go here */}
     </div>
   );
 }
-
       {/* TOGGLE */}
       <div className="mt-8 flex items-center justify-center gap-3 text-sm font-semibold">
         <span className={!yearly ? "text-gray-900" : "text-gray-400"}>
