@@ -54,18 +54,17 @@ export default function Page() {
             </span>
           </div>
 
-          {/* DESKTOP MENU */}
-          <div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How it works</a>
-
-            <a href="/#pricing">Pricing</a>
-            <a href="/login">Login</a>
-            <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full">
-              Get Started
-            </a>
-          </div>
-
+         {/* DESKTOP MENU */}
+<div className="hidden md:flex items-center gap-8 font-semibold text-gray-600">
+  <a href="/#features" className="hover:text-emerald-600 transition-colors">Features</a>
+  <a href="/#how-it-works" className="hover:text-emerald-600 transition-colors">How it works</a>
+  <a href="/#pricing" className="hover:text-emerald-600 transition-colors">Pricing</a>
+  <a href="/login" className="hover:text-emerald-600 transition-colors">Login</a>
+  
+  <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition-all shadow-md">
+    Get Started
+  </a>
+</div>
           {/* MOBILE HAMBURGER */}
           <button
             onClick={() => setOpen(!open)}
