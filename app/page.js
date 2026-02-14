@@ -429,7 +429,7 @@ export default function Page() {
 
 <FAQSection />
 
-  <Footer />
+ 
   
 
 
