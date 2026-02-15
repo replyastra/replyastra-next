@@ -6,7 +6,7 @@ import {
   Bell, Plus, Trash2, ToggleLeft, ToggleRight,
   CheckCircle, AlertCircle, Settings, Instagram
 } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "../../lib/supabase";
 
 // ─── Sidebar ─────────────────────────────────────────────────
 function Sidebar({ active, setActive, onLogout }) {
