@@ -43,7 +43,6 @@ export default function ForgotPasswordPage() {
           </div>
 
           {success ? (
-            /* ── Success state ── */
             <div className="text-center py-4">
               <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <svg className="w-7 h-7 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -60,7 +59,6 @@ export default function ForgotPasswordPage() {
               </a>
             </div>
           ) : (
-            /* ── Form state ── */
             <>
               <p className="text-center text-sm text-gray-500 mb-8">
                 Enter your email and we&apos;ll send you a reset link.
