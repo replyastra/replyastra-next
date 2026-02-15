@@ -139,27 +139,34 @@ export default function SupportPage() {
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className={`border rounded-2xl p-6 transition-all duration-300 bg-white ${
-                  openFAQ === i
-                    ? "border-emerald-400"
-                    : "border-gray-200"
+                className={`border rounded-2xl overflow-hidden transition-all duration-300 bg-white ${
+                  openFAQ === i ? "border-emerald-400 shadow-md" : "border-gray-200"
                 }`}
               >
                 <button
                   onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
-                  className="w-full flex justify-between items-center text-left font-bold"
+                  className="w-full flex justify-between items-center text-left font-bold px-6 py-5"
                 >
-                  {faq.q}
-                  {openFAQ === i ? (
-                    <Minus className="text-emerald-600 shrink-0 ml-4" />
-                  ) : (
-                    <Plus className="text-gray-400 shrink-0 ml-4" />
-                  )}
+                  <span>{faq.q}</span>
+                  <span className={`ml-4 shrink-0 transition-transform duration-300 ${openFAQ === i ? "rotate-180" : "rotate-0"}`}>
+                    {openFAQ === i ? (
+                      <Minus className="text-emerald-600" />
+                    ) : (
+                      <Plus className="text-gray-400" />
+                    )}
+                  </span>
                 </button>
 
-                {openFAQ === i && (
-                  <p className="mt-4 text-gray-600">{faq.a}</p>
-                )}
+                {/* Smooth slide animation */}
+                <div
+                  className="transition-all duration-500 ease-in-out overflow-hidden"
+                  style={{
+                    maxHeight: openFAQ === i ? "300px" : "0px",
+                    opacity: openFAQ === i ? 1 : 0,
+                  }}
+                >
+                  <p className="px-6 pb-5 text-gray-600">{faq.a}</p>
+                </div>
               </div>
             ))}
           </div>
