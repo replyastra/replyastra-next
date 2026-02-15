@@ -12,7 +12,7 @@ export default function DataDeletion() {
     e.preventDefault();
     setLoading(true);
     try {
-      // Replace with your actual Supabase insert or API call
+      // Replace with your actual API call or Supabase insert:
       // const { error } = await supabase.from("deletion_requests").insert([form]);
       await new Promise((res) => setTimeout(res, 1000)); // simulate request
       setStatus("success");
@@ -30,179 +30,188 @@ export default function DataDeletion() {
 
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="inline-block mb-4 bg-red-100 text-red-600 px-4 py-1 rounded-full text-xs font-bold">
-            DATA RIGHTS
+          <span className="inline-block mb-4 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-xs font-bold">
+            LEGAL
           </span>
-          <h1 className="text-5xl font-black text-gray-900">Data Deletion Request</h1>
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
-            You have the right to request deletion of all personal data ReplyAstra holds about you,
-            including data collected via your Instagram account connection.
-          </p>
+          <h1 className="text-5xl font-black text-gray-900">Data Deletion</h1>
+          <p className="mt-4 text-gray-500 text-sm">Last updated: February 15, 2026</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-10">
+        {/* Info card */}
+        <div className="bg-white rounded-3xl shadow-sm p-10 md:p-16 space-y-10 text-gray-700 leading-relaxed mb-10">
 
-          {/* What gets deleted */}
-          <div className="bg-white rounded-3xl p-10 shadow-sm">
-            <h2 className="text-2xl font-black text-gray-900 mb-6">What We Delete</h2>
-            <div className="space-y-4">
-              {[
-                "Your ReplyAstra account and login credentials",
-                "Your connected Instagram account tokens",
-                "All automation rules and keyword triggers you configured",
-                "Your DM analytics and usage history",
-                "Your billing information (payment records retained for legal compliance only)",
-                "Any support tickets or messages you sent us",
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <CheckCircle className="text-emerald-500 shrink-0 mt-0.5" size={18} />
-                  <p className="text-gray-700 text-sm">{item}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-5">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={18} />
-                <div>
-                  <p className="font-bold text-amber-800 text-sm">Important Note</p>
-                  <p className="text-amber-700 text-sm mt-1">
-                    Deletion is permanent and irreversible. Your active subscription will also be
-                    cancelled with no refund. Billing records may be retained for up to 5 years
-                    as required by Indian tax law.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 bg-emerald-50 rounded-2xl p-5">
-              <p className="text-emerald-800 text-sm font-semibold">⏱ Processing Time</p>
-              <p className="text-emerald-700 text-sm mt-1">
-                We will process your request and delete all data within <strong>30 days</strong> of
-                receiving your request. You will receive a confirmation email when complete.
-              </p>
-            </div>
-          </div>
-
-          {/* Request Form */}
-          <div className="bg-white rounded-3xl p-10 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
+          <section>
+            <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                <Trash2 className="text-red-500" size={20} />
+                <Trash2 className="w-5 h-5 text-red-500" />
               </div>
-              <h2 className="text-2xl font-black text-gray-900">Submit Request</h2>
+              <h2 className="text-2xl font-black text-gray-900">Your Right to Delete</h2>
             </div>
+            <p>
+              You have the right to request deletion of your personal data from ReplyAstra at any time.
+              When you submit a deletion request, we will remove all data associated with your account
+              within <strong>30 days</strong>, including your profile, Instagram connection, automation
+              history, and any stored messages.
+            </p>
+          </section>
 
-            {status === "success" ? (
-              <div className="text-center py-10">
-                <CheckCircle className="text-emerald-500 mx-auto mb-4" size={48} />
-                <h3 className="text-xl font-black text-gray-900">Request Received</h3>
-                <p className="text-gray-600 mt-2">
-                  We've received your data deletion request. You'll receive a confirmation email
-                  shortly. All data will be deleted within 30 days.
-                </p>
-                <p className="text-gray-500 text-sm mt-4">
-                  Reference: DR-{Date.now().toString().slice(-8)}
-                </p>
+          <section>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <Mail className="w-5 h-5 text-emerald-600" />
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email used for your ReplyAstra account"
-                    className="w-full p-4 rounded-xl bg-gray-100 outline-none text-sm"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Instagram Username *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="@yourinstagram"
-                    className="w-full p-4 rounded-xl bg-gray-100 outline-none text-sm"
-                    value={form.instagram}
-                    onChange={(e) => setForm({ ...form, instagram: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Reason (optional)
-                  </label>
-                  <textarea
-                    placeholder="Let us know why you're leaving (optional)..."
-                    className="w-full p-4 rounded-xl bg-gray-100 outline-none text-sm h-24 resize-none"
-                    value={form.reason}
-                    onChange={(e) => setForm({ ...form, reason: e.target.value })}
-                  />
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 text-xs text-gray-500">
-                  By submitting this form, you confirm you are the account owner and consent to
-                  permanent deletion of all associated data.
-                </div>
-
-                {status === "error" && (
-                  <p className="text-red-500 text-sm text-center">
-                    Something went wrong. Please email us directly at{" "}
-                    <a href="mailto:privacy@replyastra.online" className="underline">
-                      privacy@replyastra.online
-                    </a>
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-60"
-                >
-                  <Trash2 size={18} />
-                  {loading ? "Submitting..." : "Request Data Deletion"}
-                </button>
-              </form>
-            )}
-
-            {/* Alternative email option */}
-            <div className="mt-6 pt-6 border-t border-gray-100 flex items-center gap-3">
-              <Mail className="text-gray-400 shrink-0" size={18} />
-              <p className="text-gray-500 text-sm">
-                Or email us directly:{" "}
-                <a href="mailto:privacy@replyastra.online" className="text-emerald-600 underline font-semibold">
-                  privacy@replyastra.online
-                </a>
-              </p>
+              <h2 className="text-2xl font-black text-gray-900">What We Delete</h2>
             </div>
-          </div>
+            <ul className="space-y-2">
+              {[
+                "Your account credentials and profile information",
+                "Connected Instagram account data and tokens",
+                "All automation rules, keywords, and DM templates",
+                "Message history and analytics data",
+                "Any payment information (handled via Stripe — we do not store card details)",
+              ].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-gray-600">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-black text-gray-900 mb-3">What We May Retain</h2>
+            <p>
+              We may retain certain data as required by law or for legitimate business purposes,
+              such as records of transactions for tax compliance. This data is kept securely and
+              never used for marketing purposes.
+            </p>
+          </section>
 
         </div>
 
-        {/* Meta specific note */}
-        <div className="mt-10 bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-          <h3 className="font-black text-gray-900 text-lg mb-3">
-            Disconnecting ReplyAstra from Instagram
-          </h3>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            You can also revoke ReplyAstra's access to your Instagram account directly through Meta
-            without submitting a deletion request here. To do this:
+        {/* Request Form */}
+        <div className="bg-white rounded-3xl shadow-sm p-10 md:p-16">
+          <h2 className="text-2xl font-black text-gray-900 mb-2">Submit a Deletion Request</h2>
+          <p className="text-gray-500 text-sm mb-8">
+            Fill out the form below and we'll process your request within 30 days.
           </p>
-          <ol className="list-decimal pl-6 mt-3 space-y-2 text-sm text-gray-600">
-            <li>Go to your <strong>Facebook Settings</strong></li>
-            <li>Click on <strong>Security and Login → Business Integrations</strong></li>
-            <li>Find <strong>ReplyAstra</strong> and click <strong>Remove</strong></li>
-          </ol>
-          <p className="mt-3 text-sm text-gray-500">
-            This will immediately revoke our API access but will not delete your ReplyAstra account data.
-            Submit the form above to delete all data permanently.
+
+          {/* Success message */}
+          {status === "success" && (
+            <div className="mb-8 flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-5">
+              <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-bold text-emerald-800">Request Received!</p>
+                <p className="text-emerald-700 text-sm mt-1">
+                  We've received your data deletion request and will process it within 30 days.
+                  You'll receive a confirmation email shortly.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error message */}
+          {status === "error" && (
+            <div className="mb-8 flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl p-5">
+              <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-bold text-red-800">Something went wrong</p>
+                <p className="text-red-700 text-sm mt-1">
+                  Please try again or email us directly at{" "}
+                  <a href="mailto:support@replyastra.online" className="underline">
+                    support@replyastra.online
+                  </a>
+                </p>
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="you@example.com"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Instagram */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Instagram Username <span className="text-red-500">*</span>
+              </label>
+              <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-emerald-400 transition">
+                <span className="px-4 py-3 bg-gray-50 text-gray-400 font-semibold border-r border-gray-200">@</span>
+                <input
+                  type="text"
+                  required
+                  value={form.instagram}
+                  onChange={(e) => setForm({ ...form, instagram: e.target.value })}
+                  placeholder="yourhandle"
+                  className="flex-1 px-4 py-3 text-gray-700 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Reason */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Reason (optional)
+              </label>
+              <textarea
+                rows={4}
+                value={form.reason}
+                onChange={(e) => setForm({ ...form, reason: e.target.value })}
+                placeholder="Let us know why you'd like your data deleted..."
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition resize-none"
+              />
+            </div>
+
+            {/* Submit button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-bold py-4 rounded-xl transition-colors"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4" />
+                  Submit Deletion Request
+                </>
+              )}
+            </button>
+
+            <p className="text-xs text-gray-400 text-center">
+              By submitting, you confirm this is your account and you understand deletion is irreversible.
+            </p>
+          </form>
+        </div>
+
+        {/* Contact fallback */}
+        <div className="mt-8 text-center">
+          <p className="text-gray-500 text-sm">
+            Prefer email?{" "}
+            <a
+              href="mailto:support@replyastra.online"
+              className="text-emerald-600 font-semibold hover:underline"
+            >
+              support@replyastra.online
+            </a>
           </p>
         </div>
 
