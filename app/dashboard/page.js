@@ -1,41 +1,15 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Zap, BarChart2, Users, LogOut,
-  Instagram, Bell, Plus, Trash2, ToggleLeft, ToggleRight,
-  TrendingUp, MessageCircle, Heart, Eye, ChevronRight,
-  CheckCircle, AlertCircle, Settings, Search
+  Bell, Plus, Trash2, ToggleLeft, ToggleRight,
+  CheckCircle, AlertCircle, Settings, Instagram
 } from "lucide-react";
-
-// ─── Mock Data ───────────────────────────────────────────────
-const mockAutomations = [
-  { id: 1, keyword: "price", reply: "Hey! Our pricing starts at ₹999/mo. Check replyastra.online/pricing 🚀", active: true, triggered: 142 },
-  { id: 2, keyword: "link", reply: "Here's the link you asked for 👉 replyastra.online", active: true, triggered: 89 },
-  { id: 3, keyword: "collab", reply: "Love that! DM us your media kit and we'll get back to you 🤝", active: false, triggered: 23 },
-  { id: 4, keyword: "discount", reply: "Use code EARLY20 for 20% off your first month! 🎉", active: true, triggered: 67 },
-];
-
-const mockAccounts = [
-  { id: 1, handle: "@replyastra", followers: "12.4K", status: "connected", avatar: "RA" },
-  { id: 2, handle: "@yourbrand", followers: "5.1K", status: "connected", avatar: "YB" },
-];
-
-const statsData = [
-  { label: "DMs Sent", value: "1,284", change: "+18%", icon: MessageCircle, color: "bg-emerald-50 text-emerald-600" },
-  { label: "Automations Run", value: "321", change: "+12%", icon: Zap, color: "bg-blue-50 text-blue-600" },
-  { label: "Accounts", value: "2", change: "", icon: Instagram, color: "bg-pink-50 text-pink-600" },
-  { label: "Avg. Reply Time", value: "< 1s", change: "instant", icon: TrendingUp, color: "bg-purple-50 text-purple-600" },
-];
-
-const recentActivity = [
-  { msg: 'Keyword "price" triggered → DM sent to @user123', time: "2 min ago", ok: true },
-  { msg: 'Keyword "link" triggered → DM sent to @creator99', time: "5 min ago", ok: true },
-  { msg: 'Keyword "collab" skipped — automation paused', time: "12 min ago", ok: false },
-  { msg: 'Keyword "discount" triggered → DM sent to @shopowner', time: "20 min ago", ok: true },
-  { msg: 'New account @yourbrand connected', time: "1 hr ago", ok: true },
-];
+import { supabase } from "@/lib/supabaseClient";
 
 // ─── Sidebar ─────────────────────────────────────────────────
-function Sidebar({ active, setActive }) {
+function Sidebar({ active, setActive, onLogout }) {
   const links = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "automations", label: "Automations", icon: Zap },
@@ -47,7 +21,9 @@ function Sidebar({ active, setActive }) {
     <aside className="w-56 shrink-0 bg-white border-r border-gray-100 min-h-screen flex flex-col">
       {/* Logo */}
       <div className="px-5 py-6 border-b border-gray-100">
-        <span className="text-xl font-black text-gray-900">Reply<span className="text-emerald-500">Astra</span></span>
+        <span className="text-xl font-black text-gray-900">
+          Reply<span className="text-emerald-500">Astra</span>
+        </span>
       </div>
 
       {/* Nav */}
@@ -74,7 +50,10 @@ function Sidebar({ active, setActive }) {
           <Settings size={17} />
           Settings
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-50 transition-all">
+        <button 
+          onClick={onLogout}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-50 transition-all"
+        >
           <LogOut size={17} />
           Log Out
         </button>
@@ -84,13 +63,14 @@ function Sidebar({ active, setActive }) {
 }
 
 // ─── Topbar ──────────────────────────────────────────────────
-function Topbar({ page }) {
+function Topbar({ page, user }) {
   const titles = {
     overview: "Overview",
     automations: "Automations",
     analytics: "Analytics",
     accounts: "Accounts",
   };
+  
   return (
     <header className="h-14 bg-white border-b border-gray-100 flex items-center justify-between px-6">
       <h1 className="text-base font-bold text-gray-800">{titles[page]}</h1>
@@ -100,7 +80,7 @@ function Topbar({ page }) {
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-emerald-500 rounded-full" />
         </button>
         <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center">
-          YO
+          {user?.email?.substring(0, 2).toUpperCase() || "YO"}
         </div>
       </div>
     </header>
@@ -108,7 +88,64 @@ function Topbar({ page }) {
 }
 
 // ─── Overview Page ───────────────────────────────────────────
-function OverviewPage() {
+function OverviewPage({ userId }) {
+  const [stats, setStats] = useState({
+    dmsSent: 0,
+    automationsRun: 0,
+    accounts: 0,
+  });
+  const [recentActivity, setRecentActivity] = useState([]);
+
+  useEffect(() => {
+    if (!userId) return;
+    
+    const fetchData = async () => {
+      // Fetch DM logs count
+      const { count: dmCount } = await supabase
+        .from('dm_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+
+      // Fetch active automations count
+      const { count: autoCount } = await supabase
+        .from('automations')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('active', true);
+
+      // Fetch accounts count
+      const { count: accCount } = await supabase
+        .from('accounts')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+
+      // Fetch recent activity
+      const { data: logs } = await supabase
+        .from('dm_logs')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      setStats({
+        dmsSent: dmCount || 0,
+        automationsRun: autoCount || 0,
+        accounts: accCount || 0,
+      });
+
+      setRecentActivity(logs || []);
+    };
+
+    fetchData();
+  }, [userId]);
+
+  const statsData = [
+    { label: "DMs Sent", value: stats.dmsSent.toLocaleString(), change: "+18%", icon: Zap, color: "bg-emerald-50 text-emerald-600" },
+    { label: "Automations Run", value: stats.automationsRun.toString(), change: "+12%", icon: Zap, color: "bg-blue-50 text-blue-600" },
+    { label: "Accounts", value: stats.accounts.toString(), change: "", icon: Instagram, color: "bg-pink-50 text-pink-600" },
+    { label: "Avg. Reply Time", value: "< 1s", change: "instant", icon: BarChart2, color: "bg-purple-50 text-purple-600" },
+  ];
+
   return (
     <div className="p-6 space-y-6">
       {/* Stats */}
@@ -131,18 +168,23 @@ function OverviewPage() {
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h2 className="text-sm font-bold text-gray-800 mb-4">Recent Activity</h2>
         <div className="space-y-3">
-          {recentActivity.map((item, i) => (
-            <div key={i} className="flex items-start gap-3">
-              {item.ok
-                ? <CheckCircle size={15} className="text-emerald-500 mt-0.5 shrink-0" />
-                : <AlertCircle size={15} className="text-gray-300 mt-0.5 shrink-0" />
-              }
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-700 truncate">{item.msg}</p>
+          {recentActivity.length === 0 ? (
+            <p className="text-sm text-gray-400">No activity yet</p>
+          ) : (
+            recentActivity.map((item) => (
+              <div key={item.id} className="flex items-start gap-3">
+                {item.success ? (
+                  <CheckCircle size={15} className="text-emerald-500 mt-0.5 shrink-0" />
+                ) : (
+                  <AlertCircle size={15} className="text-gray-300 mt-0.5 shrink-0" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-700 truncate">{item.message}</p>
+                </div>
+                <span className="text-xs text-gray-400 shrink-0">{item.time_ago}</span>
               </div>
-              <span className="text-xs text-gray-400 shrink-0">{item.time}</span>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -163,27 +205,63 @@ function OverviewPage() {
 }
 
 // ─── Automations Page ────────────────────────────────────────
-function AutomationsPage() {
-  const [automations, setAutomations] = useState(mockAutomations);
+function AutomationsPage({ userId }) {
+  const [automations, setAutomations] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ keyword: "", reply: "" });
+  const [loading, setLoading] = useState(false);
 
-  const toggle = (id) =>
-    setAutomations((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, active: !a.active } : a))
-    );
+  useEffect(() => {
+    if (!userId) return;
+    fetchAutomations();
+  }, [userId]);
 
-  const remove = (id) =>
-    setAutomations((prev) => prev.filter((a) => a.id !== id));
+  const fetchAutomations = async () => {
+    const { data } = await supabase
+      .from('automations')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
 
-  const add = () => {
+    setAutomations(data || []);
+  };
+
+  const toggle = async (id, currentActive) => {
+    await supabase
+      .from('automations')
+      .update({ active: !currentActive })
+      .eq('id', id);
+    
+    fetchAutomations();
+  };
+
+  const remove = async (id) => {
+    await supabase
+      .from('automations')
+      .delete()
+      .eq('id', id);
+    
+    fetchAutomations();
+  };
+
+  const add = async () => {
     if (!form.keyword || !form.reply) return;
-    setAutomations((prev) => [
-      ...prev,
-      { id: Date.now(), keyword: form.keyword, reply: form.reply, active: true, triggered: 0 },
-    ]);
+    
+    setLoading(true);
+    await supabase
+      .from('automations')
+      .insert([{ 
+        user_id: userId, 
+        keyword: form.keyword, 
+        reply: form.reply,
+        active: true,
+        triggered: 0
+      }]);
+    
     setForm({ keyword: "", reply: "" });
     setShowForm(false);
+    setLoading(false);
+    fetchAutomations();
   };
 
   return (
@@ -218,10 +296,17 @@ function AutomationsPage() {
             className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
           />
           <div className="flex gap-2">
-            <button onClick={add} className="bg-emerald-600 text-white text-sm font-bold px-5 py-2 rounded-xl hover:bg-emerald-700 transition-colors">
-              Save
+            <button 
+              onClick={add} 
+              disabled={loading}
+              className="bg-emerald-600 text-white text-sm font-bold px-5 py-2 rounded-xl hover:bg-emerald-700 transition-colors disabled:opacity-50"
+            >
+              {loading ? "Saving..." : "Save"}
             </button>
-            <button onClick={() => setShowForm(false)} className="text-sm font-semibold text-gray-400 px-4 py-2 rounded-xl hover:bg-gray-50">
+            <button 
+              onClick={() => setShowForm(false)} 
+              className="text-sm font-semibold text-gray-400 px-4 py-2 rounded-xl hover:bg-gray-50"
+            >
               Cancel
             </button>
           </div>
@@ -230,47 +315,62 @@ function AutomationsPage() {
 
       {/* List */}
       <div className="space-y-3">
-        {automations.map((a) => (
-          <div key={a.id} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full font-mono">
-                  "{a.keyword}"
-                </span>
-                <span className="text-xs text-gray-400">{a.triggered} triggered</span>
-              </div>
-              <p className="text-sm text-gray-600 truncate">{a.reply}</p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button onClick={() => toggle(a.id)} className="text-gray-400 hover:text-emerald-600 transition-colors">
-                {a.active
-                  ? <ToggleRight size={26} className="text-emerald-500" />
-                  : <ToggleLeft size={26} />
-                }
-              </button>
-              <button onClick={() => remove(a.id)} className="text-gray-300 hover:text-red-400 transition-colors">
-                <Trash2 size={16} />
-              </button>
-            </div>
+        {automations.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-gray-100 p-10 text-center">
+            <p className="text-gray-400">No automations yet. Create your first one!</p>
           </div>
-        ))}
+        ) : (
+          automations.map((a) => (
+            <div key={a.id} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-start gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full font-mono">
+                    "{a.keyword}"
+                  </span>
+                  <span className="text-xs text-gray-400">{a.triggered} triggered</span>
+                </div>
+                <p className="text-sm text-gray-600 truncate">{a.reply}</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button onClick={() => toggle(a.id, a.active)} className="text-gray-400 hover:text-emerald-600 transition-colors">
+                  {a.active ? (
+                    <ToggleRight size={26} className="text-emerald-500" />
+                  ) : (
+                    <ToggleLeft size={26} />
+                  )}
+                </button>
+                <button onClick={() => remove(a.id)} className="text-gray-300 hover:text-red-400 transition-colors">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
 }
 
 // ─── Analytics Page ──────────────────────────────────────────
-function AnalyticsPage() {
-  const bars = [
-    { day: "Mon", dms: 180 },
-    { day: "Tue", dms: 220 },
-    { day: "Wed", dms: 195 },
-    { day: "Thu", dms: 310 },
-    { day: "Fri", dms: 280 },
-    { day: "Sat", dms: 145 },
-    { day: "Sun", dms: 90 },
-  ];
-  const max = Math.max(...bars.map((b) => b.dms));
+function AnalyticsPage({ userId }) {
+  const [weeklyData, setWeeklyData] = useState([]);
+
+  useEffect(() => {
+    if (!userId) return;
+    
+    // Mock weekly data - in production, fetch from Supabase
+    setWeeklyData([
+      { day: "Mon", dms: 180 },
+      { day: "Tue", dms: 220 },
+      { day: "Wed", dms: 195 },
+      { day: "Thu", dms: 310 },
+      { day: "Fri", dms: 280 },
+      { day: "Sat", dms: 145 },
+      { day: "Sun", dms: 90 },
+    ]);
+  }, [userId]);
+
+  const max = Math.max(...weeklyData.map((b) => b.dms));
 
   const topKeywords = [
     { kw: "price", count: 142, pct: 44 },
@@ -300,7 +400,7 @@ function AnalyticsPage() {
       <div className="bg-white rounded-2xl border border-gray-100 p-6">
         <h2 className="text-sm font-bold text-gray-800 mb-6">DMs Sent — Last 7 Days</h2>
         <div className="flex items-end gap-3 h-36">
-          {bars.map((b) => (
+          {weeklyData.map((b) => (
             <div key={b.day} className="flex-1 flex flex-col items-center gap-2">
               <span className="text-xs text-gray-400 font-semibold">{b.dms}</span>
               <div
@@ -338,8 +438,31 @@ function AnalyticsPage() {
 }
 
 // ─── Accounts Page ───────────────────────────────────────────
-function AccountsPage() {
-  const [accounts, setAccounts] = useState(mockAccounts);
+function AccountsPage({ userId }) {
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    if (!userId) return;
+    fetchAccounts();
+  }, [userId]);
+
+  const fetchAccounts = async () => {
+    const { data } = await supabase
+      .from('accounts')
+      .select('*')
+      .eq('user_id', userId);
+
+    setAccounts(data || []);
+  };
+
+  const removeAccount = async (id) => {
+    await supabase
+      .from('accounts')
+      .delete()
+      .eq('id', id);
+    
+    fetchAccounts();
+  };
 
   return (
     <div className="p-6 space-y-4">
@@ -352,38 +475,49 @@ function AccountsPage() {
       </div>
 
       <div className="space-y-3">
-        {accounts.map((acc) => (
-          <div key={acc.id} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
-            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-pink-400 to-orange-400 flex items-center justify-center text-white font-bold text-sm shrink-0">
-              {acc.avatar}
+        {accounts.length === 0 ? (
+          <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-emerald-300 transition-colors cursor-pointer group">
+            <div className="w-12 h-12 bg-gray-50 group-hover:bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3 transition-colors">
+              <Instagram size={22} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
             </div>
-            <div className="flex-1">
-              <p className="font-bold text-gray-900 text-sm">{acc.handle}</p>
-              <p className="text-xs text-gray-400">{acc.followers} followers</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block" />
-                Connected
-              </span>
-              <button
-                onClick={() => setAccounts((prev) => prev.filter((a) => a.id !== acc.id))}
-                className="text-gray-300 hover:text-red-400 transition-colors"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
+            <p className="text-sm font-bold text-gray-500 group-hover:text-gray-700">Connect your first Instagram account</p>
+            <p className="text-xs text-gray-400 mt-1">Manage automations from one dashboard</p>
           </div>
-        ))}
-      </div>
-
-      {/* Connect new */}
-      <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-emerald-300 transition-colors cursor-pointer group">
-        <div className="w-12 h-12 bg-gray-50 group-hover:bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3 transition-colors">
-          <Instagram size={22} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
-        </div>
-        <p className="text-sm font-bold text-gray-500 group-hover:text-gray-700">Connect another Instagram account</p>
-        <p className="text-xs text-gray-400 mt-1">Manage multiple accounts from one dashboard</p>
+        ) : (
+          <>
+            {accounts.map((acc) => (
+              <div key={acc.id} className="bg-white rounded-2xl border border-gray-100 p-5 flex items-center gap-4">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-pink-400 to-orange-400 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                  {acc.avatar || acc.handle.substring(0, 2).toUpperCase()}
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-gray-900 text-sm">{acc.handle}</p>
+                  <p className="text-xs text-gray-400">{acc.followers} followers</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block" />
+                    Connected
+                  </span>
+                  <button
+                    onClick={() => removeAccount(acc.id)}
+                    className="text-gray-300 hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+            
+            <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-emerald-300 transition-colors cursor-pointer group">
+              <div className="w-12 h-12 bg-gray-50 group-hover:bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3 transition-colors">
+                <Instagram size={22} className="text-gray-300 group-hover:text-emerald-500 transition-colors" />
+              </div>
+              <p className="text-sm font-bold text-gray-500 group-hover:text-gray-700">Connect another Instagram account</p>
+              <p className="text-xs text-gray-400 mt-1">Manage multiple accounts from one dashboard</p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -392,19 +526,56 @@ function AccountsPage() {
 // ─── Main Dashboard ──────────────────────────────────────────
 export default function Dashboard() {
   const [activePage, setActivePage] = useState("overview");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Get current user
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    
+    getUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
 
   const pages = {
-    overview: <OverviewPage />,
-    automations: <AutomationsPage />,
-    analytics: <AnalyticsPage />,
-    accounts: <AccountsPage />,
+    overview: <OverviewPage userId={user?.id} />,
+    automations: <AutomationsPage userId={user?.id} />,
+    analytics: <AnalyticsPage userId={user?.id} />,
+    accounts: <AccountsPage userId={user?.id} />,
   };
+
+  // Show loading if no user yet
+  if (!user) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600 font-semibold">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
-      <Sidebar active={activePage} setActive={setActivePage} />
+      <Sidebar active={activePage} setActive={setActivePage} onLogout={handleLogout} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar page={activePage} />
+        <Topbar page={activePage} user={user} />
         <main className="flex-1 overflow-y-auto">
           {pages[activePage]}
         </main>
