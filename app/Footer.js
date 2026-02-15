@@ -51,11 +51,9 @@ export default function Footer() {
         {/* BOTTOM BAR */}
         <div className="mt-16 pt-6 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-400 font-semibold text-center md:text-left">
-            © 2026 ReplyAstra Platform · All Rights Reserved
+            © 2026 ReplyAstra · All Rights Reserved
           </p>
-          <a href="/data-deletion" className="text-xs text-gray-400 hover:text-emerald-600 font-semibold transition-colors">
-            Data Deletion
-          </a>
+
           <a
             href="https://www.instagram.com/replyastra?igsh=N2t5OGszZXp4aWUw"
             target="_blank"
