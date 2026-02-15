@@ -23,7 +23,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3 text-gray-600 font-semibold">
               <li><a href="#pricing" className="hover:text-emerald-600">Pricing</a></li>
-              <li><a href="/terms" className="hover:text-emerald-600">Terms & Conditions</a></li>
+              <li><a href="/terms" className="hover:text-emerald-600">Terms of Service</a></li>
               <li><a href="/privacy-policy" className="hover:text-emerald-600">Privacy Policy</a></li>
               <li><a href="/refund-policy" className="hover:text-emerald-600">Refund Policy</a></li>
               <li><a href="/cookie-policy" className="hover:text-emerald-600">Cookie Policy</a></li>
