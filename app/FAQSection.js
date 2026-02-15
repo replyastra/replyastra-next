@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Plus, Minus } from "lucide-react";
+
 export default function FAQSection() {
   const faqs = [
     {
@@ -34,10 +35,13 @@ export default function FAQSection() {
         "You can visit our dedicated Support page to send us a message anytime. We provide direct email support for all users, with priority response times for Pro subscribers.",
     },
   ];
+
   const [activeIndex, setActiveIndex] = useState(null);
+
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
   return (
     <section className="pt-28 pb-16 px-6 bg-[#f0fdfa]">
       <div className="max-w-4xl mx-auto text-center">
@@ -47,34 +51,45 @@ export default function FAQSection() {
         <p className="mt-4 text-gray-600">
           Everything you need to know about ReplyAstra.
         </p>
+
         <div className="mt-12 space-y-4 text-left">
           {faqs.map((faq, index) => {
             const isActive = activeIndex === index;
             return (
               <div
                 key={index}
-                className={`rounded-2xl border p-6 transition-all duration-300 ${
+                className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
                   isActive
-                    ? "border-emerald-400 bg-white"
+                    ? "border-emerald-400 bg-white shadow-md"
                     : "border-gray-200 bg-white"
                 }`}
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="flex justify-between items-center w-full text-left font-semibold text-gray-900"
+                  className="flex justify-between items-center w-full text-left font-semibold text-gray-900 px-6 py-5"
                 >
-                  {faq.question}
-                  {isActive ? (
-                    <Minus className="text-emerald-600 shrink-0 ml-4" />
-                  ) : (
-                    <Plus className="text-gray-500 shrink-0 ml-4" />
-                  )}
+                  <span>{faq.question}</span>
+                  <span className={`ml-4 shrink-0 transition-transform duration-300 ${isActive ? "rotate-180" : "rotate-0"}`}>
+                    {isActive ? (
+                      <Minus className="text-emerald-600" />
+                    ) : (
+                      <Plus className="text-gray-500" />
+                    )}
+                  </span>
                 </button>
-                {isActive && (
-                  <p className="mt-4 text-gray-600 leading-relaxed">
+
+                {/* Smooth slide animation using max-height trick */}
+                <div
+                  className="transition-all duration-500 ease-in-out overflow-hidden"
+                  style={{
+                    maxHeight: isActive ? "300px" : "0px",
+                    opacity: isActive ? 1 : 0,
+                  }}
+                >
+                  <p className="px-6 pb-5 text-gray-600 leading-relaxed">
                     {faq.answer}
                   </p>
-                )}
+                </div>
               </div>
             );
           })}
