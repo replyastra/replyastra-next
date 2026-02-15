@@ -26,6 +26,7 @@ export default function Footer() {
               <li><a href="/terms" className="hover:text-emerald-600">Terms & Conditions</a></li>
               <li><a href="/privacy-policy" className="hover:text-emerald-600">Privacy Policy</a></li>
               <li><a href="/refund-policy" className="hover:text-emerald-600">Refund Policy</a></li>
+              <li><a href="/cookie-policy" className="hover:text-emerald-600">Cookie Policy</a></li>
             </ul>
           </div>
           {/* SUPPORT */}
@@ -52,6 +53,9 @@ export default function Footer() {
           <p className="text-xs text-gray-400 font-semibold text-center md:text-left">
             © 2026 ReplyAstra Platform · All Rights Reserved
           </p>
+          <a href="/data-deletion" className="text-xs text-gray-400 hover:text-emerald-600 font-semibold transition-colors">
+            Data Deletion
+          </a>
           <a
             href="https://www.instagram.com/replyastra?igsh=N2t5OGszZXp4aWUw"
             target="_blank"
