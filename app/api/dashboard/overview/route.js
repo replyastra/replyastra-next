@@ -1,7 +1,7 @@
 // app/api/dashboard/overview/route.js
 
-import { getAuthUser, unauthorized, serverError } from "@/lib/authMiddleware";
-import { PLAN_LIMITS, getCurrentMonth } from "@/lib/planLimits";
+import { getAuthUser, unauthorized, serverError } from "../../../lib/authMiddleware";
+import { PLAN_LIMITS, getCurrentMonth } from "../../../lib/planLimits";
 
 export async function GET() {
   const { user, profile, supabase, error } = await getAuthUser();
