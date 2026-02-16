@@ -1,7 +1,7 @@
 // app/api/automations/route.js
 
-import { getAuthUser, unauthorized, forbidden, serverError } from "@/lib/authMiddleware";
-import { PLAN_LIMITS } from "@/lib/planLimits";
+import { getAuthUser, unauthorized, forbidden, serverError } from "../../lib/authMiddleware";
+import { PLAN_LIMITS } from "../../lib/planLimits";
 
 // GET — list all automations
 export async function GET() {
