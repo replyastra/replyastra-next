@@ -1,6 +1,6 @@
 // app/api/instagram/accounts/[id]/route.js
 
-import { getAuthUser, unauthorized, forbidden, serverError } from "@/lib/authMiddleware";
+import { getAuthUser, unauthorized, forbidden, serverError } from "../../../../lib/authMiddleware";
 
 // DELETE — disconnect Instagram account
 export async function DELETE(req, { params }) {
