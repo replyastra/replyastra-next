@@ -1,6 +1,6 @@
 // app/api/automations/[id]/route.js
 
-import { getAuthUser, unauthorized, forbidden, serverError } from "@/lib/authMiddleware";
+import { getAuthUser, unauthorized, forbidden, serverError } from "../../../lib/authMiddleware";
 
 // PATCH — toggle active/paused
 export async function PATCH(req, { params }) {
