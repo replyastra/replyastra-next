@@ -1,6 +1,6 @@
 // app/api/subscription/route.js
 
-import { getAuthUser, unauthorized, serverError } from "@/lib/authMiddleware";
+import { getAuthUser, unauthorized, serverError } from "../../lib/authMiddleware";
 
 // GET — get subscription status
 export async function GET() {
