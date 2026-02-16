@@ -1,18 +1,7 @@
-// app/layout.js
-import "./globals.css";
-import ClientLayout from "./ClientLayout";
+// app/(auth)/layout.js
+// This file makes sure login, signup, dashboard pages
+// do NOT show the navbar or footer from the root layout
 
-export const metadata = {
-  title: "ReplyAstra - Automate Your Instagram DMs",
-  description: "Automate Instagram DM replies with keyword triggers",
-};
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>
-        <ClientLayout>{children}</ClientLayout>
-      </body>
-    </html>
-  );
+export default function AuthLayout({ children }) {
+  return <>{children}</>;
 }
