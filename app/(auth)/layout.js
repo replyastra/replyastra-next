@@ -1,8 +1,18 @@
-// SAVE THIS FILE AT: app/(auth)/layout.js
-// The (auth) folder name with brackets is a Next.js "Route Group"
-// It hides the navbar and footer for all pages inside it
-// URLs still work normally: /login /signup /dashboard
+// app/layout.js
+import "./globals.css";
+import ClientLayout from "./ClientLayout";
 
-export default function AuthLayout({ children }) {
-  return <>{children}</>;
+export const metadata = {
+  title: "ReplyAstra - Automate Your Instagram DMs",
+  description: "Automate Instagram DM replies with keyword triggers",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <ClientLayout>{children}</ClientLayout>
+      </body>
+    </html>
+  );
 }
