@@ -1,20 +1,19 @@
 // app/api/dashboard/overview/route.js
+import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
+import { PLAN_LIMITS, getCurrentMonth } from "@/lib/planLimits";
 
-import { getAuthUser, unauthorized, serverError } from "../../../lib/authMiddleware";
-import { PLAN_LIMITS, getCurrentMonth } from "../../../lib/planLimits";
+export const runtime = "edge";
 
 export async function GET() {
   const { user, profile, supabase, error } = await getAuthUser();
-  if (error) return unauthorized();
+  if (error) return unauth();
 
   try {
     const plan = profile.plan || "free";
     const limits = PLAN_LIMITS[plan];
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
+    const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
     const month = getCurrentMonth();
 
-    // Fetch all stats in parallel
     const [
       { count: totalDMs },
       { count: weekDMs },
@@ -27,7 +26,7 @@ export async function GET() {
       supabase.from("dm_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("sent_at", weekAgo.toISOString()),
       supabase.from("automations").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "active"),
       supabase.from("instagram_accounts").select("*", { count: "exact", head: true }).eq("user_id", user.id).neq("status", "disconnected"),
-      supabase.from("dm_logs").select("keyword, recipient, status, sent_at, error_message").eq("user_id", user.id).order("sent_at", { ascending: false }).limit(8),
+      supabase.from("dm_logs").select("keyword,recipient,status,sent_at").eq("user_id", user.id).order("sent_at", { ascending: false }).limit(8),
       supabase.from("usage_tracking").select("dm_count").eq("user_id", user.id).eq("month", month).single(),
     ]);
 
@@ -50,7 +49,6 @@ export async function GET() {
         accounts: limits.accounts,
         watermark: limits.watermark,
         advanced_analytics: limits.advanced_analytics,
-        ask_to_follow: limits.ask_to_follow,
       },
       recentActivity: recentActivity || [],
       subscription: {
@@ -60,7 +58,6 @@ export async function GET() {
       },
     });
   } catch (err) {
-    console.error("Overview error:", err);
-    return serverError();
+    return fail();
   }
 }
