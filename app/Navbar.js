@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Link from 'next/link';
+
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
@@ -21,8 +21,9 @@ export default function Navbar() {
           <a href="/#features" className="hover:text-emerald-600 transition-colors">Features</a>
           <a href="/#how-it-works" className="hover:text-emerald-600 transition-colors">How it works</a>
           <a href="/#pricing" className="hover:text-emerald-600 transition-colors">Pricing</a>
-          <Link href="/login" className="hover:text-emerald-600 transition-colors">Login</Link>
-          <Link href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition-all shadow-md">Get Started</Link>
+          <a href="/login" className="hover:text-emerald-600 transition-colors">Login</a>
+          <a href="/signup" className="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition-all shadow-md">Get Started</a>
+
         </div>
 
         {/* MOBILE HAMBURGER */}
