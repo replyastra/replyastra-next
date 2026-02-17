@@ -89,6 +89,7 @@ function PricingPage({ plan, onClose }) {
         { text: "3,000 DMs per month",      ok: true },
         { text: "10 automation rules",       ok: true },
         { text: "3 Instagram accounts",      ok: true },
+        { text: "Basic analytics",          ok: true  },
         { text: "Ask-to-Follow automation",  ok: true },
         { text: "Unlimited keyword replies", ok: true },
         { text: "No watermark",             ok: true },
