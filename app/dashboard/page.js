@@ -76,7 +76,7 @@ function PricingPage({ plan, onClose }) {
         { text: "3 automation rules",       ok: true  },
         { text: "1 Instagram account",      ok: true  },
         { text: "Basic analytics",          ok: true  },
-        { text: "ReplyAstra watermark",     ok: false },
+        { text: "ReplyAstra watermark",     ok: true },
         { text: "Ask to Follow automation", ok: false },
       ],
     },
