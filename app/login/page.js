@@ -1,136 +1,175 @@
 "use client";
+import { useState, useEffect, Suspense } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
-import { useState } from "react";
-import { supabase } from "../../lib/supabase";
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  { auth: { persistSession: true, autoRefreshToken: true } }
+);
 
-export default function LoginPage() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
 
-  const handleLogin = async (e) => {
+  useEffect(() => {
+    // Handle error params from Supabase email links (otp_expired etc.)
+    const errCode = searchParams.get("error_code");
+    const errDesc = searchParams.get("error_description");
+    if (errCode === "otp_expired") {
+      setError("This confirmation link has expired. Please request a new one below or sign in.");
+    } else if (errCode) {
+      setError(errDesc?.replace(/\+/g, " ") || "An error occurred. Please try again.");
+    }
+
+    // If user just confirmed email and was redirected here
+    const msg = searchParams.get("message");
+    if (msg === "confirmed") setInfo("Email confirmed! You can now log in.");
+
+    // If already logged in, go to dashboard
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) window.location.href = "/dashboard";
+    });
+  }, [searchParams]);
+
+  async function handleLogin(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email: form.email,
-      password: form.password,
-    });
+    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      setError(error.message);
+    if (authError) {
+      // Check if user exists at all — give better message
+      const msg = authError.message?.toLowerCase() || "";
+
+      if (msg.includes("invalid login credentials") || msg.includes("invalid credentials")) {
+        // Try to distinguish between wrong password vs no account
+        const { data: methods } = await supabase.auth.signInWithOtp({ email, shouldCreateUser: false });
+        // If email doesn't exist in system, guide them to sign up
+        setError("No account found with this email. Please check your email or sign up for a new account.");
+      } else if (msg.includes("email not confirmed")) {
+        setError("Please confirm your email first. Check your inbox for the confirmation link.");
+        setInfo("Didn't get the email? Check spam or sign up again to resend.");
+      } else if (msg.includes("too many requests")) {
+        setError("Too many attempts. Please wait a few minutes and try again.");
+      } else {
+        setError("Incorrect password. Please try again or reset your password.");
+      }
       setLoading(false);
-    } else {
+      return;
+    }
+
+    if (data?.user) {
       window.location.href = "/dashboard";
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-[#f0fdfa] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#f0fdfa] flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Back to home */}
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors">
+          ← Back to Home
+        </Link>
 
-      <a href="/" className="fixed top-6 left-6 text-sm font-semibold text-gray-400 hover:text-gray-700 transition-colors">
-        ← Back to Home
-      </a>
-
-      <div className="w-full max-w-sm">
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 px-8 py-10">
-
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
           {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <img src="/logo.png" alt="ReplyAstra" className="h-10 w-auto" />
+          <div className="text-center mb-8">
+            <Link href="/">
+              <img src="/logo.png" alt="ReplyAstra" className="h-8 mx-auto" onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "block"; }} />
+              <span className="text-2xl font-black text-emerald-600 hidden">ReplyAstra</span>
+            </Link>
+            <p className="text-gray-500 text-sm mt-3">Welcome back. Login to your dashboard.</p>
           </div>
 
-          <p className="text-center text-sm text-gray-500 mb-8">
-            Welcome back. Login to your dashboard.
-          </p>
-
+          {/* Error */}
           {error && (
-            <div className="mb-5 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
-              {error}
+            <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3 mb-5">
+              <p className="text-sm text-red-700 font-medium">{error}</p>
+              {error.includes("No account found") && (
+                <Link href="/signup" className="text-sm text-emerald-600 font-bold hover:underline mt-1 block">
+                  → Create an account for free
+                </Link>
+              )}
+              {error.includes("Incorrect password") && (
+                <Link href="/forgot-password" className="text-sm text-emerald-600 font-bold hover:underline mt-1 block">
+                  → Reset your password
+                </Link>
+              )}
+            </div>
+          )}
+
+          {/* Info */}
+          {info && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-4 py-3 mb-5">
+              <p className="text-sm text-emerald-700 font-medium">{info}</p>
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
-
-            {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+              <label className="block text-sm font-bold text-gray-700 mb-1.5">Email</label>
               <input
                 type="email"
-                required
                 placeholder="you@email.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"
               />
             </div>
 
-            {/* Password */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+              <label className="block text-sm font-bold text-gray-700 mb-1.5">Password</label>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
-                  required
+                  type={showPwd ? "text" : "password"}
                   placeholder="••••••••"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-11 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 transition pr-11"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {showPassword ? (
-                    // Eye Off
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  ) : (
-                    // Eye
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  )}
+                <button type="button" onClick={() => setShowPwd(p => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1">
+                  {showPwd ? "🙈" : "👁️"}
                 </button>
+              </div>
+              <div className="text-right mt-1.5">
+                <Link href="/forgot-password" className="text-xs text-emerald-600 hover:underline font-semibold">
+                  Forgot password?
+                </Link>
               </div>
             </div>
 
-            {/* Forgot */}
-            <div className="flex justify-end">
-              <a href="/forgot-password" className="text-xs text-emerald-600 font-semibold hover:underline">
-                Forgot password?
-              </a>
-            </div>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-bold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                  </svg>
-                  Logging in...
-                </>
-              ) : "Login"}
+            <button type="submit" disabled={loading}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-bold py-3.5 rounded-xl transition-colors text-sm">
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
-          <p className="text-center text-xs text-gray-400 mt-6">
-            Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-emerald-600 font-semibold hover:underline">Sign up</a>
+          <p className="text-center text-sm text-gray-500 mt-5">
+            Don't have an account?{" "}
+            <Link href="/signup" className="text-emerald-600 font-bold hover:underline">Sign up</Link>
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f0fdfa] flex items-center justify-center"><div className="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"/></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
