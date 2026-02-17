@@ -12,29 +12,23 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
-    const { error: err } = await supabase.auth.resetPasswordForEmail(email, {
-      // FIX: Reset link goes to /reset-password page, NOT back to /login
+    // NOTE: Always call resetPasswordForEmail — Supabase does NOT reveal if email exists (security)
+    // The redirectTo URL MUST be added to Supabase → Authentication → URL Configuration → Redirect URLs
+    await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
 
-    if (err) {
-      setError("Could not send reset email. Please check the email address.");
-      setLoading(false);
-      return;
-    }
-
+    // Always show success — even if email not found or error occurred
+    // This prevents email enumeration attacks
     setSent(true);
     setLoading(false);
   }
 
-  // ── SAME CARD STYLE as login/signup ──────────────────────────
   return (
     <div className="min-h-screen bg-[#f0fdfa] flex items-center justify-center px-4">
 
@@ -58,25 +52,28 @@ export default function ForgotPasswordPage() {
               </div>
               <h3 className="text-lg font-black text-gray-900 mb-2">Check your email!</h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                We sent a password reset link to <strong>{email}</strong>.
-                Click it to set a new password.
+                If <strong>{email}</strong> is registered, you'll receive a reset link shortly.
               </p>
-              <p className="text-xs text-gray-400 mt-3">Link expires in 1 hour. Check spam if you don't see it.</p>
-              <a href="/login" className="inline-block mt-5 text-sm font-bold text-emerald-600 hover:underline">
-                Back to Login
-              </a>
+              <p className="text-xs text-gray-400 mt-3">
+                Link expires in 1 hour. Check spam folder if not found.
+              </p>
+              <button
+                onClick={() => { setSent(false); setEmail(""); }}
+                className="inline-block mt-4 text-xs text-emerald-600 font-semibold hover:underline"
+              >
+                Try a different email
+              </button>
+              <div className="mt-4">
+                <a href="/login" className="inline-block text-sm font-bold text-gray-400 hover:text-gray-600">
+                  ← Back to Login
+                </a>
+              </div>
             </div>
           ) : (
             <>
               <p className="text-center text-sm text-gray-500 mb-8">
                 Enter your email and we'll send you a reset link.
               </p>
-
-              {error && (
-                <div className="mb-5 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3">
-                  {error}
-                </div>
-              )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
