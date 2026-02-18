@@ -135,7 +135,7 @@ function PricingPage({ plan, onClose }) {
   const plans = [
     { id: "free", name: "Free", tag: "BASE LAYER", price: { monthly: 0, yearly: 0 }, border: "border-gray-300", features: [
       { text: "500 DMs per month", ok: true }, { text: "3 automation rules", ok: true }, { text: "1 Instagram account", ok: true },
-      { text: "Basic analytics", ok: true }, { text: "ReplyAstra watermark", ok: false }, { text: "Ask to Follow automation", ok: false },
+      { text: "Basic analytics", ok: true }, { text: "ReplyAstra watermark", ok: true }, { text: "Ask to Follow automation", ok: false },
     ]},
     { id: "starter", name: "Starter", tag: "EXPANSION MODE", price: { monthly: 199, yearly: 169 }, border: "border-emerald-500", highlight: true, badge: "MOST POPULAR", features: [
       { text: "3,000 DMs per month", ok: true }, { text: "10 automation rules", ok: true }, { text: "3 Instagram accounts", ok: true },
