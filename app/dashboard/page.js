@@ -588,12 +588,17 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
   const lim = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
   const dmPct = Math.min(Math.round((monthlyDMs / lim.dms) * 100), 100);
 
-  const NAV = [
-    { id: "overview", label: t.overview, Icon: Icons.overview },
-    { id: "automations", label: t.automations, Icon: Icons.automations },
-    { id: "leads", label: t.leads, Icon: Icons.leads },
-    { id: "settings", label: t.settings, Icon: Icons.settings },
-  ];
+  // In dashboard sidebar
+const NAV = [
+  { id: "overview", label: t.overview, Icon: Icons.overview },
+  { id: "automations", label: t.automations, Icon: Icons.automations },
+  { id: "ai", label: "ReplyAstra AI", Icon: Icons.ai }, // NEW
+  { id: "contacts", label: t.contacts, Icon: Icons.leads },
+  { id: "settings", label: t.settings, Icon: Icons.settings },
+];
+
+// In main content
+{page === "ai" && <ReplyAstraAI userId={user.id} plan={plan} lang={lang} />}
 
   const SidebarContent = () => (
     <>
