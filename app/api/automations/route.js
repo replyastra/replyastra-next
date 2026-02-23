@@ -1,6 +1,6 @@
 // app/api/automations/route.js
 import { getAuthUser, unauth, forbid, fail } from "@/lib/authMiddleware";
-import { PLAN_LIMITS } from "@/lib/planLimits";
+import { getPlanLimits, getCurrentMonth } from "@/lib/planLimits";
 
 export const runtime = "edge";
 
@@ -22,8 +22,8 @@ export async function POST(req) {
   const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
-  const plan = profile.plan || "free";
-  const limits = PLAN_LIMITS[plan];
+  const plan = profile.plan_type || profile.plan || "free";
+  const limits = getPlanLimits(plan);
 
   const { count } = await supabase
     .from("automations")
@@ -33,6 +33,19 @@ export async function POST(req) {
 
   if (limits.automations !== Infinity && count >= limits.automations) {
     return forbid(`Your ${plan} plan allows ${limits.automations} automations. Upgrade to add more.`);
+  }
+
+  const month = getCurrentMonth();
+  const { data: usage } = await supabase
+    .from("usage_tracking")
+    .select("dm_count")
+    .eq("user_id", user.id)
+    .eq("month", month)
+    .single();
+
+  const monthlyDMs = usage?.dm_count || 0;
+  if (limits.dms_per_month !== Infinity && monthlyDMs >= limits.dms_per_month) {
+    return forbid(`Your ${plan} plan allows ${limits.dms_per_month} DMs per month. Upgrade to continue sending DMs.`);
   }
 
   const body = await req.json();
