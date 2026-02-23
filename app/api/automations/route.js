@@ -22,7 +22,15 @@ export async function POST(req) {
   const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
+ codex/identify-next-steps-jexmxf
   const plan = profile.plan_type || profile.plan || "free";
+
+ codex/identify-next-steps-euibxt
+  const plan = profile.plan_type || profile.plan || "free";
+
+  const plan = profile.plan || "free";
+ main
+ main
   const limits = getPlanLimits(plan);
 
   const { count } = await supabase
