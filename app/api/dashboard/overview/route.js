@@ -9,6 +9,9 @@ export async function GET() {
   if (error) return unauth();
 
   try {
+ codex/identify-next-steps-4uhrma
+    const plan = profile.plan_type || profile.plan || "free";
+
  codex/identify-next-steps-crj88c
     const plan = profile.plan_type || profile.plan || "free";
 
@@ -19,6 +22,7 @@ export async function GET() {
     const plan = profile.plan_type || profile.plan || "free";
 
     const plan = profile.plan || "free";
+ main
  main
  main
  main

@@ -2,6 +2,21 @@
 import { getAuthUser, unauth, fail, forbid } from "@/lib/authMiddleware";
 import { getPlanContext } from "@/lib/planGuards";
 
+codex/identify-next-steps-4uhrma
+export const runtime = "edge";
+
+export async function POST(request) {
+  const { user, profile, error } = await getAuthUser();
+  if (error) return unauth();
+
+  try {
+    const { features } = getPlanContext(profile);
+    if (!features.canUseAI) {
+      return forbid("ReplyAstra AI is not available on the free plan.");
+    }
+
+    const { prompt } = await request.json();
+
  codex/identify-next-steps-crj88c
 export const runtime = "edge";
 
@@ -101,9 +116,12 @@ export async function POST(request) {
  main
  main
  main
+ main
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
       return Response.json({ error: "Prompt is required" }, { status: 400 });
     }
+
+ codex/identify-next-steps-4uhrma
 
  codex/identify-next-steps-crj88c
 
@@ -118,6 +136,7 @@ export async function POST(request) {
  main
  main
  main
+ main
     const workerResponse = await fetch(process.env.CLOUDFLARE_WORKER_URL, {
       method: "POST",
       headers: {
@@ -127,6 +146,8 @@ export async function POST(request) {
       body: JSON.stringify({ userId: user.id, prompt: prompt.trim() }),
     });
 
+ codex/identify-next-steps-4uhrma
+
  codex/identify-next-steps-crj88c
 
  codex/identify-next-steps-jexmxf
@@ -134,10 +155,13 @@ export async function POST(request) {
  codex/identify-next-steps-euibxt
  main
  main
+ main
     const payload = await workerResponse.json();
     return Response.json(payload, { status: workerResponse.status });
   } catch {
     return fail();
+ codex/identify-next-steps-4uhrma
+
  codex/identify-next-steps-crj88c
 
  codex/identify-next-steps-jexmxf
@@ -162,6 +186,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("API error:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
+ main
  main
  main
  main
