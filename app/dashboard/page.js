@@ -209,8 +209,21 @@ const Icons = {
   leads: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>,
   settings: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>,
   pricing: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.12-3 2.5S10.343 13 12 13s3 1.12 3 2.5S13.657 18 12 18m0-10V6m0 12v-2M4 5h16M4 19h16"/></svg>,
+ codex/identify-next-steps-crj88c
   replyAI: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5m-2.25 0v3m-6.75 3h13.5M6.75 9.75v7.5a3 3 0 003 3h4.5a3 3 0 003-3v-7.5M8.25 14.25h.008v.008H8.25v-.008zm3.75 0h.008v.008H12v-.008zm3.75 0h.008v.008h-.008v-.008z"/></svg>,
   upgrade: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 7-7"/><path strokeLinecap="round" strokeLinejoin="round" d="M14 8h6v6"/></svg>,
+
+ codex/identify-next-steps-jexmxf
+  replyAI: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5m-2.25 0v3m-6.75 3h13.5M6.75 9.75v7.5a3 3 0 003 3h4.5a3 3 0 003-3v-7.5M8.25 14.25h.008v.008H8.25v-.008zm3.75 0h.008v.008H12v-.008zm3.75 0h.008v.008h-.008v-.008z"/></svg>,
+  upgrade: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 7-7"/><path strokeLinecap="round" strokeLinejoin="round" d="M14 8h6v6"/></svg>,
+
+ codex/identify-next-steps-euibxt
+  replyAI: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5m-2.25 0v3m-6.75 3h13.5M6.75 9.75v7.5a3 3 0 003 3h4.5a3 3 0 003-3v-7.5M8.25 14.25h.008v.008H8.25v-.008zm3.75 0h.008v.008H12v-.008zm3.75 0h.008v.008h-.008v-.008z"/></svg>,
+  upgrade: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 7-7"/><path strokeLinecap="round" strokeLinejoin="round" d="M14 8h6v6"/></svg>,
+
+ main
+ main
+ main
   logout: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>,
   search: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35"/></svg>,
   eye: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>,
@@ -594,6 +607,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
     { id: "replyastra-ai", label: "ReplyAstra AI", Icon: Icons.replyAI },
     { id: "upgrade", label: "Upgrade", Icon: Icons.upgrade },
     { id: "settings", label: t.settings, Icon: Icons.settings },
+    { id: "pricing", label: "Pricing", Icon: Icons.pricing },
   ];
 
   const SidebarContent = () => (
@@ -630,8 +644,13 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
         {NAV.map(({ id, label, Icon }) => (
           <button
             key={id}
+ codex/identify-next-steps-crj88c
             onClick={() => { setPage(id); setOpen?.(false); }}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+
+            onClick={() => { if (id === "pricing") { window.location.href = "/dashboard/pricing"; return; } setPage(id); setOpen?.(false); }}
+            className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors mb-0.5 ${
+ main
               page === id ? "bg-black text-white" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
             }`}
           >
@@ -664,7 +683,11 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
       <aside className={`fixed inset-y-0 left-0 w-56 bg-white border-r border-gray-200 flex flex-col z-50 transition-transform duration-300 lg:hidden ${open ? "translate-x-0" : "-translate-x-full"}`}>
         <SidebarContent />
       </aside>
+ codex/identify-next-steps-crj88c
       <aside className="hidden lg:flex w-56 bg-white border-r border-gray-200 flex-col h-screen sticky top-0">
+
+      <aside className="hidden lg:flex w-52 bg-white border-r border-gray-200 flex-col h-screen sticky top-0">
+ main
         <SidebarContent />
       </aside>
     </>
@@ -686,7 +709,11 @@ function Topbar({ page, user, setOpen, lang, planType }) {
   const currentPlanType = planType || user?.plan_type || "free";
 
   return (
+ codex/identify-next-steps-crj88c
     <header className="bg-white border-b border-gray-200 px-4 lg:px-10 py-4">
+
+    <header className="bg-white border-b border-gray-200 px-4 lg:px-10 py-5">
+ main
       <div className="flex items-center justify-between mb-2">
         <button onClick={() => setOpen(true)} className="lg:hidden p-1 text-gray-600">
           <Icons.menu />
@@ -696,6 +723,26 @@ function Topbar({ page, user, setOpen, lang, planType }) {
           <div className={`px-3 py-1 rounded-xl text-xs font-black ${currentPlanType === "pro" ? "bg-gray-900 text-white" : currentPlanType === "starter" ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-600"}`}>
             {PLAN_NAMES[currentPlanType] || PLAN_NAMES.free}
           </div>
+ codex/identify-next-steps-crj88c
+
+ codex/identify-next-steps-jexmxf
+
+ codex/identify-next-steps-euibxt
+
+
+
+          {currentPlanType !== "pro" && (
+            <button
+              onClick={() => { window.location.href = "/dashboard/pricing"; }}
+              className="px-3 py-1 rounded-xl text-xs font-black bg-gray-900 text-white"
+            >
+              Upgrade
+            </button>
+          )}
+ main
+ main
+ main
+ main
           <div className="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold">
             {name.slice(0, 2).toUpperCase()}
           </div>
@@ -757,7 +804,11 @@ function OverviewPage({ userId, lang }) {
   const maxBar = Math.max(...bars.map(b => b.dms), 1);
 
   return (
+ codex/identify-next-steps-crj88c
     <div className="p-6 lg:p-10 space-y-8 max-w-6xl mx-auto">
+
+    <div className="p-6 lg:p-10 space-y-8 max-w-5xl mx-auto">
+ main
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: t.sentReplies, value: stats.sentReplies.toLocaleString(), change: "+24%" },
@@ -765,10 +816,17 @@ function OverviewPage({ userId, lang }) {
           { label: t.conversion, value: `${stats.convRate}%`, change: "+3.2%" },
           { label: t.leads, value: stats.leads, change: "+14" },
         ].map(({ label, value, change }) => (
+ codex/identify-next-steps-crj88c
           <div key={label} className="bg-white border border-gray-200 rounded-3xl p-5 lg:p-6 shadow-sm min-h-[138px]">
             <div className="flex justify-between items-start mb-3">
               <div className="h-7 w-7 rounded-lg border border-gray-200 bg-gray-50" />
               <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold text-gray-500 bg-gray-100">{change}</span>
+
+          <div key={label} className="bg-white border border-gray-200 rounded-3xl p-5 lg:p-6 shadow-sm">
+            <div className="flex justify-between mb-3">
+              <div className="text-xs text-gray-400 uppercase tracking-wide font-medium">{label}</div>
+              <span className="text-xs font-semibold text-emerald-600">{change}</span>
+ main
             </div>
             <div className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-semibold mb-1">{label}</div>
             <div className="serif text-2xl lg:text-3xl text-gray-900">{value}</div>

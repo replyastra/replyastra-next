@@ -9,7 +9,19 @@ export async function GET() {
   if (error) return unauth();
 
   try {
+ codex/identify-next-steps-crj88c
     const plan = profile.plan_type || profile.plan || "free";
+
+ codex/identify-next-steps-jexmxf
+    const plan = profile.plan_type || profile.plan || "free";
+
+ codex/identify-next-steps-euibxt
+    const plan = profile.plan_type || profile.plan || "free";
+
+    const plan = profile.plan || "free";
+ main
+ main
+ main
     const limits = getPlanLimits(plan);
     const analyticsDays = limits.analytics_days || 7;
     const analyticsStart = new Date();
@@ -52,6 +64,7 @@ export async function GET() {
       .select("*", { count: "exact", head: true })
       .eq("user_id", user.id)
       .gte("sent_at", analyticsStart.toISOString());
+ codex/identify-next-steps-crj88c
 
     const { count: week } = await supabase
       .from("dm_logs")
@@ -59,6 +72,15 @@ export async function GET() {
       .eq("user_id", user.id)
       .gte("sent_at", weekAgo.toISOString());
 
+
+
+    const { count: week } = await supabase
+      .from("dm_logs")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("sent_at", weekAgo.toISOString());
+
+ main
     const { count: failed } = await supabase
       .from("dm_logs")
       .select("*", { count: "exact", head: true })

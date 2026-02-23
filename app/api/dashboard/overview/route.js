@@ -9,7 +9,19 @@ export async function GET() {
   if (error) return unauth();
 
   try {
+ codex/identify-next-steps-crj88c
     const plan = profile.plan_type || profile.plan || "free";
+
+ codex/identify-next-steps-jexmxf
+    const plan = profile.plan_type || profile.plan || "free";
+
+ codex/identify-next-steps-euibxt
+    const plan = profile.plan_type || profile.plan || "free";
+
+    const plan = profile.plan || "free";
+ main
+ main
+ main
     const limits = getPlanLimits(plan);
     const leadLimit = limits.leads_preview === Infinity ? 1000 : limits.leads_preview;
     const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
