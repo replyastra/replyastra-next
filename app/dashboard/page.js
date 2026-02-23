@@ -213,6 +213,9 @@ const Icons = {
   automations: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>,
   leads: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>,
   settings: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>,
+  pricing: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.12-3 2.5S10.343 13 12 13s3 1.12 3 2.5S13.657 18 12 18m0-10V6m0 12v-2M4 5h16M4 19h16"/></svg>,
+  replyAI: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5m-2.25 0v3m-6.75 3h13.5M6.75 9.75v7.5a3 3 0 003 3h4.5a3 3 0 003-3v-7.5M8.25 14.25h.008v.008H8.25v-.008zm3.75 0h.008v.008H12v-.008zm3.75 0h.008v.008h-.008v-.008z"/></svg>,
+  upgrade: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 17l6-6 4 4 7-7"/><path strokeLinecap="round" strokeLinejoin="round" d="M14 8h6v6"/></svg>,
   logout: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>,
   search: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35"/></svg>,
   eye: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>,
@@ -578,6 +581,7 @@ function SettingsPage({ user, profile, onProfileUpdate, lang, setLang }) {
 // Sidebar
 function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
   const [search, setSearch] = useState("");
+  const [logoFailed, setLogoFailed] = useState(false);
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
   async function logout() {
@@ -591,14 +595,27 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
   const NAV = [
     { id: "overview", label: t.overview, Icon: Icons.overview },
     { id: "automations", label: t.automations, Icon: Icons.automations },
-    { id: "leads", label: t.leads, Icon: Icons.leads },
+    { id: "contacts", label: "Contacts", Icon: Icons.leads },
+    { id: "replyastra-ai", label: "ReplyAstra AI", Icon: Icons.replyAI },
+    { id: "upgrade", label: "Upgrade", Icon: Icons.upgrade },
     { id: "settings", label: t.settings, Icon: Icons.settings },
   ];
 
   const SidebarContent = () => (
     <>
       <div className="px-6 py-6 border-b border-gray-100">
-        <img src="https://drive.google.com/uc?export=view&id=1CkhHHcGFCr6BmfoE2TylgYJRlJQkcDEC" alt="ReplyAstra" className="h-6 w-auto" />
+        <a href="/dashboard" className="inline-flex items-center">
+          {!logoFailed ? (
+            <img
+              src="https://drive.google.com/uc?export=view&id=1CkhHHcGFCr6BmfoE2TylgYJRlJQkcDEC"
+              alt="ReplyAstra"
+              className="h-8 w-auto"
+              onError={() => setLogoFailed(true)}
+            />
+          ) : (
+            <span className="text-lg font-black text-gray-900">ReplyAstra</span>
+          )}
+        </a>
       </div>
       <div className="px-4 pt-4 pb-2">
         <div className="relative">
@@ -618,7 +635,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
         {NAV.map(({ id, label, Icon }) => (
           <button
             key={id}
-            onClick={() => { setPage(id); setOpen?.(false); }}
+            onClick={() => { if (id === "upgrade") { window.location.href = "/dashboard/pricing"; return; } setPage(id); setOpen?.(false); }}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors mb-0.5 ${
               page === id ? "bg-black text-white" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
             }`}
@@ -660,15 +677,18 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
 }
 
 // Topbar
-function Topbar({ page, user, setOpen, lang }) {
+function Topbar({ page, user, setOpen, lang, planType }) {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const titles = {
     overview: t.welcome,
     automations: "Flows",
-    leads: "Captured Growth",
+    contacts: "Lead Management",
+    "replyastra-ai": "ReplyAstra AI",
     settings: "Console",
+    upgrade: "Upgrade",
   };
   const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "there";
+  const currentPlanType = planType || user?.plan_type || "free";
 
   return (
     <header className="bg-white border-b border-gray-100 px-4 lg:px-8 py-4">
@@ -678,6 +698,9 @@ function Topbar({ page, user, setOpen, lang }) {
         </button>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
+          <div className={`px-3 py-1 rounded-xl text-xs font-black ${currentPlanType === "pro" ? "bg-gray-900 text-white" : currentPlanType === "starter" ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-600"}`}>
+            {PLAN_NAMES[currentPlanType] || PLAN_NAMES.free}
+          </div>
           <div className="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold">
             {name.slice(0, 2).toUpperCase()}
           </div>
@@ -799,7 +822,123 @@ function OverviewPage({ userId, lang }) {
 
 // Remaining pages abbreviated for token limit...
 function AutomationsPage() { return <div className="p-8"><p>Automations coming soon</p></div>; }
-function LeadsPage() { return <div className="p-8"><p>Leads coming soon</p></div>; }
+function ContactsPage() {
+  const [loading, setLoading] = useState(true);
+  const [contacts, setContacts] = useState([]);
+  const [query, setQuery] = useState("");
+  const [meta, setMeta] = useState({ limitedPreview: false, features: {} });
+  const [error, setError] = useState("");
+
+  async function loadContacts(q = "") {
+    setLoading(true);
+    const res = await fetch(`/api/contacts${q ? `?q=${encodeURIComponent(q)}` : ""}`);
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error || "Unable to load contacts");
+      setLoading(false);
+      return;
+    }
+    setContacts(data.contacts || []);
+    setMeta({ limitedPreview: data.limitedPreview, features: data.features || {} });
+    setError("");
+    setLoading(false);
+  }
+
+  useEffect(() => { loadContacts(); }, []);
+
+  async function exportCsv() {
+    const res = await fetch('/api/contacts/export');
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'replyastra-contacts.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-4">
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 lg:p-6">
+        <h2 className="serif text-2xl text-gray-900">Lead Management</h2>
+        <p className="text-sm text-gray-500 mt-1">Track relationships and interactions from your automations.</p>
+        {meta.limitedPreview && <div className="mt-3 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">Lead preview limit reached for free plan. Upgrade to unlock full CRM.</div>}
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 lg:p-6">
+        <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+          <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search by username" className="w-full md:max-w-sm px-3 py-2 border border-gray-200 rounded-xl text-sm" />
+          <div className="flex gap-2">
+            <button onClick={() => loadContacts(query)} className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-900 text-white">Search</button>
+            <button onClick={exportCsv} disabled={!meta.features.canExportContacts} className="px-4 py-2 rounded-xl text-sm font-bold bg-gray-100 text-gray-700 disabled:opacity-50">Export CSV</button>
+          </div>
+        </div>
+        {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
+        {loading ? <div className="mt-4 text-sm text-gray-500">Loading contacts...</div> : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead><tr className="text-left text-gray-500 border-b"><th className="py-2">Username</th><th>Interactions</th><th>Follows You</th><th>You Follow</th><th>Score</th></tr></thead>
+              <tbody>
+                {contacts.map(c => (
+                  <tr key={c.id} className="border-b border-gray-100 text-gray-800">
+                    <td className="py-2">@{c.instagram_username}</td><td>{c.interaction_count}</td><td>{c.follows_you ? 'Yes':'No'}</td><td>{c.you_follow ? 'Yes':'No'}</td><td>{meta.features.canSeeEngagementScore ? (c.engagement_score || 0) : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ReplyAstraAIPage() {
+  const [prompt, setPrompt] = useState('');
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [remaining, setRemaining] = useState({ today: null, month: null });
+
+  async function generate() {
+    setLoading(true);
+    setError('');
+    setResult('');
+    const res = await fetch('/api/replyastra-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
+    const data = await res.json();
+    if (!res.ok) {
+      setError(data.error || 'Generation failed');
+      setLoading(false);
+      return;
+    }
+    setResult(data.text || '');
+    setRemaining({ today: data.remaining_today, month: data.remaining_month });
+    setLoading(false);
+  }
+
+  return (
+    <div className="p-4 lg:p-8 max-w-5xl mx-auto space-y-4">
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 lg:p-6">
+        <h2 className="serif text-2xl text-gray-900">ReplyAstra AI</h2>
+        <p className="text-sm text-gray-500 mt-1">Generate captions, replies and hashtags for your campaigns.</p>
+      </div>
+      <div className="bg-white rounded-2xl border border-gray-200 p-4 lg:p-6 space-y-3">
+        <textarea value={prompt} onChange={(e)=>setPrompt(e.target.value)} rows={5} className="w-full rounded-xl border border-gray-200 p-3 text-sm" placeholder="Describe your post, niche, and tone..." />
+        <button onClick={generate} disabled={loading || !prompt.trim()} className="px-5 py-2.5 rounded-xl text-sm font-bold bg-gray-900 text-white disabled:opacity-50">{loading ? 'Generating...' : 'Generate'}</button>
+        {error && <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</div>}
+        {result && (
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+            <div className="whitespace-pre-wrap text-sm text-gray-800">{result}</div>
+            <div className="mt-3 text-xs text-gray-500">Remaining today: {remaining.today ?? '—'} · Remaining month: {remaining.month ?? '—'}</div>
+            <p className="mt-2 text-xs text-amber-700">ReplyAstra AI can make mistakes. Please review before publishing.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 // Root
 export default function Dashboard() {
@@ -907,13 +1046,13 @@ export default function Dashboard() {
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         <Sidebar page={page} setPage={setPage} plan={plan} monthlyDMs={monthlyDMs} open={sidebarOpen} setOpen={setSidebarOpen} lang={lang} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          <Topbar page={page} user={user} setOpen={setSidebarOpen} lang={lang} />
+          <Topbar page={page} user={user} setOpen={setSidebarOpen} lang={lang} planType={profile?.plan_type || profile?.plan} />
           <main className="flex-1 overflow-y-auto">
             {page === "overview" && <OverviewPage userId={user.id} lang={lang} />}
             {page === "automations" && <AutomationsPage />}
-            {page === "leads" && <LeadsPage />}
+            {page === "contacts" && <ContactsPage />}
+            {page === "replyastra-ai" && <ReplyAstraAIPage />}
             {page === "settings" && <SettingsPage user={user} profile={profile} onProfileUpdate={() => loadProfile(user.id)} lang={lang} setLang={setLang} />}
-            {page === "pricing" && <PricingPage plan={plan} onClose={() => setPage("overview")} onUpgrade={handleUpgrade} lang={lang} />}
           </main>
         </div>
       </div>
