@@ -684,6 +684,17 @@ function Topbar({ page, user, setOpen, lang, planType }) {
           <div className={`px-3 py-1 rounded-xl text-xs font-black ${currentPlanType === "pro" ? "bg-gray-900 text-white" : currentPlanType === "starter" ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-600"}`}>
             {PLAN_NAMES[currentPlanType] || PLAN_NAMES.free}
           </div>
+          codex/identify-next-steps-ms9zoo
+
+          {currentPlanType !== "pro" && (
+            <button
+              onClick={() => { window.location.href = "/dashboard/pricing"; }}
+              className="px-3 py-1 rounded-xl text-xs font-black bg-gray-900 text-white"
+            >
+              Upgrade
+            </button>
+          )}
+ main
           <div className="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold">
             {name.slice(0, 2).toUpperCase()}
           </div>
