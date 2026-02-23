@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages@1",
-    "lint": "next lint"
+    "build": "npm run check:merge-artifacts && next build",
+    "pages:build": "npm run check:merge-artifacts && npx @cloudflare/next-on-pages@1",
+    "lint": "next lint",
+    "check:merge-artifacts": "bash -lc '! rg -n \"codex/identify-next-steps|<<<<<<<|>>>>>>>|=======\" app lib workers supabase'"
   },
   "dependencies": {
     "next": "14.2.15",
