@@ -1,6 +1,6 @@
 // app/api/dashboard/overview/route.js
 import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
-import { PLAN_LIMITS, getCurrentMonth } from "@/lib/planLimits";
+import { getPlanLimits, getCurrentMonth } from "@/lib/planLimits";
 
 export const runtime = "edge";
 
@@ -10,7 +10,8 @@ export async function GET() {
 
   try {
     const plan = profile.plan || "free";
-    const limits = PLAN_LIMITS[plan];
+    const limits = getPlanLimits(plan);
+    const leadLimit = limits.leads_preview === Infinity ? 1000 : limits.leads_preview;
     const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
     const month = getCurrentMonth();
 
@@ -26,7 +27,7 @@ export async function GET() {
       supabase.from("dm_logs").select("*", { count: "exact", head: true }).eq("user_id", user.id).gte("sent_at", weekAgo.toISOString()),
       supabase.from("automations").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "active"),
       supabase.from("instagram_accounts").select("*", { count: "exact", head: true }).eq("user_id", user.id).neq("status", "disconnected"),
-      supabase.from("dm_logs").select("keyword,recipient,status,sent_at").eq("user_id", user.id).order("sent_at", { ascending: false }).limit(8),
+      supabase.from("dm_logs").select("keyword,recipient,status,sent_at").eq("user_id", user.id).order("sent_at", { ascending: false }).limit(leadLimit),
       supabase.from("usage_tracking").select("dm_count").eq("user_id", user.id).eq("month", month).single(),
     ]);
 
@@ -49,8 +50,12 @@ export async function GET() {
         accounts: limits.accounts,
         watermark: limits.watermark,
         advanced_analytics: limits.advanced_analytics,
+        analytics_days: limits.analytics_days,
+        leads_preview: limits.leads_preview === Infinity ? null : limits.leads_preview,
+        ai_generations: limits.ai_generations,
       },
       recentActivity: recentActivity || [],
+      leadPreviewLimited: limits.leads_preview !== Infinity,
       subscription: {
         status: profile.subscription_status,
         cancel_at_period_end: profile.cancel_at_period_end,
