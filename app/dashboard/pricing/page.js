@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+ codex/identify-next-steps-crj88c
+import { supabase } from "@/lib/supabase";
+
+
+
  codex/identify-next-steps-jexmxf
 import { supabase } from "@/lib/supabase";
 
@@ -14,6 +19,7 @@ const supabase = createClient(
 );
  main
 
+ main
 const PLANS = [
   {
     id: "free",

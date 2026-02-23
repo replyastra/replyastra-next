@@ -17,6 +17,9 @@ export async function GET() {
 
   if (dbErr) return fail();
 
+ codex/identify-next-steps-crj88c
+  const plan = profile.plan_type || profile.plan || "free";
+
  codex/identify-next-steps-jexmxf
   const plan = profile.plan_type || profile.plan || "free";
 
@@ -24,6 +27,7 @@ export async function GET() {
   const plan = profile.plan_type || profile.plan || "free";
 
   const plan = profile.plan || "free";
+ main
  main
  main
   const limit = getPlanLimits(plan).accounts;
@@ -35,6 +39,9 @@ export async function POST(req) {
   const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
+ codex/identify-next-steps-crj88c
+  const plan = profile.plan_type || profile.plan || "free";
+
  codex/identify-next-steps-jexmxf
   const plan = profile.plan_type || profile.plan || "free";
 
@@ -42,6 +49,7 @@ export async function POST(req) {
   const plan = profile.plan_type || profile.plan || "free";
 
   const plan = profile.plan || "free";
+ main
  main
  main
   const limits = getPlanLimits(plan);
