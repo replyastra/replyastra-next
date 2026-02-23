@@ -660,7 +660,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
 }
 
 // Topbar
-function Topbar({ page, user, setOpen, lang }) {
+function Topbar({ page, user, setOpen, lang, planType }) {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const titles = {
     overview: t.welcome,
@@ -669,6 +669,7 @@ function Topbar({ page, user, setOpen, lang }) {
     settings: "Console",
   };
   const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "there";
+  const currentPlanType = planType || user?.plan_type || "free";
 
   return (
     <header className="bg-white border-b border-gray-100 px-4 lg:px-8 py-4">
@@ -678,6 +679,17 @@ function Topbar({ page, user, setOpen, lang }) {
         </button>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
+          <div className={`px-3 py-1 rounded-xl text-xs font-black ${currentPlanType === "pro" ? "bg-gray-900 text-white" : currentPlanType === "starter" ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-600"}`}>
+            {PLAN_NAMES[currentPlanType] || PLAN_NAMES.free}
+          </div>
+          {currentPlanType !== "pro" && (
+            <button
+              onClick={() => { window.location.href = "/dashboard/pricing"; }}
+              className="px-3 py-1 rounded-xl text-xs font-black bg-gray-900 text-white"
+            >
+              Upgrade
+            </button>
+          )}
           <div className="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold">
             {name.slice(0, 2).toUpperCase()}
           </div>
@@ -907,7 +919,7 @@ export default function Dashboard() {
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         <Sidebar page={page} setPage={setPage} plan={plan} monthlyDMs={monthlyDMs} open={sidebarOpen} setOpen={setSidebarOpen} lang={lang} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          <Topbar page={page} user={user} setOpen={setSidebarOpen} lang={lang} />
+          <Topbar page={page} user={user} setOpen={setSidebarOpen} lang={lang} planType={profile?.plan_type || profile?.plan} />
           <main className="flex-1 overflow-y-auto">
             {page === "overview" && <OverviewPage userId={user.id} lang={lang} />}
             {page === "automations" && <AutomationsPage />}
