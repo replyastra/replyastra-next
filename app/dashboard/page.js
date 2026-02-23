@@ -213,6 +213,7 @@ const Icons = {
   automations: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>,
   leads: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>,
   settings: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>,
+  pricing: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.12-3 2.5S10.343 13 12 13s3 1.12 3 2.5S13.657 18 12 18m0-10V6m0 12v-2M4 5h16M4 19h16"/></svg>,
   logout: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>,
   search: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path strokeLinecap="round" strokeLinejoin="round" d="m21 21-4.35-4.35"/></svg>,
   eye: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>,
@@ -593,6 +594,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
     { id: "automations", label: t.automations, Icon: Icons.automations },
     { id: "leads", label: t.leads, Icon: Icons.leads },
     { id: "settings", label: t.settings, Icon: Icons.settings },
+    { id: "pricing", label: "Pricing", Icon: Icons.pricing },
   ];
 
   const SidebarContent = () => (
@@ -618,7 +620,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
         {NAV.map(({ id, label, Icon }) => (
           <button
             key={id}
-            onClick={() => { setPage(id); setOpen?.(false); }}
+            onClick={() => { if (id === "pricing") { window.location.href = "/dashboard/pricing"; return; } setPage(id); setOpen?.(false); }}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors mb-0.5 ${
               page === id ? "bg-black text-white" : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
             }`}
@@ -660,7 +662,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, open, setOpen, lang }) {
 }
 
 // Topbar
-function Topbar({ page, user, setOpen, lang }) {
+function Topbar({ page, user, setOpen, lang, planType }) {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   const titles = {
     overview: t.welcome,
@@ -669,6 +671,7 @@ function Topbar({ page, user, setOpen, lang }) {
     settings: "Console",
   };
   const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "there";
+  const currentPlanType = planType || user?.plan_type || "free";
 
   return (
     <header className="bg-white border-b border-gray-100 px-4 lg:px-8 py-4">
@@ -678,6 +681,9 @@ function Topbar({ page, user, setOpen, lang }) {
         </button>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
+          <div className={`px-3 py-1 rounded-xl text-xs font-black ${currentPlanType === "pro" ? "bg-gray-900 text-white" : currentPlanType === "starter" ? "bg-emerald-600 text-white" : "bg-gray-100 text-gray-600"}`}>
+            {PLAN_NAMES[currentPlanType] || PLAN_NAMES.free}
+          </div>
           <div className="w-7 h-7 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-bold">
             {name.slice(0, 2).toUpperCase()}
           </div>
@@ -907,7 +913,7 @@ export default function Dashboard() {
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         <Sidebar page={page} setPage={setPage} plan={plan} monthlyDMs={monthlyDMs} open={sidebarOpen} setOpen={setSidebarOpen} lang={lang} />
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-          <Topbar page={page} user={user} setOpen={setSidebarOpen} lang={lang} />
+          <Topbar page={page} user={user} setOpen={setSidebarOpen} lang={lang} planType={profile?.plan_type || profile?.plan} />
           <main className="flex-1 overflow-y-auto">
             {page === "overview" && <OverviewPage userId={user.id} lang={lang} />}
             {page === "automations" && <AutomationsPage />}
