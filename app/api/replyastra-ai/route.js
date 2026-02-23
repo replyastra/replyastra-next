@@ -1,5 +1,21 @@
 // app/api/replyastra-ai/route.js
-// Next.js API Route to proxy AI requests to Cloudflare Worker
+import { getAuthUser, unauth, fail, forbid } from "@/lib/authMiddleware";
+import { getPlanContext } from "@/lib/planGuards";
+
+ codex/identify-next-steps-nbp9zw
+export const runtime = "edge";
+
+export async function POST(request) {
+  const { user, profile, error } = await getAuthUser();
+  if (error) return unauth();
+
+  try {
+    const { features } = getPlanContext(profile);
+    if (!features.canUseAI) {
+      return forbid("ReplyAstra AI is not available on the free plan.");
+    }
+
+    const { prompt } = await request.json();
 
 import { createClient } from "@supabase/supabase-js";
 import { getCurrentMonth, getPlanLimits } from "@/lib/planLimits";
@@ -52,25 +68,32 @@ export async function POST(request) {
 
     const { prompt } = await request.json();
 
+ main
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
       return Response.json({ error: "Prompt is required" }, { status: 400 });
     }
+
+ codex/identify-next-steps-nbp9zw
 
     if (prompt.length > 500) {
       return Response.json({ error: "Prompt too long. Maximum 500 characters." }, { status: 400 });
     }
 
+ main
     const workerResponse = await fetch(process.env.CLOUDFLARE_WORKER_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": process.env.INTERNAL_API_SECRET,
       },
-      body: JSON.stringify({
-        userId: user.id,
-        prompt: prompt.trim(),
-      }),
+      body: JSON.stringify({ userId: user.id, prompt: prompt.trim() }),
     });
+
+ codex/identify-next-steps-nbp9zw
+    const payload = await workerResponse.json();
+    return Response.json(payload, { status: workerResponse.status });
+  } catch {
+    return fail();
 
     const workerData = await workerResponse.json();
 
@@ -91,11 +114,6 @@ export async function POST(request) {
   } catch (error) {
     console.error("API error:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
+ main
   }
 }
-
-// Environment variables required in .env:
-// CLOUDFLARE_WORKER_URL=https://your-worker.your-subdomain.workers.dev
-// INTERNAL_API_SECRET=your-secret-key-here
-// NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
-// NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...

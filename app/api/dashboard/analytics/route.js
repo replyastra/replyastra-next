@@ -9,7 +9,11 @@ export async function GET() {
   if (error) return unauth();
 
   try {
+codex/identify-next-steps-nbp9zw
+    const plan = profile.plan_type || profile.plan || "free";
+
     const plan = profile.plan || "free";
+ main
     const limits = getPlanLimits(plan);
     const analyticsDays = limits.analytics_days || 7;
     const analyticsStart = new Date();
