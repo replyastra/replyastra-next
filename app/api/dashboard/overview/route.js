@@ -1,7 +1,9 @@
-export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
 import { PLAN_LIMITS } from "@/lib/planLimits";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request) {
   const { user, profile, supabase, error } = await getAuthUser();
