@@ -1,99 +1,73 @@
-// app/api/instagram/accounts/route.js
-import { getAuthUser, unauth, forbid, fail } from "@/lib/authMiddleware";
-import { getPlanLimits } from "@/lib/planLimits";
+import { NextResponse } from "next/server";
+import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
+import { PLAN_LIMITS } from "@/lib/planLimits";
 
-export const runtime = "edge";
-
-export async function GET() {
+export async function GET(request) {
   const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
   const { data, error: dbErr } = await supabase
     .from("instagram_accounts")
-    .select("id,instagram_id,handle,followers,status,connected_at,token_expires_at")
+    .select("*")
     .eq("user_id", user.id)
     .neq("status", "disconnected")
     .order("connected_at", { ascending: false });
 
   if (dbErr) return fail();
 
- codex/identify-next-steps-4uhrma
   const plan = profile.plan_type || profile.plan || "free";
 
- codex/identify-next-steps-crj88c
-  const plan = profile.plan_type || profile.plan || "free";
-
- codex/identify-next-steps-jexmxf
-  const plan = profile.plan_type || profile.plan || "free";
-
- codex/identify-next-steps-euibxt
-  const plan = profile.plan_type || profile.plan || "free";
-
-  const plan = profile.plan || "free";
- main
- main
- main
- main
-  const limit = getPlanLimits(plan).accounts;
-
-  return Response.json({ accounts: data || [], limit, plan, canAddMore: (data || []).length < limit });
+  return NextResponse.json({
+    accounts: data || [],
+    limit: PLAN_LIMITS[plan]?.accounts || 1,
+    plan,
+  });
 }
 
-export async function POST(req) {
+export async function POST(request) {
   const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
- codex/identify-next-steps-4uhrma
   const plan = profile.plan_type || profile.plan || "free";
 
- codex/identify-next-steps-crj88c
-  const plan = profile.plan_type || profile.plan || "free";
-
- codex/identify-next-steps-jexmxf
-  const plan = profile.plan_type || profile.plan || "free";
-
- codex/identify-next-steps-euibxt
-  const plan = profile.plan_type || profile.plan || "free";
-
-  const plan = profile.plan || "free";
- main
- main
- main
- main
-  const limits = getPlanLimits(plan);
-
-  const { count } = await supabase
+  const { count: currentCount } = await supabase
     .from("instagram_accounts")
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id)
     .neq("status", "disconnected");
 
-  if (limits.accounts !== Infinity && (count || 0) >= limits.accounts) {
-    return forbid(`Your ${plan} plan allows ${limits.accounts} Instagram account${limits.accounts === 1 ? "" : "s"}. Upgrade to connect more.`);
+  const limit = PLAN_LIMITS[plan]?.accounts || 1;
+  if (currentCount >= limit) {
+    return NextResponse.json(
+      { error: `Account limit reached. Upgrade to connect more accounts.` },
+      { status: 403 }
+    );
   }
 
-  const body = await req.json();
-  const { instagram_id, handle, followers, token_expires_at } = body || {};
+  try {
+    const body = await request.json();
+    const { handle, access_token, instagram_user_id } = body;
 
-  if (!instagram_id || !handle) {
-    return Response.json({ error: "instagram_id and handle are required" }, { status: 400 });
-  }
+    if (!handle || !access_token || !instagram_user_id) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
 
-  const { data, error: insertErr } = await supabase
-    .from("instagram_accounts")
-    .insert([
-      {
+    const { data, error: insertErr } = await supabase
+      .from("instagram_accounts")
+      .insert({
         user_id: user.id,
-        instagram_id,
         handle,
-        followers: Number.isFinite(Number(followers)) ? Number(followers) : 0,
+        access_token,
+        instagram_user_id,
         status: "connected",
-        token_expires_at: token_expires_at || null,
-      },
-    ])
-    .select("id,instagram_id,handle,followers,status,connected_at,token_expires_at")
-    .single();
+        connected_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
 
-  if (insertErr) return fail();
-  return Response.json({ account: data }, { status: 201 });
+    if (insertErr) return fail();
+    return NextResponse.json({ account: data });
+  } catch (err) {
+    return fail();
+  }
 }
