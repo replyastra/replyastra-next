@@ -1,11 +1,10 @@
-// app/api/automations/route.js
-import { getAuthUser, unauth, forbid, fail } from "@/lib/authMiddleware";
-import { getPlanLimits, getCurrentMonth } from "@/lib/planLimits";
+import { NextResponse } from "next/server";
+import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
+import { PLAN_LIMITS } from "@/lib/planLimits";
+import { checkPlanLimit } from "@/lib/planGuards";
 
-export const runtime = "edge";
-
-export async function GET() {
-  const { user, supabase, error } = await getAuthUser();
+export async function GET(request) {
+  const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
   const { data, error: dbErr } = await supabase
@@ -15,66 +14,78 @@ export async function GET() {
     .order("created_at", { ascending: false });
 
   if (dbErr) return fail();
-  return Response.json({ automations: data || [] });
+  return NextResponse.json({ automations: data || [] });
 }
 
-export async function POST(req) {
+export async function POST(request) {
   const { user, profile, supabase, error } = await getAuthUser();
   if (error) return unauth();
 
- codex/identify-next-steps-4uhrma
   const plan = profile.plan_type || profile.plan || "free";
 
- codex/identify-next-steps-crj88c
-  const plan = profile.plan_type || profile.plan || "free";
-
- codex/identify-next-steps-jexmxf
-  const plan = profile.plan_type || profile.plan || "free";
-
- codex/identify-next-steps-euibxt
-  const plan = profile.plan_type || profile.plan || "free";
-
-  const plan = profile.plan || "free";
- main
- main
- main
- main
-  const limits = getPlanLimits(plan);
-
-  const { count } = await supabase
+  const { count: currentCount } = await supabase
     .from("automations")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .neq("status", "disabled_by_system");
+    .eq("user_id", user.id);
 
-  if (limits.automations !== Infinity && count >= limits.automations) {
-    return forbid(`Your ${plan} plan allows ${limits.automations} automations. Upgrade to add more.`);
+  const limit = PLAN_LIMITS[plan]?.automations || 3;
+  if (currentCount >= limit) {
+    return NextResponse.json(
+      { error: `Automation limit reached. Upgrade to create more.` },
+      { status: 403 }
+    );
   }
 
-  const month = getCurrentMonth();
-  const { data: usage } = await supabase
-    .from("usage_tracking")
-    .select("dm_count")
-    .eq("user_id", user.id)
-    .eq("month", month)
-    .single();
+  try {
+    const body = await request.json();
+    const { trigger_type, trigger_value, response_message, account_id } = body;
 
-  const monthlyDMs = usage?.dm_count || 0;
-  if (limits.dms_per_month !== Infinity && monthlyDMs >= limits.dms_per_month) {
-    return forbid(`Your ${plan} plan allows ${limits.dms_per_month} DMs per month. Upgrade to continue sending DMs.`);
+    if (!trigger_type || !trigger_value || !response_message || !account_id) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    const { data, error: insertErr } = await supabase
+      .from("automations")
+      .insert({
+        user_id: user.id,
+        account_id,
+        trigger_type,
+        trigger_value,
+        response_message,
+        status: "active",
+        active: true,
+      })
+      .select()
+      .single();
+
+    if (insertErr) return fail();
+    return NextResponse.json({ automation: data });
+  } catch (err) {
+    return fail();
   }
+}
 
-  const body = await req.json();
-  const { keyword, reply, account_id } = body;
-  if (!keyword?.trim() || !reply?.trim()) {
-    return Response.json({ error: "Keyword and reply are required" }, { status: 400 });
+export async function DELETE(request) {
+  const { user, supabase, error } = await getAuthUser();
+  if (error) return unauth();
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing automation ID" }, { status: 400 });
+    }
+
+    const { error: delErr } = await supabase
+      .from("automations")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (delErr) return fail();
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return fail();
   }
-
-  const { data, error: insertErr } = await supabase
-    .from("automations")
-    .insert([{ user_id: user.id, account_id: account_id || null, keyword: keyword.trim().toLowerCase(), reply: reply.trim(), status: "active", active: true }])
-    .select().single();
-
-  if (insertErr) return fail();
-  return Response.json({ automation: data }, { status: 201 });
 }
