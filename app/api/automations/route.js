@@ -1,4 +1,4 @@
-
+export const runtime = "edge";
 import { NextResponse } from "next/server";
 import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
 import { PLAN_LIMITS } from "@/lib/planLimits";
