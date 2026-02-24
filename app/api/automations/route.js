@@ -4,7 +4,7 @@ import { getAuthUser, unauth, fail } from "@/lib/authMiddleware";
 import { PLAN_LIMITS } from "@/lib/planLimits";
 import { checkPlanLimit } from "@/lib/planGuards";
 
-export const dynamic = "force-dynamic";
+
 
 export async function GET(request) {
   const { user, profile, supabase, error } = await getAuthUser();
