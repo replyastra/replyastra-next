@@ -849,9 +849,17 @@ function AIPage({ plan, user, t }) {
     if (!prompt.trim() || loading) return;
     setLoading(true); setError(""); setResponse("");
     try {
+      // Get the current session token to send with the request
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) { setError("Session expired. Please refresh the page."); setLoading(false); return; }
+
       const res = await fetch("/api/replyastra-ai", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify({ prompt: prompt.trim() }),
       });
       const data = await res.json();
@@ -1484,36 +1492,29 @@ export default function DashboardPage() {
       .single();
 
     if (profileErr) {
-      if (process.env.NODE_ENV === "development") console.error("[Dashboard] Profile fetch failed:", profileErr);
+      if (process.env.NODE_ENV === "development") console.error("[Dashboard] Profile fetch failed:", profileErr.code, profileErr.message);
 
-      // Auto-create profile if it doesn't exist (PGRST116 = no rows)
       if (profileErr.code === "PGRST116") {
+        // No profile row yet — auto-create for this user
         const { error: insertErr } = await supabase
           .from("profiles")
           .insert({ id: u.id, plan: "free", plan_type: "free", ai_used_today: 0, ai_used_monthly: 0, monthly_dm_count: 0 });
-        if (insertErr) {
-          if (process.env.NODE_ENV === "development") console.error("[Dashboard] Profile insert failed:", insertErr);
-          setLoadError("Could not initialise your profile. Please refresh or contact support.");
-          setLoading(false);
-          return;
-        }
+        if (process.env.NODE_ENV === "development" && insertErr) console.error("[Dashboard] Profile insert failed:", insertErr);
         setPlan("free");
       } else {
-        setLoadError("Failed to load your profile. Please check your connection and try again.");
-        setLoading(false);
-        return;
+        // Any other error (RLS issue, network, etc.) — silently degrade to free plan
+        // so the dashboard still loads rather than blocking the user entirely
+        setPlan("free");
       }
     } else if (profile) {
-      const effectivePlan = profile.plan_type || profile.plan;
-      if (!effectivePlan) {
-        setLoadError("Profile data is malformed. Please contact support.");
-        setLoading(false);
-        return;
-      }
+      const effectivePlan = profile.plan_type || profile.plan || "free";
       setPlan(effectivePlan);
       setMonthlyDMs(profile.monthly_dm_count || 0);
       setBillingRenewal(profile.billing_renewal || null);
       if (profile.preferred_language) setLang(profile.preferred_language);
+    } else {
+      // profile is null but no error (shouldn't happen with .single(), but be safe)
+      setPlan("free");
     }
 
     // ── 3. Automations ───────────────────────────────────
