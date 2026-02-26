@@ -1,8 +1,9 @@
+
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-// NOTE: Do NOT set runtime = "edge" here — cookies() doesn't work in edge runtime
-// export const runtime = "edge";
+// Cloudflare Pages requires edge runtime on all API routes
+export const runtime = "edge";
 
 export async function POST(request) {
   try {
