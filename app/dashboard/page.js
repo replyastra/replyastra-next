@@ -849,11 +849,16 @@ function AIPage({ plan, user, t }) {
     if (!prompt.trim() || loading) return;
     setLoading(true); setError(""); setResponse("");
     try {
+      // Get session token
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
       if (!token) { setError("Session expired. Please refresh the page."); setLoading(false); return; }
 
-      const res = await fetch("/api/replyastra-ai", {
+      // Call the Cloudflare Worker directly (bypasses Next.js edge runtime issues)
+      const workerUrl = (process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL || "").trim().replace(/\/$/, "");
+      if (!workerUrl) { setError("AI service URL not configured."); setLoading(false); return; }
+
+      const res = await fetch(workerUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -862,17 +867,11 @@ function AIPage({ plan, user, t }) {
         body: JSON.stringify({ prompt: prompt.trim() }),
       });
 
-      // Read as text first so we don't crash on non-JSON responses
+      // Safe JSON parsing
       const rawText = await res.text();
       let data;
-      try {
-        data = JSON.parse(rawText);
-      } catch {
-        // API returned non-JSON — show raw response for debugging
-        setError(`API error (${res.status}): ${rawText.slice(0, 150)}`);
-        setLoading(false);
-        return;
-      }
+      try { data = JSON.parse(rawText); }
+      catch { setError(`Error (${res.status}): ${rawText.slice(0, 150)}`); setLoading(false); return; }
 
       if (!res.ok) { setError(data.error || `Error ${res.status}`); }
       else {
@@ -882,6 +881,7 @@ function AIPage({ plan, user, t }) {
     } catch (e) { setError(`Request failed: ${e?.message || e}`); }
     finally { setLoading(false); }
   };
+
 
 
   const copy = async () => {
