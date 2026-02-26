@@ -1,3 +1,4 @@
+
 export default {
   async fetch(request, env) {
     // ── CORS preflight ────────────────────────────────────────
@@ -102,14 +103,24 @@ export default {
     const maxTokens = replyLength === "Long" ? 500 : replyLength === "Short" ? 150 : 350;
     const temp = (tone === "Funny" || tone === "Gen-Z") ? 0.9 : 0.7;
 
-    const aiResult = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt },
-      ],
-      max_tokens: maxTokens,
-      temperature: temp,
-    });
+    // Check AI binding exists (Workers AI must be bound in Cloudflare Worker settings)
+    if (!env.AI) {
+      return json({ error: "Workers AI binding missing. Go to Cloudflare Worker → Settings → Bindings → Add → Workers AI → Variable name: AI" }, 500);
+    }
+
+    let aiResult;
+    try {
+      aiResult = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: prompt },
+        ],
+        max_tokens: maxTokens,
+        temperature: temp,
+      });
+    } catch (aiErr) {
+      return json({ error: `AI model error: ${aiErr?.message || aiErr}` }, 500);
+    }
 
     const text = typeof aiResult?.response === "string"
       ? aiResult.response
