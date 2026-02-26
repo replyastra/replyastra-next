@@ -6,6 +6,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import Image from "next/image";
+import AIConfigPage from "./ai-config/page";
 
 /* ─────────────────────────────────────────
    PLAN LIMITS (matches planLimits.js)
@@ -849,29 +850,20 @@ function AIPage({ plan, user, t }) {
     if (!prompt.trim() || loading) return;
     setLoading(true); setError(""); setResponse("");
     try {
-      // Get session token
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
       if (!token) { setError("Session expired. Please refresh the page."); setLoading(false); return; }
 
-      // Call the Cloudflare Worker directly (bypasses Next.js edge runtime issues)
-      const workerUrl = (process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL || "").trim().replace(/\/$/, "");
-      if (!workerUrl) { setError("AI service URL not configured."); setLoading(false); return; }
-
-      const res = await fetch(workerUrl, {
+      const res = await fetch("/api/replyastra-ai", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({ prompt: prompt.trim() }),
       });
 
-      // Safe JSON parsing
       const rawText = await res.text();
       let data;
       try { data = JSON.parse(rawText); }
-      catch { setError(`Error (${res.status}): ${rawText.slice(0, 150)}`); setLoading(false); return; }
+      catch { setError(`Error (${res.status}): ${rawText.slice(0, 200)}`); setLoading(false); return; }
 
       if (!res.ok) { setError(data.error || `Error ${res.status}`); }
       else {
@@ -881,6 +873,7 @@ function AIPage({ plan, user, t }) {
     } catch (e) { setError(`Request failed: ${e?.message || e}`); }
     finally { setLoading(false); }
   };
+
 
 
 
@@ -1615,7 +1608,7 @@ export default function DashboardPage() {
           {page === "automations" && <AutomationsPage automations={automations} setAutomations={setAutomations} plan={effectivePlan} t={t} />}
           {page === "contacts" && <ContactsPage contacts={contacts} plan={effectivePlan} t={t} />}
           {page === "ai" && <AIPage plan={effectivePlan} user={user} t={t} />}
-          {page === "ai-config" && <AIConfigPage user={user} plan={effectivePlan} t={t} />}
+          {page === "ai-config" && <AIConfigPage />}
           {page === "upgrade" && <PricingPage plan={effectivePlan} t={t} />}
           {page === "settings" && <SettingsPage user={user} igAccounts={igAccounts} plan={effectivePlan} billingRenewal={billingRenewal} setIgAccounts={setIgAccounts} lang={lang} setLang={setLang} t={t} />}
         </main>
