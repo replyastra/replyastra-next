@@ -1,13 +1,10 @@
 
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
-// Cloudflare Pages requires edge runtime on all API routes
 export const runtime = "edge";
 
 export async function POST(request) {
   try {
-    // ── 1. Auth — get user from Supabase using the Authorization header ──
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
     const accessToken = authHeader?.replace("Bearer ", "");
 
@@ -15,18 +12,27 @@ export async function POST(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    );
+    const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    const { data: { user }, error: authErr } = await supabase.auth.getUser(accessToken);
-    if (authErr || !user) {
+    const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: {
+        apikey: supabaseAnon,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!userRes.ok) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // ── 2. Parse request body ────────────────────────────────
-    const { prompt } = await request.json();
+    const user = await userRes.json();
+    if (!user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const prompt = body?.prompt;
 
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -36,7 +42,6 @@ export async function POST(request) {
       return NextResponse.json({ error: "Prompt too long. Maximum 500 characters." }, { status: 400 });
     }
 
-    // ── 3. Forward to Cloudflare Worker ─────────────────────
     const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
     const apiSecret = process.env.INTERNAL_API_SECRET;
 
@@ -50,10 +55,7 @@ export async function POST(request) {
         "Content-Type": "application/json",
         "x-api-key": apiSecret,
       },
-      body: JSON.stringify({
-        userId: user.id,
-        prompt: prompt.trim(),
-      }),
+      body: JSON.stringify({ userId: user.id, prompt: prompt.trim() }),
     });
 
     const workerData = await workerResponse.json();
@@ -65,7 +67,6 @@ export async function POST(request) {
     return NextResponse.json(workerData, { status: 200 });
 
   } catch (err) {
-    if (process.env.NODE_ENV === "development") console.error("AI API error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
