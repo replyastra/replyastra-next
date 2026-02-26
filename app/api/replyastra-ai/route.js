@@ -1,23 +1,27 @@
 
 import { NextResponse } from "next/server";
 
-// Cloudflare Pages requires edge runtime on all API routes
 export const runtime = "edge";
 
 export async function POST(request) {
   try {
-    // ── 1. Auth — verify token directly via Supabase REST (edge-safe) ──
+    // ── 1. Auth via Bearer token ──────────────────────────────────────
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
-    const accessToken = authHeader?.replace("Bearer ", "");
+    const accessToken = authHeader?.replace("Bearer ", "").trim();
 
     if (!accessToken) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    // Trim env vars to handle accidental spaces in Cloudflare Pages settings
+    const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
+    const supabaseAnon = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
-    // Verify token using Supabase Auth REST API (no JS client needed — fully edge-safe)
+    if (!supabaseUrl || !supabaseAnon) {
+      return NextResponse.json({ error: "Supabase not configured" }, { status: 500 });
+    }
+
+    // Verify token using Supabase Auth REST API (fully edge-safe, no JS client)
     const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
       headers: {
         apikey: supabaseAnon,
@@ -34,48 +38,39 @@ export async function POST(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // ── 2. Parse request body ────────────────────────────────
+    // ── 2. Parse body ─────────────────────────────────────────────────
     const body = await request.json();
     const prompt = body?.prompt;
 
-    if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
+    if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
-
     if (prompt.length > 500) {
-      return NextResponse.json({ error: "Prompt too long. Maximum 500 characters." }, { status: 400 });
+      return NextResponse.json({ error: "Prompt too long (max 500 chars)" }, { status: 400 });
     }
 
-    // ── 3. Forward to Cloudflare Worker ─────────────────────
-    const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
-    const apiSecret = process.env.INTERNAL_API_SECRET;
+    // ── 3. Forward to Cloudflare Worker ──────────────────────────────
+    const workerUrl = (process.env.CLOUDFLARE_WORKER_URL || "").trim();
+    const apiSecret = (process.env.INTERNAL_API_SECRET || "").trim();
 
     if (!workerUrl || !apiSecret) {
       return NextResponse.json({ error: "AI service not configured" }, { status: 500 });
     }
 
-    const workerResponse = await fetch(workerUrl, {
+    const workerRes = await fetch(workerUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiSecret,
       },
-      body: JSON.stringify({
-        userId: user.id,
-        prompt: prompt.trim(),
-      }),
+      body: JSON.stringify({ userId: user.id, prompt: prompt.trim() }),
     });
 
-    const workerData = await workerResponse.json();
+    const workerData = await workerRes.json();
 
-    if (!workerResponse.ok) {
-      return NextResponse.json(workerData, { status: workerResponse.status });
-    }
-
-    return NextResponse.json(workerData, { status: 200 });
+    return NextResponse.json(workerData, { status: workerRes.status });
 
   } catch (err) {
-    // Expose real error temporarily for debugging
-    return NextResponse.json({ error: err?.message || err?.toString() || "Server error" }, { status: 500 });
+    return NextResponse.json({ error: err?.message || "Server error" }, { status: 500 });
   }
 }
