@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 
 export const runtime = "edge";
@@ -13,7 +12,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Trim env vars to handle accidental spaces in Cloudflare Pages settings
+    // Trim env vars — handles accidental spaces/newlines in Cloudflare Pages settings
     const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
     const supabaseAnon = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
@@ -21,7 +20,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Supabase not configured" }, { status: 500 });
     }
 
-    // Verify token using Supabase Auth REST API (fully edge-safe, no JS client)
+    // Verify token using Supabase Auth REST API (fully edge-safe)
     const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
       headers: {
         apikey: supabaseAnon,
@@ -50,7 +49,8 @@ export async function POST(request) {
     }
 
     // ── 3. Forward to Cloudflare Worker ──────────────────────────────
-    const workerUrl = (process.env.CLOUDFLARE_WORKER_URL || "").trim();
+    // Strip trailing slash to avoid double-slash URLs
+    const workerUrl = (process.env.CLOUDFLARE_WORKER_URL || "").trim().replace(/\/$/, "");
     const apiSecret = (process.env.INTERNAL_API_SECRET || "").trim();
 
     if (!workerUrl || !apiSecret) {
@@ -66,11 +66,21 @@ export async function POST(request) {
       body: JSON.stringify({ userId: user.id, prompt: prompt.trim() }),
     });
 
-    const workerData = await workerRes.json();
+    // Guard against HTML error pages from wrong worker URL
+    const contentType = workerRes.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      const text = await workerRes.text();
+      return NextResponse.json(
+        { error: `Worker error (${workerRes.status}): ${text.slice(0, 200)}` },
+        { status: 502 }
+      );
+    }
 
+    const workerData = await workerRes.json();
     return NextResponse.json(workerData, { status: workerRes.status });
 
   } catch (err) {
     return NextResponse.json({ error: err?.message || "Server error" }, { status: 500 });
   }
 }
+
