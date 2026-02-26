@@ -849,7 +849,6 @@ function AIPage({ plan, user, t }) {
     if (!prompt.trim() || loading) return;
     setLoading(true); setError(""); setResponse("");
     try {
-      // Get the current session token to send with the request
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
       if (!token) { setError("Session expired. Please refresh the page."); setLoading(false); return; }
@@ -862,15 +861,28 @@ function AIPage({ plan, user, t }) {
         },
         body: JSON.stringify({ prompt: prompt.trim() }),
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error || t.error); }
+
+      // Read as text first so we don't crash on non-JSON responses
+      const rawText = await res.text();
+      let data;
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        // API returned non-JSON — show raw response for debugging
+        setError(`API error (${res.status}): ${rawText.slice(0, 150)}`);
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) { setError(data.error || `Error ${res.status}`); }
       else {
         setResponse(data.text || "");
         if (data.remaining_today !== undefined) setRemaining({ today: data.remaining_today, month: data.remaining_month });
       }
-    } catch { setError(t.error); }
+    } catch (e) { setError(`Request failed: ${e?.message || e}`); }
     finally { setLoading(false); }
   };
+
 
   const copy = async () => {
     await navigator.clipboard.writeText(response);
@@ -1611,3 +1623,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+
