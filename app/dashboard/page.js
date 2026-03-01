@@ -852,36 +852,47 @@ function AIPage({ plan, user, t }) {
     setLoading(false);
   };
 
-  // ── History: localStorage with 7-day retention ──
-  const HISTORY_KEY = `ra_ai_history_${user?.id || "anon"}`;
+  // ── History: Supabase (syncs across all devices) ──
   const HISTORY_MAX = 30;
   const HISTORY_DAYS = 7;
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(HISTORY_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      const cutoff = Date.now() - HISTORY_DAYS * 24 * 60 * 60 * 1000;
-      const valid = parsed.filter(h => h.ts > cutoff);
-      setHistory(valid);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(valid));
-    } catch { }
-  }, [HISTORY_KEY]);
+    if (!user?.id) return;
+    const loadHistory = async () => {
+      try {
+        const cutoff = new Date(Date.now() - HISTORY_DAYS * 24 * 60 * 60 * 1000).toISOString();
+        // Delete old entries
+        await supabase.from("ai_chat_history").delete().eq("user_id", user.id).lt("created_at", cutoff);
+        // Load recent
+        const { data } = await supabase
+          .from("ai_chat_history")
+          .select("id, question, answer, created_at")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(HISTORY_MAX);
+        if (data) setHistory(data.map(h => ({ id: h.id, q: h.question, a: h.answer, ts: new Date(h.created_at).getTime() })));
+      } catch { }
+    };
+    loadHistory();
+  }, [user?.id]);
 
-  const saveToHistory = (userText, aiText) => {
+  const saveToHistory = async (userText, aiText) => {
+    if (!user?.id) return;
     const entry = { id: Date.now(), q: userText.slice(0, 80), a: aiText.slice(0, 120), ts: Date.now() };
-    setHistory(prev => {
-      const updated = [entry, ...prev].slice(0, HISTORY_MAX);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
-      return updated;
-    });
+    setHistory(prev => [entry, ...prev].slice(0, HISTORY_MAX));
+    try {
+      await supabase.from("ai_chat_history").insert({
+        user_id: user.id,
+        question: userText.slice(0, 80),
+        answer: aiText.slice(0, 120),
+      });
+    } catch { }
   };
 
   const loadFromHistory = (entry) => {
     setMessages([
-      { id: entry.ts, role: "user", text: entry.q },
-      { id: entry.ts + 1, role: "ai", text: entry.a },
+      { id: entry.ts || entry.id, role: "user", text: entry.q },
+      { id: (entry.ts || entry.id) + 1, role: "ai", text: entry.a },
     ]);
     setHistoryOpen(false);
   };
@@ -989,7 +1000,7 @@ function AIPage({ plan, user, t }) {
               )}
             </div>
             <div className="p-3 border-t border-gray-100">
-              <p className="text-[10px] text-gray-400 text-center">History is stored locally for {HISTORY_DAYS} days</p>
+              <p className="text-[10px] text-gray-400 text-center">History syncs across devices · kept for {HISTORY_DAYS} days</p>
             </div>
           </div>
         </>
