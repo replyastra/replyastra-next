@@ -849,6 +849,7 @@ function AIPage({ plan, user, t }) {
   const [copiedId, setCopiedId] = useState(null);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [history, setHistory] = useState([]);
+  const [currentChatId, setCurrentChatId] = useState(null);
   const scrollRef = useCallback(node => { if (node) node.scrollIntoView({ behavior: "smooth" }); }, []);
   const abortRef = useRef(null);
   const hasAI = plan !== "free";
@@ -872,34 +873,26 @@ function AIPage({ plan, user, t }) {
         // Load recent
         const { data } = await supabase
           .from("ai_chat_history")
-          .select("id, question, answer, created_at")
+          .select("id, question, answer, messages, created_at")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
           .limit(HISTORY_MAX);
-        if (data) setHistory(data.map(h => ({ id: h.id, q: h.question, a: h.answer, ts: new Date(h.created_at).getTime() })));
+        if (data) setHistory(data.map(h => ({ id: h.id, q: h.question, a: h.answer, msgs: h.messages, ts: new Date(h.created_at).getTime() })));
       } catch { }
     };
     loadHistory();
   }, [user?.id]);
 
-  const saveToHistory = async (userText, aiText) => {
-    if (!user?.id) return;
-    const entry = { id: Date.now(), q: userText.slice(0, 80), a: aiText, ts: Date.now() };
-    setHistory(prev => [entry, ...prev].slice(0, HISTORY_MAX));
-    try {
-      await supabase.from("ai_chat_history").insert({
-        user_id: user.id,
-        question: userText.slice(0, 80),
-        answer: aiText,
-      });
-    } catch { }
-  };
-
   const loadFromHistory = (entry) => {
-    setMessages([
-      { id: entry.ts || entry.id, role: "user", text: entry.q },
-      { id: (entry.ts || entry.id) + 1, role: "ai", text: entry.a },
-    ]);
+    if (entry.msgs && Array.isArray(entry.msgs) && entry.msgs.length > 0) {
+      setMessages(entry.msgs);
+    } else {
+      setMessages([
+        { id: entry.ts || entry.id, role: "user", text: entry.q },
+        { id: (entry.ts || entry.id) + 1, role: "ai", text: entry.a },
+      ]);
+    }
+    setCurrentChatId(entry.id);
     setHistoryOpen(false);
   };
 
@@ -908,7 +901,8 @@ function AIPage({ plan, user, t }) {
     if (!text || loading) return;
 
     const userMsg = { id: Date.now(), role: "user", text };
-    setMessages(prev => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput("");
     setLoading(true);
     const controller = new AbortController();
@@ -925,7 +919,11 @@ function AIPage({ plan, user, t }) {
       const res = await fetch("/api/replyastra-ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, prompt: text }),
+        body: JSON.stringify({
+          token,
+          prompt: text,
+          messages: newMessages.slice(-10).map(m => ({ role: m.role, content: m.text })) // Send last 10 lines for context context
+        }),
         signal: controller.signal,
       });
 
@@ -941,9 +939,35 @@ function AIPage({ plan, user, t }) {
         setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: data.error || `Error ${res.status}` }]);
       } else {
         const aiText = data.text || "";
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: "ai", text: aiText }]);
+        const finalMessages = [...newMessages, { id: Date.now() + 1, role: "ai", text: aiText }];
+        setMessages(finalMessages);
         if (data.remaining_today !== undefined) setRemaining({ today: data.remaining_today, month: data.remaining_month });
-        saveToHistory(text, aiText);
+
+        // Save logic to DB
+        if (user?.id) {
+          try {
+            if (currentChatId) {
+              await supabase.from("ai_chat_history").update({
+                messages: finalMessages,
+                answer: aiText,
+                created_at: new Date().toISOString()
+              }).eq("id", currentChatId);
+              setHistory(prev => prev.map(h => h.id === currentChatId ? { ...h, a: aiText, msgs: finalMessages, ts: Date.now() } : h));
+            } else {
+              const { data: newRow } = await supabase.from("ai_chat_history").insert({
+                user_id: user.id,
+                question: text.slice(0, 80),
+                answer: aiText,
+                messages: finalMessages
+              }).select("id").single();
+
+              if (newRow) {
+                setCurrentChatId(newRow.id);
+                setHistory(prev => [{ id: newRow.id, q: text.slice(0, 80), a: aiText, msgs: finalMessages, ts: Date.now() }, ...prev].slice(0, HISTORY_MAX));
+              }
+            }
+          } catch { }
+        }
       }
     } catch (e) {
       if (e?.name === "AbortError") {
@@ -988,7 +1012,7 @@ function AIPage({ plan, user, t }) {
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <p className="text-sm font-semibold text-gray-800">{t.recentConversations}</p>
               <div className="flex items-center gap-2">
-                <button onClick={() => { setMessages([]); setHistoryOpen(false); }}
+                <button onClick={() => { setMessages([]); setCurrentChatId(null); setHistoryOpen(false); }}
                   className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors" title={t.newChat}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -1531,6 +1555,25 @@ function IGPanel({ igAccounts, setIgAccounts, plan, t }) {
     if (!error) setIgAccounts(prev => prev.filter(a => a.id !== id));
   };
 
+  const [connecting, setConnecting] = useState(false);
+  const handleConnect = async () => {
+    setConnecting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch("/api/auth/instagram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: session?.access_token })
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else alert(data.error || "Failed to initiate connection");
+    } catch (e) {
+      alert("Error connecting.");
+    }
+    setConnecting(false);
+  };
+
   return (
     <div className="bg-white border border-gray-100 rounded-xl p-5 sm:p-6">
       <p style={serifStyle("22px")} className="mb-6">{t.instagramAccounts}</p>
@@ -1548,9 +1591,9 @@ function IGPanel({ igAccounts, setIgAccounts, plan, t }) {
         </div>
       ))}
       {!atLimit ? (
-        <a href="/dashboard/connect-instagram">
-          <button className="border border-gray-200 text-gray-600 text-[11px] font-semibold tracking-widest px-5 py-2.5 rounded-full hover:border-gray-900 hover:text-gray-900 transition-colors">{t.connectNewAccount}</button>
-        </a>
+        <button onClick={handleConnect} disabled={connecting} className="border border-gray-200 text-gray-600 text-[11px] font-semibold tracking-widest px-5 py-2.5 rounded-full hover:border-gray-900 hover:text-gray-900 transition-colors disabled:opacity-50">
+          {connecting ? "CONNECTING..." : t.connectNewAccount}
+        </button>
       ) : (
         <p className="text-xs text-amber-600 mt-2">Account limit reached ({lim.accounts}) for your {PLAN_NAMES[plan]} plan.</p>
       )}
@@ -1674,6 +1717,42 @@ function Sidebar({ page, setPage, plan, monthlyDMs, mobileOpen, setMobileOpen, t
 }
 
 /* ─────────────────────────────────────────
+   WELCOME MODAL
+───────────────────────────────────────── */
+function WelcomeModal({ type, onClose, onConnect }) {
+  if (!type) return null;
+  const isNew = type === "new";
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl w-full max-w-sm p-8 shadow-2xl relative text-center">
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 transition-colors">
+          <IC.cross />
+        </button>
+        <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-amber-200">
+          <span className="text-2xl">✨</span>
+        </div>
+        <h2 style={serifStyle("26px")} className="mb-3 text-gray-900">
+          {isNew ? "Welcome to ReplyAstra" : "Welcome back!"}
+        </h2>
+        <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+          {isNew
+            ? "Ready to automate your DMs and grow your audience? Connect your Instagram account to get started."
+            : "Your automations are running smoothly! Add more interactive flows or connect another account to maximize reach."}
+        </p>
+        <div className="flex flex-col gap-3">
+          <button onClick={onConnect} className="w-full bg-gray-900 text-white text-[12px] font-semibold tracking-widest py-3.5 rounded-xl hover:bg-gray-800 transition-colors uppercase shadow-sm">
+            Connect Instagram
+          </button>
+          <button onClick={onClose} className="w-full text-gray-500 text-[12px] font-semibold tracking-widest py-3.5 rounded-xl hover:bg-gray-50 transition-colors uppercase">
+            Maybe Later
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
    TOPBAR
 ───────────────────────────────────────── */
 function Topbar({ user, plan, setMobileOpen }) {
@@ -1724,6 +1803,7 @@ export default function DashboardPage() {
   const [loadError, setLoadError] = useState("");
   const [lang, setLang] = useState("en");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [welcomeType, setWelcomeType] = useState(null);
 
   const t = T[lang] || T.en;
 
@@ -1806,6 +1886,21 @@ export default function DashboardPage() {
       setSources([{ label: "Story Reply", pct: 0 }, { label: "Comment DM", pct: 0 }]);
     }
 
+    // ── 7. Check for Welcome Modal ───────────────────────
+    if (u) {
+      const lastLoginStr = localStorage.getItem(`lastLogin_${u.id}`);
+      const now = Date.now();
+      if (!lastLoginStr) {
+        setWelcomeType("new");
+      } else {
+        const lastLogin = parseInt(lastLoginStr, 10);
+        if (now - lastLogin > 7 * 24 * 60 * 60 * 1000) {
+          setWelcomeType("returning");
+        }
+      }
+      localStorage.setItem(`lastLogin_${u.id}`, now.toString());
+    }
+
     setLoading(false);
   }, []);
 
@@ -1850,9 +1945,46 @@ export default function DashboardPage() {
       <div className="flex-1 lg:ml-[168px] flex flex-col h-screen overflow-hidden">
         <Topbar user={user} plan={effectivePlan} setMobileOpen={setMobileOpen} />
 
-        <main className="flex-1 overflow-y-auto flex flex-col min-h-0">
+        <main className="flex-1 overflow-y-auto flex flex-col min-h-0 relative">
+          {welcomeType && (
+            <WelcomeModal
+              type={welcomeType}
+              onClose={() => setWelcomeType(null)}
+              onConnect={async () => {
+                setWelcomeType(null);
+                const { data: { session } } = await supabase.auth.getSession();
+                const res = await fetch("/api/auth/instagram", {
+                  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: session?.access_token })
+                });
+                const data = await res.json();
+                if (data.url) window.location.href = data.url;
+              }}
+            />
+          )}
           {page === "overview" && <OverviewPage userName={userName} stats={stats} chartData={chartData} sources={sources} t={t} />}
-          {page === "automations" && <AutomationsPage automations={automations} setAutomations={setAutomations} plan={effectivePlan} t={t} />}
+          {page === "automations" && (
+            igAccounts.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 h-full">
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6 text-gray-400">
+                  <IC.ig />
+                </div>
+                <h2 style={serifStyle("32px")} className="mb-3 text-gray-900">Connect Instagram</h2>
+                <p className="text-gray-500 max-w-sm mb-8 text-sm leading-relaxed">You need to connect an Instagram account before creating or viewing automations.</p>
+                <button onClick={async () => {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  const res = await fetch("/api/auth/instagram", {
+                    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: session?.access_token })
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                }} className="bg-gray-900 text-white px-8 py-3.5 rounded-xl text-[12px] font-semibold tracking-widest uppercase hover:bg-gray-800 transition-colors shadow-sm">
+                  Connect Now
+                </button>
+              </div>
+            ) : (
+              <AutomationsPage automations={automations} setAutomations={setAutomations} plan={effectivePlan} t={t} />
+            )
+          )}
           {page === "contacts" && <ContactsPage contacts={contacts} plan={effectivePlan} t={t} />}
           {page === "ai" && <AIPage plan={effectivePlan} user={user} t={t} />}
           {page === "ai-config" && <AIConfigPage user={user} plan={effectivePlan} t={t} />}
