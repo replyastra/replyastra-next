@@ -1560,16 +1560,17 @@ function IGPanel({ igAccounts, setIgAccounts, plan, t }) {
     setConnecting(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch("/api/auth/instagram", {
+      const apiUrl = `${window.location.origin}/api/auth/instagram`;
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: session?.access_token })
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-      else alert(data.error || "Failed to initiate connection");
+      else alert(data.error || "Failed to initiate connection. Check logs.");
     } catch (e) {
-      alert("Error connecting.");
+      alert("Error connecting. Is the API route deployed?");
     }
     setConnecting(false);
   };
@@ -1952,12 +1953,16 @@ export default function DashboardPage() {
               onClose={() => setWelcomeType(null)}
               onConnect={async () => {
                 setWelcomeType(null);
-                const { data: { session } } = await supabase.auth.getSession();
-                const res = await fetch("/api/auth/instagram", {
-                  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: session?.access_token })
-                });
-                const data = await res.json();
-                if (data.url) window.location.href = data.url;
+                try {
+                  const { data: { session } } = await supabase.auth.getSession();
+                  const apiUrl = `${window.location.origin}/api/auth/instagram`;
+                  const res = await fetch(apiUrl, {
+                    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: session?.access_token })
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                  else alert(data.error || "Connection Failed");
+                } catch (e) { alert("Error"); }
               }}
             />
           )}
@@ -1971,12 +1976,16 @@ export default function DashboardPage() {
                 <h2 style={serifStyle("32px")} className="mb-3 text-gray-900">Connect Instagram</h2>
                 <p className="text-gray-500 max-w-sm mb-8 text-sm leading-relaxed">You need to connect an Instagram account before creating or viewing automations.</p>
                 <button onClick={async () => {
-                  const { data: { session } } = await supabase.auth.getSession();
-                  const res = await fetch("/api/auth/instagram", {
-                    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: session?.access_token })
-                  });
-                  const data = await res.json();
-                  if (data.url) window.location.href = data.url;
+                  try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    const apiUrl = `${window.location.origin}/api/auth/instagram`;
+                    const res = await fetch(apiUrl, {
+                      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: session?.access_token })
+                    });
+                    const data = await res.json();
+                    if (data.url) window.location.href = data.url;
+                    else alert(data.error || "Connection Failed");
+                  } catch (e) { alert("Error"); }
                 }} className="bg-gray-900 text-white px-8 py-3.5 rounded-xl text-[12px] font-semibold tracking-widest uppercase hover:bg-gray-800 transition-colors shadow-sm">
                   Connect Now
                 </button>
