@@ -1,6 +1,6 @@
 
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
@@ -844,7 +844,13 @@ function AIPage({ plan, user, t }) {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [history, setHistory] = useState([]);
   const scrollRef = useCallback(node => { if (node) node.scrollIntoView({ behavior: "smooth" }); }, []);
+  const abortRef = useRef(null);
   const hasAI = plan !== "free";
+
+  const stop = () => {
+    if (abortRef.current) { abortRef.current.abort(); abortRef.current = null; }
+    setLoading(false);
+  };
 
   // ── History: localStorage with 7-day retention ──
   const HISTORY_KEY = `ra_ai_history_${user?.id || "anon"}`;
@@ -888,6 +894,8 @@ function AIPage({ plan, user, t }) {
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setLoading(true);
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -901,6 +909,7 @@ function AIPage({ plan, user, t }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, prompt: text }),
+        signal: controller.signal,
       });
 
       const rawText = await res.text();
@@ -920,8 +929,12 @@ function AIPage({ plan, user, t }) {
         saveToHistory(text, aiText);
       }
     } catch (e) {
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: `Request failed: ${e?.message || e}` }]);
-    } finally { setLoading(false); }
+      if (e?.name === "AbortError") {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "ai", text: "⏹ Stopped." }]);
+      } else {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: `Request failed: ${e?.message || e}` }]);
+      }
+    } finally { setLoading(false); abortRef.current = null; }
   };
 
   const copyMsg = async (id, text) => {
@@ -1113,15 +1126,27 @@ function AIPage({ plan, user, t }) {
                   className="flex-1 resize-none px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none bg-transparent max-h-24 overflow-y-auto"
                   style={{ minHeight: "36px" }}
                 />
-                <button
-                  onClick={send}
-                  disabled={loading || !input.trim()}
-                  className="flex-shrink-0 w-9 h-9 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
-                  </svg>
-                </button>
+                {loading ? (
+                  <button
+                    onClick={stop}
+                    className="flex-shrink-0 w-9 h-9 bg-red-500 text-white rounded-lg flex items-center justify-center hover:bg-red-600 transition-all"
+                    title="Stop generating"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                      <rect x="6" y="6" width="12" height="12" rx="2" />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    onClick={send}
+                    disabled={!input.trim()}
+                    className="flex-shrink-0 w-9 h-9 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                    </svg>
+                  </button>
+                )}
               </div>
               <p className="text-[10px] text-gray-400 text-center mt-2">ReplyAstra AI can make mistakes. Please verify important information.</p>
             </div>
@@ -1639,7 +1664,7 @@ function Topbar({ user, plan, setMobileOpen }) {
           <p className="text-[11px] text-gray-400">{PLAN_NAMES[plan]}</p>
         </div>
         <div className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{initials}</div>
-        <p className="text-sm font-medium text-gray-500 hidden md:block">US</p>
+
       </div>
     </header>
   );
