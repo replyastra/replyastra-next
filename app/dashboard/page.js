@@ -833,7 +833,7 @@ function ContactsPage({ contacts, plan, t }) {
 }
 
 /* ─────────────────────────────────────────
-   PAGE: REPLYASTRA AI (Chat UI)
+   PAGE: REPLYASTRA AI (Premium Assistant UI)
 ───────────────────────────────────────── */
 function AIPage({ plan, user, t }) {
   const [input, setInput] = useState("");
@@ -841,9 +841,44 @@ function AIPage({ plan, user, t }) {
   const [loading, setLoading] = useState(false);
   const [remaining, setRemaining] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
-  const chatEndRef = useCallback(node => { if (node) node.scrollIntoView({ behavior: "smooth" }); }, []);
-  const lim = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [history, setHistory] = useState([]);
+  const scrollRef = useCallback(node => { if (node) node.scrollIntoView({ behavior: "smooth" }); }, []);
   const hasAI = plan !== "free";
+
+  // ── History: localStorage with 7-day retention ──
+  const HISTORY_KEY = `ra_ai_history_${user?.id || "anon"}`;
+  const HISTORY_MAX = 30;
+  const HISTORY_DAYS = 7;
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      const cutoff = Date.now() - HISTORY_DAYS * 24 * 60 * 60 * 1000;
+      const valid = parsed.filter(h => h.ts > cutoff);
+      setHistory(valid);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(valid));
+    } catch { }
+  }, [HISTORY_KEY]);
+
+  const saveToHistory = (userText, aiText) => {
+    const entry = { id: Date.now(), q: userText.slice(0, 80), a: aiText.slice(0, 120), ts: Date.now() };
+    setHistory(prev => {
+      const updated = [entry, ...prev].slice(0, HISTORY_MAX);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const loadFromHistory = (entry) => {
+    setMessages([
+      { id: entry.ts, role: "user", text: entry.q },
+      { id: entry.ts + 1, role: "ai", text: entry.a },
+    ]);
+    setHistoryOpen(false);
+  };
 
   const send = async () => {
     const text = input.trim();
@@ -858,7 +893,7 @@ function AIPage({ plan, user, t }) {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
       if (!token) {
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: "Session expired. Please refresh the page." }]);
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: "Session expired. Please refresh." }]);
         setLoading(false); return;
       }
 
@@ -879,8 +914,10 @@ function AIPage({ plan, user, t }) {
       if (!res.ok) {
         setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: data.error || `Error ${res.status}` }]);
       } else {
-        setMessages(prev => [...prev, { id: Date.now() + 1, role: "ai", text: data.text || "" }]);
+        const aiText = data.text || "";
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "ai", text: aiText }]);
         if (data.remaining_today !== undefined) setRemaining({ today: data.remaining_today, month: data.remaining_month });
+        saveToHistory(text, aiText);
       }
     } catch (e) {
       setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: `Request failed: ${e?.message || e}` }]);
@@ -896,36 +933,68 @@ function AIPage({ plan, user, t }) {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
   };
 
-  // Typing indicator dots animation
-  const TypingDots = () => (
-    <div className="flex items-center gap-1 px-4 py-3">
-      <div className="flex items-end gap-2">
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center flex-shrink-0">
-          <IC.spark />
-        </div>
-        <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3">
-          <div className="flex gap-1.5">
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const SUGGESTIONS = [
+    "✍️ Write a caption for my new product launch",
+    "🏷️ Best hashtags for travel photography",
+    "💬 Reply template for new followers",
+    "💡 Content ideas for a fitness brand",
+    "📱 Reel script for a behind-the-scenes video",
+    "📝 Instagram bio for a food blogger",
+  ];
+
+  // Custom scrollbar styles
+  const scrollStyle = {
+    scrollbarWidth: "thin",
+    scrollbarColor: "#d1d5db transparent",
+  };
 
   return (
-    <div className="flex flex-col h-full max-w-6xl mx-auto w-full">
-      {/* Header */}
-      <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 flex items-center justify-between flex-shrink-0">
-        <div>
-          <h1 style={serifStyle("clamp(22px,3vw,32px)")} className="mb-0.5">{t.aiPageTitle || "ReplyAstra AI"}</h1>
-          <p className="text-xs text-gray-400">Instagram content assistant</p>
+    <div className="flex flex-col h-full w-full relative">
+      {/* ── History Panel (slide-in) ── */}
+      {historyOpen && (
+        <>
+          <div className="absolute inset-0 bg-black/20 z-40" onClick={() => setHistoryOpen(false)} />
+          <div className="absolute left-0 top-0 h-full w-72 bg-white z-50 shadow-xl border-r border-gray-100 flex flex-col">
+            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+              <p className="text-sm font-semibold text-gray-800">Recent Conversations</p>
+              <button onClick={() => setHistoryOpen(false)} className="text-gray-400 hover:text-gray-700">
+                <IC.cross />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-3 space-y-1.5" style={scrollStyle}>
+              {history.length === 0 ? (
+                <p className="text-xs text-gray-400 text-center py-8">No history yet</p>
+              ) : (
+                history.map(h => (
+                  <button key={h.id} onClick={() => loadFromHistory(h)}
+                    className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors group">
+                    <p className="text-xs font-medium text-gray-700 truncate">{h.q}</p>
+                    <p className="text-[10px] text-gray-400 truncate mt-0.5">{h.a}</p>
+                    <p className="text-[9px] text-gray-300 mt-1">{new Date(h.ts).toLocaleDateString()}</p>
+                  </button>
+                ))
+              )}
+            </div>
+            <div className="p-3 border-t border-gray-100">
+              <p className="text-[10px] text-gray-400 text-center">History is stored locally for {HISTORY_DAYS} days</p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Header ── */}
+      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <button onClick={() => setHistoryOpen(true)}
+            className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" title="Chat history">
+            <IC.timeline />
+          </button>
+          <h1 style={serifStyle("clamp(22px,3vw,30px)")}>{t.aiPageTitle || "ReplyAstra AI"}</h1>
         </div>
         {remaining && (
-          <div className="text-right">
-            <p className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase">{t.usage || "USAGE"}</p>
-            <p className="text-xs text-gray-500">{remaining.today} today · {remaining.month} this month</p>
+          <div className="flex items-center gap-3 text-xs text-gray-400">
+            <span className="bg-gray-100 px-2.5 py-1 rounded-full">{remaining.today} today</span>
+            <span className="bg-gray-100 px-2.5 py-1 rounded-full">{remaining.month}/mo</span>
           </div>
         )}
       </div>
@@ -933,124 +1002,129 @@ function AIPage({ plan, user, t }) {
       {!hasAI ? (
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <IC.ai />
-            </div>
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><IC.ai /></div>
             <p className="text-gray-700 font-medium mb-1">{t.aiNotAvailable}</p>
             <p className="text-gray-400 text-sm mb-4">{t.upgradeForAI}</p>
-            <button onClick={() => { }} className="bg-gray-900 text-white text-[11px] font-semibold tracking-widest px-6 py-3 rounded-full hover:bg-gray-700 transition-colors">
-              UPGRADE NOW
-            </button>
+            <button className="bg-gray-900 text-white text-[11px] font-semibold tracking-widest px-6 py-3 rounded-full hover:bg-gray-700 transition-colors">UPGRADE NOW</button>
           </div>
         </div>
       ) : (
         <>
-          {/* Chat area */}
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
-            {/* Welcome message if no messages */}
-            {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full text-center py-12">
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-800 to-gray-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                </div>
-                <h2 style={{ fontFamily: "'Georgia','Times New Roman',serif", fontSize: "22px", fontWeight: 600, color: "#111" }} className="mb-2">
-                  Hey! I&apos;m ReplyAstra AI 👋
-                </h2>
-                <p className="text-gray-400 text-sm max-w-md mb-6">
-                  I help with Instagram captions, hashtags, DM replies, content strategy, and more. Ask me anything about Instagram!
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center max-w-lg">
-                  {["Write a caption for a sunset photo 🌅", "Give me 10 trending hashtags for fitness", "Draft a DM reply to a new follower", "Content ideas for a food page"].map(s => (
-                    <button key={s} onClick={() => { setInput(s); }}
-                      className="text-xs text-gray-600 bg-white border border-gray-200 px-3 py-2 rounded-full hover:border-gray-400 hover:text-gray-900 transition-all">
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Messages */}
-            {messages.map(msg => (
-              <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                {msg.role === "user" ? (
-                  /* User bubble — right side, dark */
-                  <div className="max-w-[80%] sm:max-w-[70%]">
-                    <div className="bg-gray-900 text-white rounded-2xl rounded-br-md px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap">
-                      {msg.text}
-                    </div>
+          {/* ── Conversation area ── */}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6" style={scrollStyle}>
+            <div className="max-w-2xl mx-auto py-4">
+              {/* Empty state */}
+              {messages.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="w-14 h-14 bg-gradient-to-br from-gray-900 to-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-md">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    </svg>
                   </div>
-                ) : msg.role === "error" ? (
-                  /* Error bubble */
-                  <div className="max-w-[80%] sm:max-w-[70%]">
-                    <div className="flex items-end gap-2">
-                      <div className="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                        <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01" />
-                        </svg>
-                      </div>
-                      <div className="bg-red-50 border border-red-100 rounded-2xl rounded-bl-md px-4 py-3 text-sm text-red-600">
+                  <h2 style={{ fontFamily: "'Georgia','Times New Roman',serif", fontSize: "20px", fontWeight: 600, color: "#111" }} className="mb-2">
+                    What can I create for you?
+                  </h2>
+                  <p className="text-gray-400 text-sm mb-8">Captions, hashtags, DM templates, content ideas & more</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-lg mx-auto">
+                    {SUGGESTIONS.map(s => (
+                      <button key={s} onClick={() => setInput(s.replace(/^[^\s]+\s/, ""))}
+                        className="text-left text-xs text-gray-600 bg-white border border-gray-150 px-4 py-3 rounded-xl hover:border-gray-300 hover:shadow-sm transition-all">
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Messages as clean cards */}
+              {messages.map(msg => (
+                <div key={msg.id} className="mb-5">
+                  {msg.role === "user" ? (
+                    <div className="flex items-start gap-3 justify-end">
+                      <div className="bg-gray-900 text-white rounded-xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap max-w-[85%]">
                         {msg.text}
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  /* AI bubble — left side, light */
-                  <div className="max-w-[85%] sm:max-w-[75%] group">
-                    <div className="flex items-end gap-2">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center flex-shrink-0 mb-5">
+                  ) : msg.role === "error" ? (
+                    <div className="flex items-start gap-3">
+                      <div className="w-7 h-7 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01" />
+                        </svg>
+                      </div>
+                      <div className="bg-red-50 border border-red-100 rounded-xl px-4 py-3 text-sm text-red-600 max-w-[85%]">
+                        {msg.text}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start gap-3 group">
+                      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                         </svg>
                       </div>
-                      <div>
-                        <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-md px-4 py-3 text-sm text-gray-800 leading-relaxed whitespace-pre-wrap shadow-sm">
+                      <div className="flex-1 min-w-0">
+                        <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm text-gray-800 leading-relaxed whitespace-pre-wrap shadow-sm">
                           {msg.text}
                         </div>
                         <button onClick={() => copyMsg(msg.id, msg.text)}
-                          className="flex items-center gap-1 mt-1.5 ml-1 text-[11px] text-gray-400 hover:text-gray-700 transition-colors opacity-0 group-hover:opacity-100">
+                          className="flex items-center gap-1 mt-1.5 text-[11px] text-gray-400 hover:text-gray-700 transition-colors opacity-0 group-hover:opacity-100">
                           <IC.copy />
                           {copiedId === msg.id ? "Copied!" : "Copy"}
                         </button>
                       </div>
                     </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Typing indicator */}
+              {loading && (
+                <div className="flex items-start gap-3 mb-5">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    </svg>
                   </div>
-                )}
-              </div>
-            ))}
+                  <div className="bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm">
+                    <div className="flex gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                </div>
+              )}
 
-            {/* Typing indicator */}
-            {loading && <TypingDots />}
-
-            {/* Auto-scroll anchor */}
-            <div ref={chatEndRef} />
+              <div ref={scrollRef} />
+            </div>
           </div>
 
-          {/* Input bar — fixed at bottom */}
-          <div className="flex-shrink-0 px-4 sm:px-6 pb-4 pt-2 bg-[#f8f8f8]">
-            <div className="flex items-end gap-2 bg-white border border-gray-200 rounded-2xl p-2 focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-200 transition-all shadow-sm">
-              <textarea
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Ask about captions, hashtags, DM replies..."
-                rows={1}
-                className="flex-1 resize-none px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none bg-transparent max-h-32 overflow-y-auto"
-                style={{ minHeight: "40px" }}
-              />
-              <button
-                onClick={send}
-                disabled={loading || !input.trim()}
-                className="flex-shrink-0 w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center hover:bg-gray-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-              </button>
+          {/* ── Input bar ── */}
+          <div className="flex-shrink-0 px-4 sm:px-6 pb-4 pt-2">
+            <div className="max-w-2xl mx-auto">
+              <div className="flex items-end gap-2 bg-white border border-gray-200 rounded-xl p-2 focus-within:border-gray-400 transition-all shadow-sm">
+                <textarea
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask about captions, hashtags, DM replies..."
+                  rows={1}
+                  className="flex-1 resize-none px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none bg-transparent max-h-24 overflow-y-auto"
+                  style={{ minHeight: "36px" }}
+                />
+                <button
+                  onClick={send}
+                  disabled={loading || !input.trim()}
+                  className="flex-shrink-0 w-9 h-9 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-[10px] text-gray-400 text-center mt-2">ReplyAstra AI can make mistakes. Please verify important information.</p>
             </div>
-            <p className="text-[10px] text-gray-400 text-center mt-2">ReplyAstra AI specializes in Instagram content. Press Enter to send.</p>
           </div>
         </>
       )}
