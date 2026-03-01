@@ -981,9 +981,17 @@ function AIPage({ plan, user, t }) {
           <div className="absolute left-0 top-0 h-full w-72 bg-white z-50 shadow-xl border-r border-gray-100 flex flex-col">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
               <p className="text-sm font-semibold text-gray-800">Recent Conversations</p>
-              <button onClick={() => setHistoryOpen(false)} className="text-gray-400 hover:text-gray-700">
-                <IC.cross />
-              </button>
+              <div className="flex items-center gap-2">
+                <button onClick={() => { setMessages([]); setHistoryOpen(false); }}
+                  className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors" title="New chat">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                </button>
+                <button onClick={() => setHistoryOpen(false)} className="text-gray-400 hover:text-gray-700">
+                  <IC.cross />
+                </button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-1.5" style={scrollStyle}>
               {history.length === 0 ? (
@@ -1007,18 +1015,20 @@ function AIPage({ plan, user, t }) {
       )}
 
       {/* ── Header ── */}
-      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 flex items-center justify-between flex-shrink-0">
+      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={() => setHistoryOpen(true)}
             className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" title="Chat history">
-            <IC.timeline />
+            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
           </button>
-          <h1 style={serifStyle("clamp(22px,3vw,30px)")}>{t.aiPageTitle || "ReplyAstra AI"}</h1>
+          <h1 style={serifStyle("clamp(20px,3vw,28px)")}>{t.aiPageTitle || "ReplyAstra AI"}</h1>
         </div>
         {remaining && (
-          <div className="flex items-center gap-3 text-xs text-gray-400">
-            <span className="bg-gray-100 px-2.5 py-1 rounded-full">{remaining.today} today</span>
-            <span className="bg-gray-100 px-2.5 py-1 rounded-full">{remaining.month}/mo</span>
+          <div className="flex items-center gap-2 text-[11px] text-gray-500">
+            <span className="bg-gray-100 px-2.5 py-1 rounded-full">Daily: {remaining.today}</span>
+            <span className="bg-gray-100 px-2.5 py-1 rounded-full">Monthly: {remaining.month}</span>
           </div>
         )}
       </div>
@@ -1834,7 +1844,7 @@ export default function DashboardPage() {
       <div className="flex-1 lg:ml-[168px] flex flex-col h-screen overflow-hidden">
         <Topbar user={user} plan={effectivePlan} setMobileOpen={setMobileOpen} />
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto flex flex-col min-h-0">
           {page === "overview" && <OverviewPage userName={userName} stats={stats} chartData={chartData} sources={sources} t={t} />}
           {page === "automations" && <AutomationsPage automations={automations} setAutomations={setAutomations} plan={effectivePlan} t={t} />}
           {page === "contacts" && <ContactsPage contacts={contacts} plan={effectivePlan} t={t} />}
