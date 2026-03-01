@@ -30,7 +30,8 @@ const T = {
     logout: "Logout", usage: "USAGE", monthlyDMs: "monthly DMs",
     // Page headings
     welcome: "Welcome", flows: "Flows", capturedGrowth: "Captured Growth",
-    elevate: "Elevate", console: "Console", aiPageTitle: "ReplyAstra AI",
+    elevate: "Elevate", console: "Console", aiPageTitle: "ReplyAstra AI", dailyLimit: "Daily Limit", monthlyLimit: "Monthly Limit",
+    recentConversations: "Recent Conversations", newChat: "New chat", noHistory: "No history yet", historySyncText: "History syncs across devices · kept for", daysText: "days", aiInputPlaceholder: "Ask about captions, hashtags, DM replies...",
     aiConfigTitle: "AI Configuration", aiConfigSubtitle: "Customize how Astra AI responds to comments and DMs.",
     // Overview stats
     sentReplies: "SENT REPLIES", automationHits: "AUTOMATION HITS",
@@ -106,7 +107,8 @@ const T = {
     replyastraAI: "ರಿಪ್ಲೈಅಸ್ಟ್ರಾ AI", upgrade: "ನವೀಕರಿಸಿ", settings: "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
     logout: "ಲಾಗ್ಔಟ್", usage: "ಬಳಕೆ", monthlyDMs: "ಮಾಸಿಕ DM ಗಳು",
     welcome: "ಸ್ವಾಗತ", flows: "ಫ್ಲೋಸ್", capturedGrowth: "ಕ್ಯಾಪ್ಚರ್ಡ್ ಗ್ರೋಥ್",
-    elevate: "ಎಲಿವೇಟ್", console: "ಕನ್ಸೋಲ್", aiPageTitle: "ರಿಪ್ಲೈಅಸ್ಟ್ರಾ AI",
+    elevate: "ಎಲಿವೇಟ್", console: "ಕನ್ಸೋಲ್", aiPageTitle: "ರಿಪ್ಲೈಅಸ್ಟ್ರಾ AI", dailyLimit: "ದೈನಂದಿನ ಮಿತಿ", monthlyLimit: "ಮಾಸಿಕ ಮಿತಿ",
+    recentConversations: "ಇತ್ತೀಚಿನ ಸಂಭಾಷಣೆಗಳು", newChat: "ಹೊಸ ಚಾಟ್", noHistory: "ಇನ್ನೂ কোনো ಇತಿಹಾಸವಿಲ್ಲ", historySyncText: "ಇತಿಹಾಸವು ಎಲ್ಲಾ ಸಾಧನಗಳಲ್ಲಿ ಸಿಂಕ್ ಆಗುತ್ತದೆ · ಉಳಿಸಲಾಗಿದೆ", daysText: "ದಿನಗಳು", aiInputPlaceholder: "ಕ್ಯಾಪ್ಶನ್ಸ್, ಹ್ಯಾಶ್‌ಟ್ಯಾಗ್‌ಗಳು, DM ಕುರಿತು ಕೇಳಿ...",
     aiConfigTitle: "AI ಕಾನ್ಫಿಗರೇಶನ್", aiConfigSubtitle: "Astra AI ಹೇಗೆ ಪ್ರತಿಕ್ರಿಯಿಸುತ್ತದೆ ಎಂಬುದನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಿ.",
     sentReplies: "ಕಳುಹಿಸಿದ ಪ್ರತ್ಯುತ್ತರಗಳು", automationHits: "ಸ್ವಯಂಚಾಲನೆ ಹಿಟ್‌ಗಳು",
     conversion: "ಪರಿವರ್ತನೆ", leadsLabel: "ಸಂಪರ್ಕಗಳು",
@@ -173,7 +175,8 @@ const T = {
     replyastraAI: "रिप्लाईऐस्ट्रा AI", upgrade: "अपग्रेड करें", settings: "सेटिंग्स",
     logout: "लॉगआउट", usage: "उपयोग", monthlyDMs: "मासिक DM",
     welcome: "स्वागत", flows: "फ्लोज़", capturedGrowth: "कैप्चर्ड ग्रोथ",
-    elevate: "एलिवेट", console: "कंसोल", aiPageTitle: "रिप्लाईऐस्ट्रा AI",
+    elevate: "एलिवेट", console: "कंसोल", aiPageTitle: "रिप्लाईऐस्ट्रा AI", dailyLimit: "दैनिक सीमा", monthlyLimit: "मासिक सीमा",
+    recentConversations: "हाल की बातचीत", newChat: "नई चैट", noHistory: "अभी कोई इतिहास नहीं है", historySyncText: "इतिहास सभी उपकरणों में सिंक होता है · सुरक्षित", daysText: "दिन", aiInputPlaceholder: "कैप्शन, हैशटैग, DM के बारे में पूछें...",
     aiConfigTitle: "AI कॉन्फ़िगरेशन", aiConfigSubtitle: "Astra AI कैसे जवाब देता है, इसे कस्टमाइज़ करें।",
     sentReplies: "भेजे गए उत्तर", automationHits: "ऑटोमेशन हिट्स",
     conversion: "रूपांतरण", leadsLabel: "संपर्क",
@@ -240,7 +243,8 @@ const T = {
     replyastraAI: "ரிப்ளையாஸ்ட்ரா AI", upgrade: "மேம்படுத்து", settings: "அமைப்புகள்",
     logout: "வெளியேறு", usage: "பயன்பாடு", monthlyDMs: "மாதாந்திர DM",
     welcome: "வரவேற்கிறோம்", flows: "ஃப்ளோக்கள்", capturedGrowth: "பெறப்பட்ட வளர்ச்சி",
-    elevate: "உயர்வு", console: "கன்சோல்", aiPageTitle: "ரிப்ளையாஸ்ட்ரா AI",
+    elevate: "உயர்வு", console: "கன்சோல்", aiPageTitle: "ரிப்ளையாஸ்ட்ரா AI", dailyLimit: "தினசரி வரம்பு", monthlyLimit: "மாதாந்திர வரம்பு",
+    recentConversations: "சமீபத்திய உரையாடல்கள்", newChat: "புதிய அரட்டை", noHistory: "இன்னும் எந்த வரலாறும் இல்லை", historySyncText: "வரலாறு அனைத்து சாதனங்களிலும் ஒத்திசைக்கப்படுகிறது · சேமிக்கப்பட்டது", daysText: "நாட்கள்", aiInputPlaceholder: "கேப்ஷன்ஸ், ஹேஷ்டேக்ஸ், DM பற்றி கேட்க...",
     aiConfigTitle: "AI கட்டமைப்பு", aiConfigSubtitle: "Astra AI எவ்வாறு பதிலளிக்கிறது என்பதை தனிப்பயனாக்கவும்.",
     sentReplies: "அனுப்பிய பதில்கள்", automationHits: "தானியங்கு ஹிட்கள்",
     conversion: "மாற்றம்", leadsLabel: "தொடர்புகள்",
@@ -307,7 +311,8 @@ const T = {
     replyastraAI: "రిప్లైఅస్ట్రా AI", upgrade: "అప్‌గ్రేడ్", settings: "సెట్టింగ్‌లు",
     logout: "లాగౌట్", usage: "వినియోగం", monthlyDMs: "నెలవారీ DM",
     welcome: "స్వాగతం", flows: "ఫ్లోలు", capturedGrowth: "కాప్చర్డ్ గ్రోత్",
-    elevate: "ఎలివేట్", console: "కన్సోల్", aiPageTitle: "రిప్లైఅస్ట్రా AI",
+    elevate: "ఎలివేట్", console: "కన్సోల్", aiPageTitle: "రిప్లైఅస్ట్రా AI", dailyLimit: "రోజువారీ పరిమితి", monthlyLimit: "నెలవారీ పరిమితి",
+    recentConversations: "ఇటీవలి సంభాషణలు", newChat: "కొత్త చాట్", noHistory: "ఇంకా చరిత్ర లేదు", historySyncText: "చరిత్ర అన్ని పరికరాల్లో సమకాలీకరించబడుతుంది · సురక్షితం", daysText: "రోజులు", aiInputPlaceholder: "క్యాప్షన్స్, హ్యాష్‌టాగ్స్, DM గురించి అడగండి...",
     aiConfigTitle: "AI కాన్ఫిగరేషన్", aiConfigSubtitle: "Astra AI ఎలా స్పందిస్తుందో అనుకూలీకరించండి.",
     sentReplies: "పంపిన రిప్లైలు", automationHits: "ఆటోమేషన్ హిట్స్",
     conversion: "మార్పిడి", leadsLabel: "పరిచయాలు",
@@ -374,7 +379,8 @@ const T = {
     replyastraAI: "റിപ്ലൈഅസ്‌ട്രാ AI", upgrade: "അപ്‌ഗ്രേഡ്", settings: "ക്രമീകരണങ്ങൾ",
     logout: "പുറത്തുകടക്കുക", usage: "ഉപയോഗം", monthlyDMs: "പ്രതിമാസ DM",
     welcome: "സ്വാഗതം", flows: "ഫ്ലോകൾ", capturedGrowth: "ക്യാപ്ചർ ചെയ്ത വളർച്ച",
-    elevate: "ഉയരം", console: "കൺസോൾ", aiPageTitle: "റിപ്ലൈഅസ്‌ട്രാ AI",
+    elevate: "ഉയരം", console: "കൺസോൾ", aiPageTitle: "റിപ്ലൈഅസ്‌ട്രാ AI", dailyLimit: "പ്രതിദിന പരിധി", monthlyLimit: "പ്രതിമാസ പരിധി",
+    recentConversations: "സമീപകാല സംഭാഷണങ്ങൾ", newChat: "പുതിയ ചാറ്റ്", noHistory: "ഇതുവരെ ചരിത്രമില്ല", historySyncText: "ചരിത്രം എല്ലാ ഉപകരണങ്ങളിലും സമന്വയിപ്പിക്കുന്നു · സംരക്ഷിച്ചിരിക്കുന്നു", daysText: "ദിവസങ്ങൾ", aiInputPlaceholder: "ക്യാപ്ഷൻസ്, ഹാഷ്‌ടാഗുകൾ, DM എന്നിവയെക്കുറിച്ച് ചോദിക്കുക...",
     aiConfigTitle: "AI കോൺഫിഗറേഷൻ", aiConfigSubtitle: "Astra AI എങ്ങനെ പ്രതികരിക്കുന്നുവെന്ന് ഇഷ്ടാനുസൃതമാക്കുക.",
     sentReplies: "അയച്ച മറുപടികൾ", automationHits: "ഓട്ടോമേഷൻ ഹിറ്റുകൾ",
     conversion: "പരിവർത്തനം", leadsLabel: "കോൺടാക്റ്റുകൾ",
@@ -878,13 +884,13 @@ function AIPage({ plan, user, t }) {
 
   const saveToHistory = async (userText, aiText) => {
     if (!user?.id) return;
-    const entry = { id: Date.now(), q: userText.slice(0, 80), a: aiText.slice(0, 120), ts: Date.now() };
+    const entry = { id: Date.now(), q: userText.slice(0, 80), a: aiText, ts: Date.now() };
     setHistory(prev => [entry, ...prev].slice(0, HISTORY_MAX));
     try {
       await supabase.from("ai_chat_history").insert({
         user_id: user.id,
         question: userText.slice(0, 80),
-        answer: aiText.slice(0, 120),
+        answer: aiText,
       });
     } catch { }
   };
@@ -980,10 +986,10 @@ function AIPage({ plan, user, t }) {
           <div className="absolute inset-0 bg-black/20 z-40" onClick={() => setHistoryOpen(false)} />
           <div className="absolute left-0 top-0 h-full w-72 bg-white z-50 shadow-xl border-r border-gray-100 flex flex-col">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-              <p className="text-sm font-semibold text-gray-800">Recent Conversations</p>
+              <p className="text-sm font-semibold text-gray-800">{t.recentConversations}</p>
               <div className="flex items-center gap-2">
                 <button onClick={() => { setMessages([]); setHistoryOpen(false); }}
-                  className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors" title="New chat">
+                  className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:bg-gray-200 transition-colors" title={t.newChat}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
@@ -995,7 +1001,7 @@ function AIPage({ plan, user, t }) {
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-1.5" style={scrollStyle}>
               {history.length === 0 ? (
-                <p className="text-xs text-gray-400 text-center py-8">No history yet</p>
+                <p className="text-xs text-gray-400 text-center py-8">{t.noHistory}</p>
               ) : (
                 history.map(h => (
                   <button key={h.id} onClick={() => loadFromHistory(h)}
@@ -1008,7 +1014,7 @@ function AIPage({ plan, user, t }) {
               )}
             </div>
             <div className="p-3 border-t border-gray-100">
-              <p className="text-[10px] text-gray-400 text-center">History syncs across devices · kept for {HISTORY_DAYS} days</p>
+              <p className="text-[10px] text-gray-400 text-center">{t.historySyncText} {HISTORY_DAYS} {t.daysText}</p>
             </div>
           </div>
         </>
@@ -1018,7 +1024,7 @@ function AIPage({ plan, user, t }) {
       <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={() => setHistoryOpen(true)}
-            className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" title="Chat history">
+            className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" title={t.recentConversations}>
             <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
@@ -1027,8 +1033,8 @@ function AIPage({ plan, user, t }) {
         </div>
         {remaining && (
           <div className="flex items-center gap-2 text-[11px] text-gray-500">
-            <span className="bg-gray-100 px-2.5 py-1 rounded-full">Daily: {remaining.today}</span>
-            <span className="bg-gray-100 px-2.5 py-1 rounded-full">Monthly: {remaining.month}</span>
+            <span className="bg-gray-100 px-2.5 py-1 rounded-full">{t.dailyLimit || "Daily Limit"}: {remaining.today}</span>
+            <span className="bg-gray-100 px-2.5 py-1 rounded-full">{t.monthlyLimit || "Monthly Limit"}: {remaining.month}</span>
           </div>
         )}
       </div>
@@ -1142,7 +1148,7 @@ function AIPage({ plan, user, t }) {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about captions, hashtags, DM replies..."
+                  placeholder={t.aiInputPlaceholder}
                   rows={1}
                   className="flex-1 resize-none px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none bg-transparent max-h-24 overflow-y-auto"
                   style={{ minHeight: "36px" }}
