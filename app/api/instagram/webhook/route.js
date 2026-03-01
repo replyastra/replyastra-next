@@ -23,19 +23,24 @@ export async function POST(request) {
     const corsHeaders = { "Content-Type": "application/json" };
 
     try {
+        // 1. Parse Paylaod
         const body = await request.json();
+
+        // Log the payload for debugging (Cloudflare Tail)
         console.log("Incoming Meta Webhook:", JSON.stringify(body, null, 2));
 
         if (body.object === "instagram") {
             for (const entry of body.entry) {
-                const igAccountId = entry.id; 
+                const igAccountId = entry.id; // The IG Account ID receiving the message
 
                 for (const messagingEvent of entry.messaging) {
-                    const senderId = messagingEvent.sender.id; 
-                    const recipientId = messagingEvent.recipient.id; 
+                    const senderId = messagingEvent.sender.id; // User sending the DM
+                    const recipientId = messagingEvent.recipient.id; // Your IG Account ID
 
+                    // Ignore echoes (messages we sent)
                     if (senderId === igAccountId) continue;
 
+                    // 2. Extract Message Text
                     let messageText = "";
                     let messageType = "text";
 
@@ -50,6 +55,9 @@ export async function POST(request) {
 
                     if (!messageText && messageType !== "attachment") continue;
 
+                    // 3. Delegate to Background Automation Engine Worker
+                    // Because Meta requires a 200 OK within 20 seconds, we should ideally
+                    // process complex AI operations in a background job. We'll trigger our edge execution here.
                     const ctx = getRequestContext();
                     if (ctx?.waitUntil) {
                         ctx.waitUntil(processAutomation(igAccountId, senderId, messageText, messageType));
@@ -62,16 +70,20 @@ export async function POST(request) {
         } else {
             return new Response("Not Found", { status: 404 });
         }
+
     } catch (error) {
         console.error("Webhook Error:", error);
+        // Always return 200 to Meta so they don't retry incessantly on our internal errors
         return new Response("EVENT_RECEIVED_WITH_ERRORS", { status: 200 });
     }
 }
 
+// Temporary inline processing until we move to a dedicated queue/worker
 async function processAutomation(igAccountId, senderId, messageText, messageType) {
     const sbUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim().replace(/\/$/, "");
     const sbKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
 
+    // 1. Get the ReplyAstra User linked to this IG Account
     const { data: accounts } = await fetch(`${sbUrl}/rest/v1/instagram_accounts?ig_account_id=eq.${igAccountId}&select=*`, {
         headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` }
     }).then(res => res.json());
@@ -79,6 +91,7 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
     const account = accounts?.[0];
     if (!account) return;
 
+    // 2. Contact Sync (Find or create)
     let senderUsername = senderId;
     try {
         const profileRes = await fetch(`https://graph.facebook.com/v19.0/${senderId}?fields=username&access_token=${account.access_token}`);
@@ -100,6 +113,7 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
 
     const contactId = contactRes?.[0]?.id || null;
 
+    // 3. Fetch active automations for the user
     const { data: automations } = await fetch(`${sbUrl}/rest/v1/automations?user_id=eq.${account.user_id}&is_active=eq.true&select=*`, {
         headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` }
     }).then(res => res.json());
@@ -107,6 +121,7 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
     let matchedAuto = null;
     let replyText = "";
 
+    // Find matching automation
     if (automations && automations.length > 0) {
         const lowerMsg = messageText.toLowerCase();
         matchedAuto = automations.find(a => lowerMsg.includes((a.keyword || "").toLowerCase()));
@@ -114,6 +129,7 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
         if (matchedAuto) {
             replyText = matchedAuto.response_message;
 
+            // Increment hit count
             fetch(`${sbUrl}/rest/v1/automations?id=eq.${matchedAuto.id}`, {
                 method: "PATCH",
                 headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}`, "Content-Type": "application/json" },
@@ -124,9 +140,11 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
 
     let isAiGenerated = false;
 
+    // 4. Fallback to AI Engine
     if (!matchedAuto) {
         console.log(`No exact match for message from ${senderUsername}. Bypassed to AI Engine queue.`);
 
+        // Fetch user plan and settings
         const profileRes = await fetch(`${sbUrl}/rest/v1/profiles?id=eq.${account.user_id}&select=plan,plan_type`, {
             headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` }
         }).then(res => res.json()).catch(() => []);
@@ -168,10 +186,15 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
                 } catch (e) {
                     console.error("AI Generation failed inline:", e);
                 }
+            } else {
+                console.log(`User ${account.user_id} does not have auto_dm_reply enabled.`);
             }
+        } else {
+            console.log(`User ${account.user_id} is on free plan, skipping AI.`);
         }
     }
 
+    // 5. Dispatch Reply via Meta Graph API
     if (replyText) {
         const sendRes = await fetch(`https://graph.facebook.com/v19.0/${account.ig_account_id}/messages`, {
             method: "POST",
@@ -189,6 +212,7 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
             console.error("Meta Dispatch Error:", errorMsg);
         }
 
+        // 6. Log Transaction in dm_logs
         await fetch(`${sbUrl}/rest/v1/dm_logs`, {
             method: "POST",
             headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}`, "Content-Type": "application/json" },
@@ -206,6 +230,7 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
             })
         }).catch(() => { });
 
+        // 7. Increment Monthly Limits
         if (sendRes.ok) {
             fetch(`${sbUrl}/rest/v1/profiles?id=eq.${account.user_id}&select=monthly_dm_count`, {
                 headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}` }
@@ -221,3 +246,4 @@ async function processAutomation(igAccountId, senderId, messageText, messageType
         }
     }
 }
+
