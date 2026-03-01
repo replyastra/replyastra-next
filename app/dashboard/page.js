@@ -853,16 +853,25 @@ function AIPage({ plan, user, t }) {
       const token = session?.access_token;
       if (!token) { setError("Session expired. Please refresh the page."); setLoading(false); return; }
 
-      const res = await fetch("/api/replyastra-ai", {
+      // Worker URL baked in at build time (NEXT_PUBLIC_ prefix = available client-side)
+      const workerUrl = (process.env.NEXT_PUBLIC_CLOUDFLARE_WORKER_URL || "").trim().replace(/\/$/, "");
+      if (!workerUrl) {
+        setError("AI service not configured. Please contact support.");
+        setLoading(false); return;
+      }
+
+      // Content-Type: text/plain = CORS simple request (no preflight needed!)
+      // Token goes in the body — worker validates it against Supabase
+      const res = await fetch(workerUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ prompt: prompt.trim() }),
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ token, prompt: prompt.trim() }),
       });
 
       const rawText = await res.text();
       let data;
       try { data = JSON.parse(rawText); }
-      catch { setError(`Error (${res.status}): ${rawText.slice(0, 200)}`); setLoading(false); return; }
+      catch { setError(`Server error (${res.status}): unexpected response`); setLoading(false); return; }
 
       if (!res.ok) { setError(data.error || `Error ${res.status}`); }
       else {
@@ -872,6 +881,7 @@ function AIPage({ plan, user, t }) {
     } catch (e) { setError(`Request failed: ${e?.message || e}`); }
     finally { setLoading(false); }
   };
+
 
 
 
