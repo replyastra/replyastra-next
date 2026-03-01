@@ -873,11 +873,11 @@ function AIPage({ plan, user, t }) {
         // Load recent
         const { data } = await supabase
           .from("ai_chat_history")
-          .select("id, question, answer, messages, created_at")
+          .select("id, question, answer, created_at")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
           .limit(HISTORY_MAX);
-        if (data) setHistory(data.map(h => ({ id: h.id, q: h.question, a: h.answer, msgs: h.messages, ts: new Date(h.created_at).getTime() })));
+        if (data) setHistory(data.map(h => ({ id: h.id, q: h.question, a: h.answer, ts: new Date(h.created_at).getTime() })));
       } catch { }
     };
     loadHistory();
@@ -948,22 +948,20 @@ function AIPage({ plan, user, t }) {
           try {
             if (currentChatId) {
               await supabase.from("ai_chat_history").update({
-                messages: finalMessages,
                 answer: aiText,
                 created_at: new Date().toISOString()
               }).eq("id", currentChatId);
-              setHistory(prev => prev.map(h => h.id === currentChatId ? { ...h, a: aiText, msgs: finalMessages, ts: Date.now() } : h));
+              setHistory(prev => prev.map(h => h.id === currentChatId ? { ...h, a: aiText, ts: Date.now() } : h));
             } else {
               const { data: newRow } = await supabase.from("ai_chat_history").insert({
                 user_id: user.id,
                 question: text.slice(0, 80),
-                answer: aiText,
-                messages: finalMessages
+                answer: aiText
               }).select("id").single();
 
               if (newRow) {
                 setCurrentChatId(newRow.id);
-                setHistory(prev => [{ id: newRow.id, q: text.slice(0, 80), a: aiText, msgs: finalMessages, ts: Date.now() }, ...prev].slice(0, HISTORY_MAX));
+                setHistory(prev => [{ id: newRow.id, q: text.slice(0, 80), a: aiText, ts: Date.now() }, ...prev].slice(0, HISTORY_MAX));
               }
             }
           } catch { }
