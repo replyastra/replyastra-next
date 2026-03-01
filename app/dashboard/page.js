@@ -889,7 +889,7 @@ function AIPage({ plan, user, t }) {
       } catch { }
     };
     loadHistory();
-  }, [user?.id, currentChatId]);
+  }, [user?.id]);
 
   const loadFromHistory = (entry) => {
     if (entry.msgs && Array.isArray(entry.msgs) && entry.msgs.length > 0) {
@@ -956,17 +956,17 @@ function AIPage({ plan, user, t }) {
           try {
             if (currentChatId) {
               await supabase.from("ai_chat_history").update({
-                messages: finalMessages,
+                messages: JSON.parse(JSON.stringify(finalMessages)),
                 answer: aiText,
                 created_at: new Date().toISOString()
               }).eq("id", currentChatId);
               setHistory(prev => prev.map(h => h.id === currentChatId ? { ...h, a: aiText, msgs: finalMessages, ts: Date.now() } : h));
             } else {
-              const { data: newRow } = await supabase.from("ai_chat_history").insert({
+              const { data: newRow, error: insertError } = await supabase.from("ai_chat_history").insert({
                 user_id: user.id,
                 question: text.slice(0, 80),
                 answer: aiText,
-                messages: finalMessages
+                messages: JSON.parse(JSON.stringify(finalMessages))
               }).select("id").single();
 
               if (newRow) {
