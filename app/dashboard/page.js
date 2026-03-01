@@ -1419,7 +1419,7 @@ function Sidebar({ page, setPage, plan, monthlyDMs, mobileOpen, setMobileOpen, t
 
   return (
     <>
-      <aside className="hidden lg:flex flex-col w-[168px] min-h-screen bg-white border-r border-gray-100 fixed top-0 left-0 z-30">
+      <aside className="hidden lg:flex flex-col w-[168px] h-screen bg-white border-r border-gray-100 fixed top-0 left-0 z-30">
         <Inner />
       </aside>
 
@@ -1605,11 +1605,11 @@ export default function DashboardPage() {
   const effectivePlan = plan || "free";
 
   return (
-    <div className="min-h-screen bg-[#f8f8f8] flex">
+    <div className="h-screen bg-[#f8f8f8] flex overflow-hidden">
       <Sidebar page={page} setPage={setPage} plan={effectivePlan} monthlyDMs={monthlyDMs}
         mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} t={t} />
 
-      <div className="flex-1 lg:ml-[168px] flex flex-col min-h-screen">
+      <div className="flex-1 lg:ml-[168px] flex flex-col h-screen overflow-hidden">
         <Topbar user={user} plan={effectivePlan} setMobileOpen={setMobileOpen} />
 
         <main className="flex-1 overflow-y-auto">
