@@ -119,9 +119,18 @@ export async function POST(request) {
     const emojiLevel = aiSettings?.emoji_level || "Medium";
     const customInstruction = aiSettings?.custom_instruction || "";
 
+    const baseRules = `You are ReplyAstra AI — an Instagram content assistant built into the ReplyAstra SaaS platform.
+
+STRICT RULES:
+1. You ONLY help with Instagram-related tasks: captions, hashtags, DM reply templates, comment replies, content ideas, bio writing, story ideas, reel scripts, content strategy, engagement tips, and Instagram growth tactics.
+2. You can also answer questions about ReplyAstra features: DM automation, auto-replies, AI generation, contact management, analytics, and pricing plans (Free, Starter ₹199/mo, Pro ₹399/mo).
+3. If the user asks about ANYTHING unrelated to Instagram or ReplyAstra (weather, math, coding, general knowledge, etc.), respond ONLY with: "I'm ReplyAstra AI — I specialize in Instagram content! I can help you with captions, hashtags, DM replies, content ideas, and more. What would you like help with?"
+4. Keep replies concise, actionable, and engaging.
+5. When greeting, introduce yourself briefly: "Hey! I'm ReplyAstra AI 👋 I help with Instagram captions, hashtags, DM replies, and content strategy. What can I help you with?"`;
+
     const systemPrompt = plan === "pro"
-      ? `You are ReplyAstra AI for Instagram creators.\nTone: ${tone}\nLength: ${replyLength}\nEmoji: ${emojiLevel}${customInstruction ? `\nInstruction: ${customInstruction}` : ""}`
-      : `You are ReplyAstra AI for Instagram creators. Be helpful, concise and engaging.`;
+      ? `${baseRules}\nTone: ${tone}\nLength: ${replyLength}\nEmoji level: ${emojiLevel}${customInstruction ? `\nCustom instruction: ${customInstruction}` : ""}`
+      : baseRules;
 
     const maxTokens = replyLength === "Long" ? 500 : replyLength === "Short" ? 150 : 350;
 
@@ -199,3 +208,4 @@ export async function POST(request) {
     });
   }
 }
+
