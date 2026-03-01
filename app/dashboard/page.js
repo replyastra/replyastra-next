@@ -6,7 +6,6 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import Image from "next/image";
-import AIConfigPage from "./ai-config/page";
 
 /* ─────────────────────────────────────────
    PLAN LIMITS (matches planLimits.js)
