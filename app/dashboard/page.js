@@ -1995,10 +1995,15 @@ export default function DashboardPage() {
             )
           )}
           {page === "contacts" && <ContactsPage contacts={contacts} plan={effectivePlan} t={t} />}
-          {page === "ai" && <AIPage plan={effectivePlan} user={user} t={t} />}
-          {page === "ai-config" && <AIConfigPage user={user} plan={effectivePlan} t={t} />}
-          {page === "upgrade" && <PricingPage plan={effectivePlan} t={t} />}
-          {page === "settings" && <SettingsPage user={user} igAccounts={igAccounts} plan={effectivePlan} billingRenewal={billingRenewal} setIgAccounts={setIgAccounts} lang={lang} setLang={setLang} t={t} />}
+          {page === "ai" && <AIPage plan={plan} user={user} t={t} />}
+          {page === "ai-config" && <AIConfigPage plan={plan} user={user} t={t} />}
+          {page === "upgrade" && <PricingPanel plan={plan} t={t} />}
+          {page === "settings" && <SettingsPage user={user} igAccounts={igAccounts} plan={effectivePlan} billingRenewal={billingRenewal} setIgAccounts={setIgAccounts} lang={lang} setLang={async (newLang) => {
+            setLang(newLang);
+            if (user) {
+              await supabase.from("profiles").update({ preferred_language: newLang }).eq("id", user.id);
+            }
+          }} t={t} />}
         </main>
       </div>
     </div>
