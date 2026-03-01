@@ -833,112 +833,232 @@ function ContactsPage({ contacts, plan, t }) {
 }
 
 /* ─────────────────────────────────────────
-   PAGE: REPLYASTRA AI
+   PAGE: REPLYASTRA AI (Chat UI)
 ───────────────────────────────────────── */
 function AIPage({ plan, user, t }) {
-  const [prompt, setPrompt] = useState("");
-  const [response, setResponse] = useState("");
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [remaining, setRemaining] = useState(null);
-  const [copied, setCopied] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
+  const chatEndRef = useCallback(node => { if (node) node.scrollIntoView({ behavior: "smooth" }); }, []);
   const lim = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
   const hasAI = plan !== "free";
 
-  const generate = async () => {
-    if (!prompt.trim() || loading) return;
-    setLoading(true); setError(""); setResponse("");
+  const send = async () => {
+    const text = input.trim();
+    if (!text || loading) return;
+
+    const userMsg = { id: Date.now(), role: "user", text };
+    setMessages(prev => [...prev, userMsg]);
+    setInput("");
+    setLoading(true);
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
-      if (!token) { setError("Session expired. Please refresh the page."); setLoading(false); return; }
+      if (!token) {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: "Session expired. Please refresh the page." }]);
+        setLoading(false); return;
+      }
 
-      // Same-origin call = zero CORS issues
       const res = await fetch("/api/replyastra-ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, prompt: prompt.trim() }),
+        body: JSON.stringify({ token, prompt: text }),
       });
 
       const rawText = await res.text();
       let data;
       try { data = JSON.parse(rawText); }
-      catch { setError(`Server error (${res.status}): ${rawText.slice(0, 200)}`); setLoading(false); return; }
+      catch {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: `Server error (${res.status})` }]);
+        setLoading(false); return;
+      }
 
-      if (!res.ok) { setError(data.error || `Error ${res.status}`); }
-      else {
-        setResponse(data.text || "");
+      if (!res.ok) {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: data.error || `Error ${res.status}` }]);
+      } else {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: "ai", text: data.text || "" }]);
         if (data.remaining_today !== undefined) setRemaining({ today: data.remaining_today, month: data.remaining_month });
       }
-    } catch (e) { setError(`Request failed: ${e?.message || e}`); }
-    finally { setLoading(false); }
+    } catch (e) {
+      setMessages(prev => [...prev, { id: Date.now() + 1, role: "error", text: `Request failed: ${e?.message || e}` }]);
+    } finally { setLoading(false); }
   };
 
-
-
-
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(response);
-    setCopied(true); setTimeout(() => setCopied(false), 2000);
+  const copyMsg = async (id, text) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedId(id); setTimeout(() => setCopiedId(null), 2000);
   };
 
-  return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
-      <h1 style={serifStyle()} className="mb-6 sm:mb-8">{t.aiPageTitle}</h1>
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+  };
 
-      <div className="bg-white border border-gray-100 rounded-xl p-5 sm:p-6">
-        <p style={serifStyle("22px")} className="mb-4">AI Generation</p>
-
-        {!hasAI ? (
-          <div className="py-8 text-center">
-            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <IC.ai />
-            </div>
-            <p className="text-gray-700 font-medium mb-1">{t.aiNotAvailable}</p>
-            <p className="text-gray-400 text-sm">{t.upgradeForAI}</p>
+  // Typing indicator dots animation
+  const TypingDots = () => (
+    <div className="flex items-center gap-1 px-4 py-3">
+      <div className="flex items-end gap-2">
+        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center flex-shrink-0">
+          <IC.spark />
+        </div>
+        <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3">
+          <div className="flex gap-1.5">
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+            <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
           </div>
-        ) : (
-          <>
-            {remaining && (
-              <div className="flex gap-4 mb-4 text-xs text-gray-500">
-                <span>{remaining.today} {t.remainingToday}</span>
-                <span>{remaining.month} {t.remainingMonth}</span>
-              </div>
-            )}
-            <p className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase mb-2">{t.enterPrompt}</p>
-            <textarea
-              value={prompt} onChange={e => setPrompt(e.target.value)}
-              placeholder={t.aiPlaceholder}
-              maxLength={500}
-              className="w-full border border-gray-200 rounded-xl p-4 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none h-32 bg-gray-50"
-            />
-            <p className="text-xs text-gray-400 mt-2 mb-4">{t.aiDisclaimer}</p>
-            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-            <button onClick={generate} disabled={loading || !prompt.trim()}
-              className="flex items-center gap-2 bg-gray-700 text-white text-[11px] font-semibold tracking-widest px-6 py-3 rounded-full hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-              <IC.spark />{loading ? t.generating : t.generateResponse}
-            </button>
-
-            {response && (
-              <div className="mt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase">{t.aiResponse}</p>
-                  <button onClick={copy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-900 transition-colors">
-                    <IC.copy />{copied ? "Copied!" : t.copyResponse}
-                  </button>
-                </div>
-                <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
-                  {response}
-                </div>
-              </div>
-            )}
-          </>
-        )}
+        </div>
       </div>
     </div>
   );
+
+  return (
+    <div className="flex flex-col h-full max-w-6xl mx-auto w-full">
+      {/* Header */}
+      <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 flex items-center justify-between flex-shrink-0">
+        <div>
+          <h1 style={serifStyle("clamp(22px,3vw,32px)")} className="mb-0.5">{t.aiPageTitle || "ReplyAstra AI"}</h1>
+          <p className="text-xs text-gray-400">Instagram content assistant</p>
+        </div>
+        {remaining && (
+          <div className="text-right">
+            <p className="text-[10px] font-semibold tracking-widest text-gray-400 uppercase">{t.usage || "USAGE"}</p>
+            <p className="text-xs text-gray-500">{remaining.today} today · {remaining.month} this month</p>
+          </div>
+        )}
+      </div>
+
+      {!hasAI ? (
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <IC.ai />
+            </div>
+            <p className="text-gray-700 font-medium mb-1">{t.aiNotAvailable}</p>
+            <p className="text-gray-400 text-sm mb-4">{t.upgradeForAI}</p>
+            <button onClick={() => { }} className="bg-gray-900 text-white text-[11px] font-semibold tracking-widest px-6 py-3 rounded-full hover:bg-gray-700 transition-colors">
+              UPGRADE NOW
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Chat area */}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-4">
+            {/* Welcome message if no messages */}
+            {messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                <div className="w-16 h-16 bg-gradient-to-br from-gray-800 to-gray-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                </div>
+                <h2 style={{ fontFamily: "'Georgia','Times New Roman',serif", fontSize: "22px", fontWeight: 600, color: "#111" }} className="mb-2">
+                  Hey! I&apos;m ReplyAstra AI 👋
+                </h2>
+                <p className="text-gray-400 text-sm max-w-md mb-6">
+                  I help with Instagram captions, hashtags, DM replies, content strategy, and more. Ask me anything about Instagram!
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center max-w-lg">
+                  {["Write a caption for a sunset photo 🌅", "Give me 10 trending hashtags for fitness", "Draft a DM reply to a new follower", "Content ideas for a food page"].map(s => (
+                    <button key={s} onClick={() => { setInput(s); }}
+                      className="text-xs text-gray-600 bg-white border border-gray-200 px-3 py-2 rounded-full hover:border-gray-400 hover:text-gray-900 transition-all">
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Messages */}
+            {messages.map(msg => (
+              <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                {msg.role === "user" ? (
+                  /* User bubble — right side, dark */
+                  <div className="max-w-[80%] sm:max-w-[70%]">
+                    <div className="bg-gray-900 text-white rounded-2xl rounded-br-md px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap">
+                      {msg.text}
+                    </div>
+                  </div>
+                ) : msg.role === "error" ? (
+                  /* Error bubble */
+                  <div className="max-w-[80%] sm:max-w-[70%]">
+                    <div className="flex items-end gap-2">
+                      <div className="w-7 h-7 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01" />
+                        </svg>
+                      </div>
+                      <div className="bg-red-50 border border-red-100 rounded-2xl rounded-bl-md px-4 py-3 text-sm text-red-600">
+                        {msg.text}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* AI bubble — left side, light */
+                  <div className="max-w-[85%] sm:max-w-[75%] group">
+                    <div className="flex items-end gap-2">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center flex-shrink-0 mb-5">
+                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-md px-4 py-3 text-sm text-gray-800 leading-relaxed whitespace-pre-wrap shadow-sm">
+                          {msg.text}
+                        </div>
+                        <button onClick={() => copyMsg(msg.id, msg.text)}
+                          className="flex items-center gap-1 mt-1.5 ml-1 text-[11px] text-gray-400 hover:text-gray-700 transition-colors opacity-0 group-hover:opacity-100">
+                          <IC.copy />
+                          {copiedId === msg.id ? "Copied!" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Typing indicator */}
+            {loading && <TypingDots />}
+
+            {/* Auto-scroll anchor */}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Input bar — fixed at bottom */}
+          <div className="flex-shrink-0 px-4 sm:px-6 pb-4 pt-2 bg-[#f8f8f8]">
+            <div className="flex items-end gap-2 bg-white border border-gray-200 rounded-2xl p-2 focus-within:border-gray-400 focus-within:ring-1 focus-within:ring-gray-200 transition-all shadow-sm">
+              <textarea
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask about captions, hashtags, DM replies..."
+                rows={1}
+                className="flex-1 resize-none px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none bg-transparent max-h-32 overflow-y-auto"
+                style={{ minHeight: "40px" }}
+              />
+              <button
+                onClick={send}
+                disabled={loading || !input.trim()}
+                className="flex-shrink-0 w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center hover:bg-gray-700 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                </svg>
+              </button>
+            </div>
+            <p className="text-[10px] text-gray-400 text-center mt-2">ReplyAstra AI specializes in Instagram content. Press Enter to send.</p>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
+
+
 
 /* ─────────────────────────────────────────
    PAGE: AI CONFIG
