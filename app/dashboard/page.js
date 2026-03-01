@@ -562,7 +562,7 @@ function ChartTooltip({ active, payload, label }) {
 ───────────────────────────────────────── */
 function OverviewPage({ userName, stats, chartData, sources, t }) {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
       <h1 style={serifStyle()} className="mb-6 sm:mb-8">{t.welcome}, {userName}</h1>
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
@@ -623,7 +623,7 @@ function AutomationsPage({ automations, setAutomations, plan, t }) {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
       <h1 style={serifStyle()} className="mb-6 sm:mb-8">{t.flows}</h1>
 
       <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
@@ -709,7 +709,7 @@ function ContactsPage({ contacts, plan, t }) {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
       {/* Contacts table */}
       <div className="bg-white border border-gray-100 rounded-xl overflow-hidden mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100">
@@ -892,7 +892,7 @@ function AIPage({ plan, user, t }) {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
       <h1 style={serifStyle()} className="mb-6 sm:mb-8">{t.aiPageTitle}</h1>
 
       <div className="bg-white border border-gray-100 rounded-xl p-5 sm:p-6">
@@ -1014,7 +1014,7 @@ function AIConfigPage({ user, plan, t }) {
   );
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-3xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
       <div className="text-center mb-8">
         <h1 style={{ fontFamily: "'Georgia','Times New Roman',serif", fontSize: "clamp(24px,3vw,32px)", fontWeight: "600", color: "#111" }}>{t.aiConfigTitle}</h1>
         <p className="text-gray-500 text-sm mt-2">{t.aiConfigSubtitle}</p>
@@ -1105,7 +1105,7 @@ function PricingPage({ plan, t }) {
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-4xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto w-full">
       <h1 style={serifStyle()} className="mb-6 sm:mb-8">{t.elevate}</h1>
 
       <div className="flex items-center gap-1 mb-8 bg-gray-100 w-fit rounded-full p-1">
@@ -1182,7 +1182,7 @@ function SettingsPage({ user, igAccounts, plan, billingRenewal, setIgAccounts, l
     <div className="p-4 sm:p-6 lg:p-8">
       <h1 style={serifStyle()} className="mb-6 sm:mb-8">Settings</h1>
 
-      <div className="flex flex-col lg:flex-row gap-4 max-w-5xl">
+      <div className="flex flex-col lg:flex-row gap-4 max-w-6xl mx-auto w-full">
         {/* Sub sidebar */}
         <div className="lg:w-52 flex-shrink-0">
           <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
@@ -1617,7 +1617,7 @@ export default function DashboardPage() {
           {page === "automations" && <AutomationsPage automations={automations} setAutomations={setAutomations} plan={effectivePlan} t={t} />}
           {page === "contacts" && <ContactsPage contacts={contacts} plan={effectivePlan} t={t} />}
           {page === "ai" && <AIPage plan={effectivePlan} user={user} t={t} />}
-          {page === "ai-config" && <AIConfigPage />}
+          {page === "ai-config" && <AIConfigPage user={user} plan={effectivePlan} t={t} />}
           {page === "upgrade" && <PricingPage plan={effectivePlan} t={t} />}
           {page === "settings" && <SettingsPage user={user} igAccounts={igAccounts} plan={effectivePlan} billingRenewal={billingRenewal} setIgAccounts={setIgAccounts} lang={lang} setLang={setLang} t={t} />}
         </main>
