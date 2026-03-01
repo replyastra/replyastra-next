@@ -877,11 +877,19 @@ function AIPage({ plan, user, t }) {
           .eq("user_id", user.id)
           .order("created_at", { ascending: false })
           .limit(HISTORY_MAX);
-        if (data) setHistory(data.map(h => ({ id: h.id, q: h.question, a: h.answer, msgs: h.messages, ts: new Date(h.created_at).getTime() })));
+        if (data && data.length > 0) {
+          const formattedHistory = data.map(h => ({ id: h.id, q: h.question, a: h.answer, msgs: h.messages, ts: new Date(h.created_at).getTime() }));
+          setHistory(formattedHistory);
+          // Auto-load the most recent chat thread on initial load if none is selected
+          if (!currentChatId && formattedHistory[0].msgs && formattedHistory[0].msgs.length > 0) {
+            setMessages(formattedHistory[0].msgs);
+            setCurrentChatId(formattedHistory[0].id);
+          }
+        }
       } catch { }
     };
     loadHistory();
-  }, [user?.id]);
+  }, [user?.id, currentChatId]);
 
   const loadFromHistory = (entry) => {
     if (entry.msgs && Array.isArray(entry.msgs) && entry.msgs.length > 0) {
