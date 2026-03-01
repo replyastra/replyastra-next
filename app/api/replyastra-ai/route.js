@@ -119,61 +119,33 @@ export async function POST(request) {
     const emojiLevel = aiSettings?.emoji_level || "Medium";
     const customInstruction = aiSettings?.custom_instruction || "";
 
-    const baseRules = `You are ReplyAstra AI, built into the ReplyAstra Instagram automation platform.
-
-YOUR ONLY PURPOSE: Help users with Instagram content and ReplyAstra features. Nothing else.
-
-ALLOWED TOPICS (respond helpfully):
-- Instagram captions, hashtags, bio writing
-- DM reply templates, comment reply templates
-- Content ideas, story ideas, reel scripts
-- Instagram growth tips, engagement strategies
-- ReplyAstra features: DM automation, auto-replies, AI generation, contact management, analytics
-- ReplyAstra pricing: Free (₹0), Starter (₹199/mo), Pro (₹399/mo)
-
-STRICTLY FORBIDDEN (never respond to these):
-- Code generation (HTML, CSS, JavaScript, Python, any programming)
-- Weather, news, current events, politics
-- Math, science, history, geography
-- General knowledge questions
-- Recipe, health, fitness advice (unless for Instagram content about those)
-- ANY topic not directly about Instagram content or ReplyAstra
-
-WHEN USER ASKS FORBIDDEN TOPICS: Pick ONE of these varied responses randomly:
-- "I only help with Instagram content! Need a caption, hashtags, or DM reply? 📸"
-- "That's outside my expertise! I'm here for your Instagram game — captions, hashtags, content ideas. What do you need? ✨"
-- "I'm all about Instagram! Try asking me for captions, hashtag sets, DM templates, or content strategies 🚀"
-- "Not my area! But I can write killer captions, find trending hashtags, or draft DM replies for you 💬"
-
-WHEN USER SAYS HI/HELLO: Respond with a SHORT, unique greeting (max 2 sentences). Do NOT give a list of what you can do. Just say hi back warmly and ask what they need help with today.
-
-RESPONSE STYLE: Be concise. No lengthy introductions. Get straight to the useful content. Each response should feel different, not templated.`;
+    const baseRules = `You are ReplyAstra AI. ONLY help with Instagram content (captions, hashtags, DM replies, content ideas, bios, reels) and ReplyAstra features (DM automation, pricing: Free ₹0, Starter ₹199/mo, Pro ₹399/mo). You CANNOT generate images, videos, audio, code, or files. For anything outside Instagram content or ReplyAstra, politely decline in your own words based on what they asked — tell them you can't do that and suggest they try other AI tools, then offer what you CAN help with. Keep replies short and natural — never use the same rejection twice. When greeted, say hi briefly and ask what they need.`;
 
     const systemPrompt = plan === "pro"
-      ? `${baseRules}\nTone: ${tone}\nLength: ${replyLength}\nEmoji level: ${emojiLevel}${customInstruction ? `\nCustom instruction: ${customInstruction}` : ""}`
+      ? `${baseRules} Tone:${tone}. Length:${replyLength}. Emoji:${emojiLevel}.${customInstruction ? ` ${customInstruction}` : ""}`
       : baseRules;
 
-    const maxTokens = replyLength === "Long" ? 500 : replyLength === "Short" ? 150 : 350;
+    const maxTokens = replyLength === "Long" ? 256 : replyLength === "Short" ? 64 : 128;
 
     // ── 6. Call Workers AI directly via Pages binding ─────────
     let env;
     try {
       env = getRequestContext().env;
     } catch (e) {
-      return new Response(JSON.stringify({ error: "Runtime context not available. Ensure this runs on Cloudflare Pages." }), {
+      return new Response(JSON.stringify({ error: "Runtime context not available." }), {
         status: 500, headers: corsHeaders,
       });
     }
 
     if (!env.AI) {
-      return new Response(JSON.stringify({ error: "Workers AI binding not found. Add AI binding (name=AI) in Cloudflare Pages settings → Bindings." }), {
+      return new Response(JSON.stringify({ error: "AI binding not found. Add AI binding in Pages settings." }), {
         status: 500, headers: corsHeaders,
       });
     }
 
     let aiResult;
     try {
-      aiResult = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+      aiResult = await env.AI.run("@cf/meta/llama-3.2-3b-instruct", {
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
